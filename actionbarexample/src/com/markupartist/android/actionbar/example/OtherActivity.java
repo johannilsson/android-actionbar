@@ -1,7 +1,7 @@
 package com.markupartist.android.actionbar.example;
 
 import com.markupartist.android.widget.ActionBar;
-import com.markupartist.android.widget.ActionBar.Action;
+import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBar.IntentAction;
 
 import android.app.Activity;
@@ -30,11 +30,10 @@ public class OtherActivity extends Activity {
         return Intent.createChooser(intent, "Share");
     }
 
-    private class ExampleAction implements Action {
+    private class ExampleAction extends AbstractAction {
 
-        @Override
-        public int getDrawable() {
-            return R.drawable.ic_title_export_default;
+        public ExampleAction() {
+            super(R.drawable.ic_title_export_default);
         }
 
         @Override
@@ -42,6 +41,7 @@ public class OtherActivity extends Activity {
             Toast.makeText(OtherActivity.this,
                     "Example action", Toast.LENGTH_SHORT).show();
         }
-        
+
     }
+
 }
