@@ -23,7 +23,7 @@ The action bar widget is an [Library Project](http://developer.android.com/guide
     actionBar.addAction(new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default));
     actionBar.addAction(new ToastAction());
 
-#### Custom actions
+### Custom actions
 
 ActionBar comes with a convenient IntentAction that makes it easy to create action out of Intents. To create custom actions simply implement the Action interface and build your own like the Toast example below.
 
