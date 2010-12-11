@@ -6,7 +6,6 @@
     >
     <com.markupartist.android.widget.actionbar.ActionBar
 	    android:id="@+id/actionbar"
-	    android:title="@string/hello"
 	    style="@style/ActionBar"
         />
 	<TextView  
