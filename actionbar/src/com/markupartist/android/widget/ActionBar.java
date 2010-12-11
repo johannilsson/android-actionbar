@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package com.markupartist.android.widget.actionbar;
+package com.markupartist.android.widget;
 
 import java.util.LinkedList;
+
+import com.markupartist.android.widget.actionbar.R;
+import com.markupartist.android.widget.actionbar.R.id;
+import com.markupartist.android.widget.actionbar.R.layout;
+import com.markupartist.android.widget.actionbar.R.string;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;

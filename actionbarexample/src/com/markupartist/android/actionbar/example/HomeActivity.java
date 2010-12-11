@@ -1,8 +1,8 @@
 package com.markupartist.android.actionbar.example;
 
-import com.markupartist.android.widget.actionbar.ActionBar;
-import com.markupartist.android.widget.actionbar.ActionBar.Action;
-import com.markupartist.android.widget.actionbar.ActionBar.IntentAction;
+import com.markupartist.android.widget.ActionBar;
+import com.markupartist.android.widget.ActionBar.Action;
+import com.markupartist.android.widget.ActionBar.IntentAction;
 
 import android.app.Activity;
 import android.content.Context;

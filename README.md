@@ -4,7 +4,7 @@
 
 ## In your layout
 
-    <com.markupartist.android.widget.actionbar.ActionBar
+    <com.markupartist.android.widget.ActionBar
 	    android:id="@+id/actionbar"
 	    style="@style/ActionBar"
         />
