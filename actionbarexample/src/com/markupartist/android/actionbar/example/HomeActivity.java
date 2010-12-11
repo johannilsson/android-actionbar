@@ -1,14 +1,13 @@
 package com.markupartist.android.actionbar.example;
 
 import com.markupartist.android.widget.ActionBar;
-import com.markupartist.android.widget.ActionBar.Action;
+import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBar.IntentAction;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 public class HomeActivity extends Activity {
     /** Called when the activity is first created. */
@@ -34,20 +33,5 @@ public class HomeActivity extends Activity {
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, "Shared from the ActionBar widget.");
         return Intent.createChooser(intent, "Share");
-    }
-
-    private class ExampleAction implements Action {
-
-        @Override
-        public int getDrawable() {
-            return R.drawable.ic_title_export_default;
-        }
-
-        @Override
-        public void performAction() {
-            Toast.makeText(HomeActivity.this,
-                    "Example action", Toast.LENGTH_SHORT).show();
-        }
-        
     }
 }
