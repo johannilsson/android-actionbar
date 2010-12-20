@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     private LayoutInflater mInflater;
     private RelativeLayout mBarView;
-    //private View mLogoView;
+    private ImageView mLogoView;
     //private View mHomeView;
     private TextView mTitleView;
     private LinearLayout mActionsView;
@@ -65,8 +66,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mBarView = (RelativeLayout) mInflater.inflate(R.layout.actionbar, null);
         addView(mBarView);
 
-        // TODO: Add logo
-        
+        mLogoView = (ImageView) mBarView.findViewById(R.id.actionbar_home_logo);
         mHomeLayout = (RelativeLayout) mBarView.findViewById(R.id.actionbar_home_bg);
         mHomeBtn = (ImageButton) mBarView.findViewById(R.id.actionbar_home_btn);
 
@@ -81,12 +81,20 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mHomeLayout.setVisibility(View.VISIBLE);
     }
 
-    /*
-    public void showLogo() {
+    /**
+     * Shows the provided logo to the left in the action bar.
+     * 
+     * This is ment to be used instead of the setHomeAction and does not draw
+     * a divider to the left of the provided logo.
+     * 
+     * @param resId The drawable resource id
+     */
+    public void setHomeLogo(int resId) {
+        // TODO: Add possibility to add an IntentAction as well.
+        mLogoView.setImageResource(resId);
         mLogoView.setVisibility(View.VISIBLE);
-        mHomeView.setVisibility(View.GONE);
+        mHomeLayout.setVisibility(View.GONE);
     }
-    */
 
     public void setTitle(CharSequence title) {
         mTitleView.setText(title);
