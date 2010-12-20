@@ -18,5 +18,5 @@
     <gradient
         android:startColor="@color/actionbar_background_item_pressed_start"
         android:endColor="@color/actionbar_background_item_pressed_end"
-        android:angle="90"/>
+        android:angle="-90"/>
 </shape>
