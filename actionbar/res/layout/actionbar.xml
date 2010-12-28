@@ -68,7 +68,7 @@
         android:paddingLeft="10dip"
         android:textSize="16dip"
         android:textStyle="bold"
-        android:textColor="#FFF"
+        android:textColor="@color/actionbar_title"
         android:singleLine="true"
         />
     <LinearLayout
