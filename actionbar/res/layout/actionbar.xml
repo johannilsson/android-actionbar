@@ -60,7 +60,7 @@
     </RelativeLayout>
     <TextView
         android:id="@+id/actionbar_title"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/actionbar_home"
         android:layout_alignWithParentIfMissing="true"
