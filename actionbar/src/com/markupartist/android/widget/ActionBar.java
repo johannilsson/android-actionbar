@@ -19,9 +19,6 @@ package com.markupartist.android.widget;
 import java.util.LinkedList;
 
 import com.markupartist.android.widget.actionbar.R;
-import com.markupartist.android.widget.actionbar.R.id;
-import com.markupartist.android.widget.actionbar.R.layout;
-import com.markupartist.android.widget.actionbar.R.string;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -115,7 +112,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     /**
      * Adds a list of {@link Action}s.
-     * @param actionList
+     * @param actionList the actions to add
      */
     public void addActions(ActionList actionList) {
         int actions = actionList.size();
@@ -136,6 +133,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     /**
      * Adds a new {@link Action} at the specified index.
      * @param action the action to add
+     * @param index the position at which to add the action
      */
     public void addAction(Action action, int index) {
         mActionsView.addView(inflateAction(action), index);
