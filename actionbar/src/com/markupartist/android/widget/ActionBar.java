@@ -71,7 +71,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
     }
 
-    public void setHomeAction(IntentAction action) {
+    public void setHomeAction(Action action) {
         mHomeBtn.setOnClickListener(this);
         mHomeBtn.setTag(action);
         mHomeBtn.setImageResource(action.getDrawable());
