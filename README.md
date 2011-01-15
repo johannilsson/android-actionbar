@@ -12,13 +12,18 @@ The action bar widget is an [Library Project](http://developer.android.com/guide
 
     <com.markupartist.android.widget.ActionBar
 	    android:id="@+id/actionbar"
+	    app:title="@string/some_title"
 	    style="@style/ActionBar"
         />
+
+The use of `app:title` is optional, it's also possible to assign the title using the `setTitle` programmatically on the `ActionBar`. To be able to use the more convenient `app:title` the application namespace must be included in the same manner as the android namespace is. Please refer to the layout other.xml in the example project for a full example. Again, note that it's the application namespace and *not* the actionbar namespace that must be referred like `xmlns:app="http://schemas.android.com/apk/res/**you.application.package.here**"`
 
 ### In your activity
 
     ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-    actionBar.setTitle("Other");
+    // You can also assign the title programmatically by passing a
+    // CharSequence or resource id.
+    //actionBar.setTitle(R.string.some_title);
     actionBar.setHomeAction(new IntentAction(this, HomeActivity.createIntent(this), R.drawable.ic_title_home_default));
     actionBar.addAction(new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default));
     actionBar.addAction(new ToastAction());

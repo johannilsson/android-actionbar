@@ -23,6 +23,7 @@ import com.markupartist.android.widget.actionbar.R;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,18 +49,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     public ActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        /*
-        for (int i = 0; i < attrs.getAttributeCount(); i++) {
-            Log.d(TAG, "value: " + attrs.getAttributeValue(i)
-                    + ", name: " + attrs.getAttributeName(i));
-            if ("title".equals(attrs.getAttributeName(i))) {
-                setTitle(attrs.getAttributeValue(i));
-            }
-        }
-        */
-        
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        
+
         mBarView = (RelativeLayout) mInflater.inflate(R.layout.actionbar, null);
         addView(mBarView);
 
@@ -69,6 +60,14 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
         mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
         mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
+
+        TypedArray a = context.obtainStyledAttributes(attrs,
+                R.styleable.ActionBar);
+        CharSequence title = a.getString(R.styleable.ActionBar_title);
+        if (title != null) {
+            setTitle(title);
+        }
+        a.recycle();
     }
 
     public void setHomeAction(Action action) {

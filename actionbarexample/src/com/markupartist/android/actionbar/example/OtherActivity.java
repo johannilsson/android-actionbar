@@ -17,7 +17,9 @@ public class OtherActivity extends Activity {
         setContentView(R.layout.other);
 
         ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-        actionBar.setTitle("Other");
+        // You can also assign the title programmatically by passing a
+        // CharSequence or resource id.
+        //actionBar.setTitle(R.string.some_title);
         actionBar.setHomeAction(new IntentAction(this, HomeActivity.createIntent(this), R.drawable.ic_title_home_default));
         actionBar.addAction(new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default));
         actionBar.addAction(new ExampleAction());
