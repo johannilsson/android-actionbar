@@ -16,7 +16,7 @@ The action bar widget is an [Library Project](http://developer.android.com/guide
 	    style="@style/ActionBar"
         />
 
-The use of `app:title` is optional, it's also possible to assign the title using the `setTitle` programmatically on the `ActionBar`. To be able to use the more convenient `app:title` the application namespace must be included in the same manner as the android namespace is. Please refer to the layout other.xml in the example project for a full example. Again, note that it's the application namespace and *not* the actionbar namespace that must be referred like `xmlns:app="http://schemas.android.com/apk/res/**you.application.package.here**"`
+The use of `app:title` is optional, it's also possible to assign the title using the `setTitle` programmatically on the `ActionBar`. To be able to use the more convenient `app:title` the application namespace must be included in the same manner as the android namespace is. Please refer to the layout other.xml in the example project for a full example. Again, note that it's the application namespace and *not* the actionbar namespace that must be referred like `xmlns:app="http://schemas.android.com/apk/res/you.application.package.here"`.
 
 ### In your activity
 
