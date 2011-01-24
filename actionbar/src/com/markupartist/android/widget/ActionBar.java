@@ -105,7 +105,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         final Object tag = view.getTag();
         if (tag instanceof Action) {
             final Action action = (Action) tag;
-            action.performAction();
+            action.performAction(view);
         }
     }
 
@@ -167,7 +167,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     public interface Action {
         public int getDrawable();
-        public void performAction();
+        public void performAction(View view);
     }
 
     public static abstract class AbstractAction implements Action {
@@ -194,7 +194,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         }
 
         @Override
-        public void performAction() {
+        public void performAction(View view) {
             try {
                mContext.startActivity(mIntent); 
             } catch (ActivityNotFoundException e) {

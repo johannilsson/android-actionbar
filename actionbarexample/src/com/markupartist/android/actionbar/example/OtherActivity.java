@@ -7,6 +7,7 @@ import com.markupartist.android.widget.ActionBar.IntentAction;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 public class OtherActivity extends Activity {
@@ -39,7 +40,7 @@ public class OtherActivity extends Activity {
         }
 
         @Override
-        public void performAction() {
+        public void performAction(View view) {
             Toast.makeText(OtherActivity.this,
                     "Example action", Toast.LENGTH_SHORT).show();
         }

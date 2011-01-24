@@ -40,7 +40,7 @@ ActionBar comes with a convenient IntentAction that makes it easy to create acti
         }
 
         @Override
-        public void performAction() {
+        public void performAction(View view) {
             Toast.makeText(OtherActivity.this,
                     "Example action", Toast.LENGTH_SHORT).show();
         }
