@@ -16,14 +16,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/screen"
     android:layout_width="fill_parent"
-    android:layout_height="45dip"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@drawable/actionbar_background"
     >
     <RelativeLayout
         android:id="@+id/actionbar_home"
         android:layout_width="wrap_content"
-        android:layout_height="45dip"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
@@ -40,7 +40,7 @@
         <RelativeLayout
             android:id="@+id/actionbar_home_bg"
             android:layout_width="wrap_content"
-            android:layout_height="45dip"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
@@ -50,10 +50,8 @@
             <!-- TODO: Make configurable. -->
             <ImageButton
                 android:id="@+id/actionbar_home_btn"
-                android:layout_width="45dip"
-                android:layout_height="45dip"
+                style="@style/ActionBarItem"
                 android:background="@drawable/actionbar_btn"
-                android:padding="5dip"
                 android:layout_marginRight="1px"
                 />
         </RelativeLayout>
@@ -61,9 +59,11 @@
         <LinearLayout
 	        android:id="@+id/actionbar_actions"
 	        android:layout_width="wrap_content"
-	        android:layout_height="45dip"
+	        android:layout_height="wrap_content"
 	        android:layout_alignParentRight="true"
 	        android:layout_centerVertical="true"
+            android:layout_margin="0dp"
+            android:padding="0dp"
 	        android:background="@color/actionbar_separator"
 	        >
 	    </LinearLayout>
