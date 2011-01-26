@@ -62,6 +62,11 @@ If you don't like the default colors that is defined in the [colors.xml](https:/
 
 The same can be done with the drawables, layouts and everything else that is located in the ActionBar project.
 
+## Contributions
+
+* ohhorob, https://github.com/ohhorob
+* denravonska, https://github.com/denravonska
+
 ## License
 Copyright (c) 2010 [Johan Nilsson](http://markupartist.com)
 
