@@ -66,6 +66,7 @@ The same can be done with the drawables, layouts and everything else that is loc
 
 * ohhorob, https://github.com/ohhorob
 * denravonska, https://github.com/denravonska
+* rpdillon, https://github.com/rpdillon/
 
 ## License
 Copyright (c) 2010 [Johan Nilsson](http://markupartist.com)
