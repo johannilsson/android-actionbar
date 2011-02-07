@@ -99,6 +99,16 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     public void setTitle(int resid) {
         mTitleView.setText(resid);
     }
+    
+    /**
+     * Set title click action
+     * @param context the activity context
+     * @param intent the intent to come to onClick
+     */
+    public void setTitleClickAction(Context context, Intent intent) {
+    	mTitleView.setOnClickListener(this);
+    	mTitleView.setTag(new IntentAction(context, intent, R.drawable.icon));
+    }
 
     @Override
     public void onClick(View view) {
