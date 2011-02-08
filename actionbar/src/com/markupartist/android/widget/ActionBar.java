@@ -37,202 +37,189 @@ import android.widget.Toast;
 
 public class ActionBar extends RelativeLayout implements OnClickListener {
 
-	private LayoutInflater mInflater;
-	private RelativeLayout mBarView;
-	private ImageView mLogoView;
-	// private View mHomeView;
-	private TextView mTitleView;
-	private LinearLayout mActionsView;
-	private ImageButton mHomeBtn;
-	private RelativeLayout mHomeLayout;
+    private LayoutInflater mInflater;
+    private RelativeLayout mBarView;
+    private ImageView mLogoView;
+    //private View mHomeView;
+    private TextView mTitleView;
+    private LinearLayout mActionsView;
+    private ImageButton mHomeBtn;
+    private RelativeLayout mHomeLayout;
 
-	public ActionBar(Context context, AttributeSet attrs) {
-		super(context, attrs);
+    public ActionBar(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
-		mInflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		mBarView = (RelativeLayout) mInflater.inflate(R.layout.actionbar, null);
-		addView(mBarView);
+        mBarView = (RelativeLayout) mInflater.inflate(R.layout.actionbar, null);
+        addView(mBarView);
 
-		mLogoView = (ImageView) mBarView.findViewById(R.id.actionbar_home_logo);
-		mHomeLayout = (RelativeLayout) mBarView
-				.findViewById(R.id.actionbar_home_bg);
-		mHomeBtn = (ImageButton) mBarView.findViewById(R.id.actionbar_home_btn);
+        mLogoView = (ImageView) mBarView.findViewById(R.id.actionbar_home_logo);
+        mHomeLayout = (RelativeLayout) mBarView.findViewById(R.id.actionbar_home_bg);
+        mHomeBtn = (ImageButton) mBarView.findViewById(R.id.actionbar_home_btn);
 
-		mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
-		mActionsView = (LinearLayout) mBarView
-				.findViewById(R.id.actionbar_actions);
+        mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
+        mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
 
-		TypedArray a = context.obtainStyledAttributes(attrs,
-				R.styleable.ActionBar);
-		CharSequence title = a.getString(R.styleable.ActionBar_title);
-		if (title != null) {
-			setTitle(title);
-		}
-		a.recycle();
-	}
+        TypedArray a = context.obtainStyledAttributes(attrs,
+                R.styleable.ActionBar);
+        CharSequence title = a.getString(R.styleable.ActionBar_title);
+        if (title != null) {
+            setTitle(title);
+        }
+        a.recycle();
+    }
 
-	public void setHomeAction(Action action) {
-		mHomeBtn.setOnClickListener(this);
-		mHomeBtn.setTag(action);
-		mHomeBtn.setImageResource(action.getDrawable());
-		mHomeLayout.setVisibility(View.VISIBLE);
-	}
+    public void setHomeAction(Action action) {
+        mHomeBtn.setOnClickListener(this);
+        mHomeBtn.setTag(action);
+        mHomeBtn.setImageResource(action.getDrawable());
+        mHomeLayout.setVisibility(View.VISIBLE);
+    }
 
-	/**
-	 * Shows the provided logo to the left in the action bar.
-	 * 
-	 * This is ment to be used instead of the setHomeAction and does not draw a
-	 * divider to the left of the provided logo.
-	 * 
-	 * @param resId
-	 *            The drawable resource id
-	 */
-	public void setHomeLogo(int resId) {
-		// TODO: Add possibility to add an IntentAction as well.
-		mLogoView.setImageResource(resId);
-		mLogoView.setVisibility(View.VISIBLE);
-		mHomeLayout.setVisibility(View.GONE);
-	}
+    /**
+     * Shows the provided logo to the left in the action bar.
+     * 
+     * This is ment to be used instead of the setHomeAction and does not draw
+     * a divider to the left of the provided logo.
+     * 
+     * @param resId The drawable resource id
+     */
+    public void setHomeLogo(int resId) {
+        // TODO: Add possibility to add an IntentAction as well.
+        mLogoView.setImageResource(resId);
+        mLogoView.setVisibility(View.VISIBLE);
+        mHomeLayout.setVisibility(View.GONE);
+    }
 
-	public void setTitle(CharSequence title) {
-		mTitleView.setText(title);
-	}
+    public void setTitle(CharSequence title) {
+        mTitleView.setText(title);
+    }
 
-	public void setTitle(int resid) {
-		mTitleView.setText(resid);
-	}
+    public void setTitle(int resid) {
+        mTitleView.setText(resid);
+    }
 
-	/**
-	 * Function to set a click listener for Title TextView
-	 * 
-	 * @param listener
-	 *            the onClickListener
-	 */
-	public void setOnTitleClickListener(OnClickListener listener) {
-		mTitleView.setOnClickListener(listener);
-	}
+    /**
+     * Function to set a click listener for Title TextView
+     * 
+     * @param listener
+     *            the onClickListener
+     */
+    public void setOnTitleClickListener(OnClickListener listener) {
+        mTitleView.setOnClickListener(listener);
+    }
 
-	@Override
-	public void onClick(View view) {
-		final Object tag = view.getTag();
-		if (tag instanceof Action) {
-			final Action action = (Action) tag;
-			action.performAction(view);
-		}
-	}
+    @Override
+    public void onClick(View view) {
+        final Object tag = view.getTag();
+        if (tag instanceof Action) {
+            final Action action = (Action) tag;
+            action.performAction(view);
+        }
+    }
 
-	/**
-	 * Adds a list of {@link Action}s.
-	 * 
-	 * @param actionList
-	 *            the actions to add
-	 */
-	public void addActions(ActionList actionList) {
-		int actions = actionList.size();
-		for (int i = 0; i < actions; i++) {
-			addAction(actionList.get(i));
-		}
-	}
+    /**
+     * Adds a list of {@link Action}s.
+     * @param actionList the actions to add
+     */
+    public void addActions(ActionList actionList) {
+        int actions = actionList.size();
+        for (int i = 0; i < actions; i++) {
+            addAction(actionList.get(i));
+        }
+    }
 
-	/**
-	 * Adds a new {@link Action}.
-	 * 
-	 * @param action
-	 *            the action to add
-	 */
-	public void addAction(Action action) {
-		final int index = mActionsView.getChildCount();
-		addAction(action, index);
-	}
+    /**
+     * Adds a new {@link Action}.
+     * @param action the action to add
+     */
+    public void addAction(Action action) {
+        final int index = mActionsView.getChildCount();
+        addAction(action, index);
+    }
 
-	/**
-	 * Adds a new {@link Action} at the specified index.
-	 * 
-	 * @param action
-	 *            the action to add
-	 * @param index
-	 *            the position at which to add the action
-	 */
-	public void addAction(Action action, int index) {
-		mActionsView.addView(inflateAction(action), index);
-	}
+    /**
+     * Adds a new {@link Action} at the specified index.
+     * @param action the action to add
+     * @param index the position at which to add the action
+     */
+    public void addAction(Action action, int index) {
+        mActionsView.addView(inflateAction(action), index);
+    }
 
-	/**
-	 * Inflates a {@link View} with the given {@link Action}.
-	 * 
-	 * @param action
-	 *            the action to inflate
-	 * @return a view
-	 */
-	private View inflateAction(Action action) {
-		View view = mInflater.inflate(R.layout.actionbar_item, mActionsView,
-				false);
+    /**
+     * Inflates a {@link View} with the given {@link Action}.
+     * @param action the action to inflate
+     * @return a view
+     */
+    private View inflateAction(Action action) {
+        View view = mInflater.inflate(R.layout.actionbar_item, mActionsView, false);
 
-		ImageButton labelView = (ImageButton) view
-				.findViewById(R.id.actionbar_item);
-		labelView.setImageResource(action.getDrawable());
+        ImageButton labelView =
+            (ImageButton) view.findViewById(R.id.actionbar_item);
+        labelView.setImageResource(action.getDrawable());
 
-		view.setTag(action);
-		view.setOnClickListener(this);
-		return view;
-	}
+        view.setTag(action);
+        view.setOnClickListener(this);
+        return view;
+    }
 
-	/**
-	 * A {@link LinkedList} that holds a list of {@link Action}s.
-	 */
-	public static class ActionList extends LinkedList<Action> {
-	}
+    /**
+     * A {@link LinkedList} that holds a list of {@link Action}s.
+     */
+    public static class ActionList extends LinkedList<Action> {
+    }
 
-	/**
-	 * Definition of an action that could be performed, along with a icon to
-	 * show.
-	 */
-	public interface Action {
-		public int getDrawable();
+    /**
+     * Definition of an action that could be performed, along with a icon to
+     * show.
+     */
+    public interface Action {
+        public int getDrawable();
+        public void performAction(View view);
+    }
 
-		public void performAction(View view);
-	}
+    public static abstract class AbstractAction implements Action {
+        final private int mDrawable;
 
-	public static abstract class AbstractAction implements Action {
-		final private int mDrawable;
+        public AbstractAction(int drawable) {
+            mDrawable = drawable;
+        }
 
-		public AbstractAction(int drawable) {
-			mDrawable = drawable;
-		}
+        @Override
+        public int getDrawable() {
+            return mDrawable;
+        }
+    }
 
-		@Override
-		public int getDrawable() {
-			return mDrawable;
-		}
-	}
+    public static class IntentAction extends AbstractAction {
+        private Context mContext;
+        private Intent mIntent;
 
-	public static class IntentAction extends AbstractAction {
-		private Context mContext;
-		private Intent mIntent;
+        public IntentAction(Context context, Intent intent, int drawable) {
+            super(drawable);
+            mContext = context;
+            mIntent = intent;
+        }
 
-		public IntentAction(Context context, Intent intent, int drawable) {
-			super(drawable);
-			mContext = context;
-			mIntent = intent;
-		}
+        @Override
+        public void performAction(View view) {
+            try {
+               mContext.startActivity(mIntent); 
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(mContext,
+                        mContext.getText(R.string.actionbar_activity_not_found),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
-		@Override
-		public void performAction(View view) {
-			try {
-				mContext.startActivity(mIntent);
-			} catch (ActivityNotFoundException e) {
-				Toast.makeText(
-						mContext,
-						mContext.getText(R.string.actionbar_activity_not_found),
-						Toast.LENGTH_SHORT).show();
-			}
-		}
-	}
-
-	/*
-	 * public static abstract class SearchAction extends AbstractAction { public
-	 * SearchAction() { super(R.drawable.actionbar_search); } }
-	 */
+    /*
+    public static abstract class SearchAction extends AbstractAction {
+        public SearchAction() {
+            super(R.drawable.actionbar_search);
+        }
+    }
+    */
 }
