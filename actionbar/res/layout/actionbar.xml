@@ -18,7 +18,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@drawable/actionbar_background"
+    android:background="#0000"
     >
     <RelativeLayout
         android:id="@+id/actionbar_home"
