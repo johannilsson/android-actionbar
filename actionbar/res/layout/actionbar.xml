@@ -16,14 +16,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/screen"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/actionbar_height"
     android:orientation="horizontal"
     android:background="#0000"
     >
     <RelativeLayout
         android:id="@+id/actionbar_home"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/actionbar_height"
         android:orientation="horizontal"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
@@ -32,7 +32,7 @@
         <ImageView
             android:id="@+id/actionbar_home_logo"
             android:layout_width="wrap_content"
-            android:layout_height="45dip"
+            android:layout_height="@dimen/actionbar_height"
             android:background="@drawable/actionbar_btn"
             android:padding="0dip"
             android:visibility="gone"
@@ -40,7 +40,7 @@
         <RelativeLayout
             android:id="@+id/actionbar_home_bg"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/actionbar_height"
             android:orientation="horizontal"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
@@ -50,16 +50,15 @@
             <!-- TODO: Make configurable. -->
             <ImageButton
                 android:id="@+id/actionbar_home_btn"
-                style="@style/ActionBarItem"
+                style="@style/ActionBarHomeItem"
                 android:background="@drawable/actionbar_btn"
-                android:layout_marginRight="1px"
                 />
         </RelativeLayout>
         
         <LinearLayout
 	        android:id="@+id/actionbar_actions"
 	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_height="@dimen/actionbar_height"
 	        android:layout_alignParentRight="true"
 	        android:layout_centerVertical="true"
             android:layout_margin="0dp"

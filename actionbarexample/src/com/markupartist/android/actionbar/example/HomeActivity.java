@@ -17,8 +17,8 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.main);
 
         ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+        //actionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.ic_title_home_demo));
         actionBar.setTitle("Home");
-        actionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.ic_title_home_demo));
         actionBar.addAction(new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default));
         actionBar.addAction(new IntentAction(this, new Intent(this, OtherActivity.class), R.drawable.ic_title_export_default));
     }
