@@ -103,8 +103,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     /**
      * Function to set a click listener for Title TextView
      * 
-     * @param listener
-     *            the onClickListener
+     * @param listener the onClickListener
      */
     public void setOnTitleClickListener(OnClickListener listener) {
         mTitleView.setOnClickListener(listener);
