@@ -28,6 +28,14 @@ The use of `app:title` is optional, it's also possible to assign the title using
     actionBar.addAction(new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default));
     actionBar.addAction(new ToastAction());
 
+### Set onClickListener on the title
+
+	actionBar.setOnTitleClickListener(new OnClickListener() {
+		public void onClick(View v) {
+			// Your code here
+		}
+	});
+	
 ### Custom actions
 
 ActionBar comes with a convenient IntentAction that makes it easy to create action out of Intents. To create custom actions simply implement the Action interface and build your own like the Toast example below.
@@ -66,7 +74,8 @@ The same can be done with the drawables, layouts and everything else that is loc
 
 * ohhorob, https://github.com/ohhorob
 * denravonska, https://github.com/denravonska
-* rpdillon, https://github.com/rpdillon/
+* rpdillon, https://github.com/rpdillon
+* RickardPettersson, https://github.com/RickardPettersson
 
 ## License
 Copyright (c) 2010 [Johan Nilsson](http://markupartist.com)
