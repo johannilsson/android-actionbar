@@ -2,9 +2,11 @@
 
 ![ActionBar for Android](http://markupartist.com/images/actionbar.png "ActionBar for Android")
 
-This projects aims to provide a reusable action bar widget. The action bar replaces the default title and is therefor located at the top of the screen. The action bar highlights important actions. The action bar pattern is well documented over at [Android Patterns](http://www.androidpatterns.com/uap_pattern/action-bar).
+This projects aims to provide a reusable action bar component. The action bar pattern is well documented at [Android Patterns](http://www.androidpatterns.com/uap_pattern/action-bar).
 
-The action bar widget is an [Library Project](http://developer.android.com/guide/developing/eclipse-adt.html#libraryProject). This means that there's no need to copy-paste resources into your own project, simply add the action bar widget as a reference to your existing project.
+The action bar component is an [Library Project](http://developer.android.com/guide/developing/eclipse-adt.html#libraryProject). This means that there's no need to copy-paste resources into your own project, simply add the action bar component as a reference to any project.
+
+Need icons to your action bar? Olof Brickarp has ported some of [Androids native icons to vector format](http://www.yay.se/2011/02/native-android-icons-in-vector-format/).
 
 ## Usage
 
@@ -72,12 +74,37 @@ If you don't like the default colors that is defined in the [colors.xml](https:/
 
 The same can be done with the drawables, layouts and everything else that is located in the ActionBar project.
 
+## Code Style Guidelines
+
+Contributers are recommended to follow the Android [Code Style Guidelines](http://source.android.com/source/code-style.html) with exception for line length that I try to hold to 80 columns where possible.
+
+In short that is;
+
+* Indentation: 4 spaces, no tabs.
+* Line length: 80 columns
+* Field names: Non-public, non-static fields start with m.
+* Braces: Opening braces don't go on their own line.
+* Acronyms are words: Treat acronyms as words in names, yielding XmlHttpRequest, getUrl(), etc.
+* Consistency: Look at what's around you!
+
+Have fun and remember we do this in our spare time so don't be to serious :)
+
 ## Contributions
 
 * ohhorob, https://github.com/ohhorob
 * denravonska, https://github.com/denravonska
 * rpdillon, https://github.com/rpdillon
 * RickardPettersson, https://github.com/RickardPettersson
+
+### Want to contribute?
+
+GitHub has some great articles on [how to get started with Git and GitHub](http://help.github.com/) and how to [fork a project](http://help.github.com/forking/).
+
+Contributers are recommended to fork the app on GitHub (but don't have too). Create a feature branch, push the branch to git hub, press Pull Request and write a simple explanation.
+
+One fix per commit. If say a a commit closes the open issue 12. Just add `closes #12` in your commit message to close that issue automagically.
+
+All code that is contributed must be compliant with [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 ## License
 Copyright (c) 2010 [Johan Nilsson](http://markupartist.com)
