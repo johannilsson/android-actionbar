@@ -74,21 +74,6 @@ If you don't like the default colors that is defined in the [colors.xml](https:/
 
 The same can be done with the drawables, layouts and everything else that is located in the ActionBar project.
 
-## Code Style Guidelines
-
-Contributers are recommended to follow the Android [Code Style Guidelines](http://source.android.com/source/code-style.html) with exception for line length that I try to hold to 80 columns where possible.
-
-In short that is;
-
-* Indentation: 4 spaces, no tabs.
-* Line length: 80 columns
-* Field names: Non-public, non-static fields start with m.
-* Braces: Opening braces don't go on their own line.
-* Acronyms are words: Treat acronyms as words in names, yielding XmlHttpRequest, getUrl(), etc.
-* Consistency: Look at what's around you!
-
-Have fun and remember we do this in our spare time so don't be to serious :)
-
 ## Contributions
 
 * ohhorob, https://github.com/ohhorob
@@ -105,6 +90,21 @@ Contributers are recommended to fork the app on GitHub (but don't have too). Cre
 One fix per commit. If say a a commit closes the open issue 12. Just add `closes #12` in your commit message to close that issue automagically.
 
 All code that is contributed must be compliant with [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+
+## Code Style Guidelines
+
+Contributers are recommended to follow the Android [Code Style Guidelines](http://source.android.com/source/code-style.html) with exception for line length that I try to hold to 80 columns where possible.
+
+In short that is;
+
+* Indentation: 4 spaces, no tabs.
+* Line length: 80 columns
+* Field names: Non-public, non-static fields start with m.
+* Braces: Opening braces don't go on their own line.
+* Acronyms are words: Treat acronyms as words in names, yielding XmlHttpRequest, getUrl(), etc.
+* Consistency: Look at what's around you!
+
+Have fun and remember we do this in our spare time so don't be to serious :)
 
 ## License
 Copyright (c) 2010 [Johan Nilsson](http://markupartist.com)
