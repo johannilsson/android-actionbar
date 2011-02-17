@@ -26,19 +26,19 @@ public class HomeActivity extends Activity {
         
         Button startProgress = (Button) findViewById(R.id.start_progress);
         startProgress.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				actionBar.setProgressVisibile(true);
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                actionBar.setProgressVisibile(true);
+            }
+        });
         
         Button stopProgress = (Button) findViewById(R.id.stop_progress);
         stopProgress.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				actionBar.setProgressVisibile(false);
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                actionBar.setProgressVisibile(false);
+            }
+        });
     }
 
     public static Intent createIntent(Context context) {
