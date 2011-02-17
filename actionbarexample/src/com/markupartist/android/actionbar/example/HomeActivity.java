@@ -1,13 +1,15 @@
 package com.markupartist.android.actionbar.example;
 
 import com.markupartist.android.widget.ActionBar;
-import com.markupartist.android.widget.ActionBar.AbstractAction;
 import com.markupartist.android.widget.ActionBar.IntentAction;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class HomeActivity extends Activity {
     /** Called when the activity is first created. */
@@ -16,11 +18,27 @@ public class HomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+        final ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
         //actionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.ic_title_home_demo));
         actionBar.setTitle("Home");
         actionBar.addAction(new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default));
         actionBar.addAction(new IntentAction(this, new Intent(this, OtherActivity.class), R.drawable.ic_title_export_default));
+        
+        Button startProgress = (Button) findViewById(R.id.start_progress);
+        startProgress.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setProgressVisibile(true);
+			}
+		});
+        
+        Button stopProgress = (Button) findViewById(R.id.stop_progress);
+        stopProgress.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setProgressVisibile(false);
+			}
+		});
     }
 
     public static Intent createIntent(Context context) {
