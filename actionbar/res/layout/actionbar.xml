@@ -63,26 +63,43 @@
             android:layout_margin="0dp"
             android:padding="0dp"
 	        android:background="@color/actionbar_separator"
-	        >
-	    </LinearLayout>
-	        
-	    <com.markupartist.android.widget.ScrollingTextView
-	        android:id="@+id/actionbar_title"
-	        android:layout_width="wrap_content"
+	        />
+	    
+	    <RelativeLayout
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_toRightOf="@id/actionbar_home_bg"
 	        android:layout_toLeftOf="@id/actionbar_actions"
 	        android:layout_alignWithParentIfMissing="true"
-	        android:layout_centerVertical="true"
-	        android:paddingLeft="10dip"
-	        android:paddingRight="10dip"
-	        android:textSize="16dip"
-	        android:textStyle="bold"
-	        android:textColor="@color/actionbar_title"
-	        android:lines="1"
-	        android:scrollHorizontally="true"
-	        android:ellipsize="marquee"
-	        android:marqueeRepeatLimit="marquee_forever"
-	        />
+		    android:layout_centerVertical="true"
+		    >
+		    <ProgressBar
+		    	android:id="@+id/actionbar_progress"
+		    	android:layout_width="wrap_content"
+		    	android:layout_height="wrap_content"
+		        android:layout_alignParentRight="true"
+		    	android:layout_centerVertical="true"
+		    	android:paddingRight="5dip"
+		    	android:indeterminateOnly="true"
+		    	android:visibility="gone"
+		    	style="?android:attr/progressBarStyleSmall"
+		        />
+		    <com.markupartist.android.widget.ScrollingTextView
+		        android:id="@+id/actionbar_title"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentLeft="true"
+		        android:layout_toLeftOf="@id/actionbar_progress"
+		        android:paddingLeft="10dip"
+		        android:paddingRight="10dip"
+		        android:textSize="16dip"
+		        android:textStyle="bold"
+		        android:textColor="@color/actionbar_title"
+		        android:lines="1"
+		        android:scrollHorizontally="true"
+		        android:ellipsize="marquee"
+		        android:marqueeRepeatLimit="marquee_forever"
+		        />
+	    </RelativeLayout> 
     </RelativeLayout>
 </RelativeLayout>

@@ -31,6 +31,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     private LinearLayout mActionsView;
     private ImageButton mHomeBtn;
     private RelativeLayout mHomeLayout;
+    private ProgressBar mProgress;
 
     public ActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -60,6 +62,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
         mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
         mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
+        
+        mProgress = (ProgressBar) mBarView.findViewById(R.id.actionbar_progress);
 
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.ActionBar);
@@ -98,6 +102,10 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
     public void setTitle(int resid) {
         mTitleView.setText(resid);
+    }
+    
+    public void setProgressVisibile(boolean isVisible) {
+    	mProgress.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     /**
