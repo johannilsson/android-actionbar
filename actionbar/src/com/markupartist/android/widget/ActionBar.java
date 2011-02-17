@@ -105,7 +105,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     }
     
     public void setProgressVisibile(boolean isVisible) {
-    	mProgress.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mProgress.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     /**
