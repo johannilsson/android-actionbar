@@ -28,7 +28,7 @@ public class HomeActivity extends Activity {
         startProgress.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setProgressVisibile(true);
+                actionBar.setProgressBarVisibility(View.VISIBLE);
             }
         });
         
@@ -36,7 +36,7 @@ public class HomeActivity extends Activity {
         stopProgress.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setProgressVisibile(false);
+                actionBar.setProgressBarVisibility(View.GONE);
             }
         });
     }

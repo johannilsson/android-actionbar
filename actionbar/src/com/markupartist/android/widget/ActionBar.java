@@ -103,9 +103,25 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     public void setTitle(int resid) {
         mTitleView.setText(resid);
     }
-    
-    public void setProgressVisibile(boolean isVisible) {
-        mProgress.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+
+    /**
+     * Set the enabled state of the progress bar.
+     * 
+     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE},
+     *   or {@link View#GONE}.
+     */
+    public void setProgressBarVisibility(int visibility) {
+        mProgress.setVisibility(visibility);
+    }
+
+    /**
+     * Returns the visibility status for the progress bar.
+     * 
+     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE},
+     *   or {@link View#GONE}.
+     */
+    public int getProgressBarVisibility() {
+        return mProgress.getVisibility();
     }
 
     /**
