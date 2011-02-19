@@ -80,6 +80,7 @@ The same can be done with the drawables, layouts and everything else that is loc
 * denravonska, https://github.com/denravonska
 * rpdillon, https://github.com/rpdillon
 * RickardPettersson, https://github.com/RickardPettersson
+* Jake Wharton, <https://github.com/JakeWharton>
 
 ### Want to contribute?
 
