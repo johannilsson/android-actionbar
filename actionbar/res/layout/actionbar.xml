@@ -79,10 +79,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:paddingRight="5dip"
+                android:paddingRight="7dip"
                 android:indeterminateOnly="true"
                 android:visibility="gone"
-                style="?android:attr/progressBarStyleSmall"
+                style="@style/ActionBarProgressBar"
                 />
             <com.markupartist.android.widget.ScrollingTextView
                 android:id="@+id/actionbar_title"

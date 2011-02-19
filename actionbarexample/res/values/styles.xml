@@ -14,4 +14,12 @@
         <item name="android:layout_margin">0px</item>
     </style>
      -->
+
+    <!--
+    Example of how to change the style of the progress bar.
+    -->
+    <!--
+    <style name="ActionBarProgressBar" parent="@android:style/Widget.ProgressBar.Small.Inverse">
+    </style>
+     -->
 </resources>
