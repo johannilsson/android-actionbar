@@ -74,6 +74,10 @@ If you don't like the default colors that is defined in the [colors.xml](https:/
 
 The same can be done with the drawables, layouts and everything else that is located in the ActionBar project.
 
+## Is it stable?
+
+Yes it is, but there's no guarantees. The api however is still not stable so please check all commits since the last pull. It might also be an good idea to depend on your own fork instead of this component directly. Eventually there will be more controlled releases but until then.
+
 ## Contributions
 
 * ohhorob, <https://github.com/ohhorob>
