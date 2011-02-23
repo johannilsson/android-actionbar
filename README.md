@@ -109,7 +109,7 @@ In short that is;
 * Acronyms are words: Treat acronyms as words in names, yielding XmlHttpRequest, getUrl(), etc.
 * Consistency: Look at what's around you!
 
-Have fun and remember we do this in our spare time so don't be to serious :)
+Have fun and remember we do this in our spare time so don't be too serious :)
 
 ## License
 Copyright (c) 2010 [Johan Nilsson](http://markupartist.com)
