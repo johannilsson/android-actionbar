@@ -63,7 +63,7 @@ To handle on clicks on the title pass a `android.view.View.OnClickListener` to t
 
 Since the ActionBar is an Libary Project all resources will be merged to the project that referencing the ActionBar. The values in the main project will always be used before the default values of the ActionBar.
 
-If you don't like the default colors that is defined in the [colors.xml](https://github.com/johannilsson/android-actionbar/blob/master/actionbar/res/values/colors.xml) file simply override the default values in the main projects colors.xml file. To create a blue ActionBar create a colors.xml file that looks something like the one below. Note that we don't override the values for actionbar_background_item_pressed_start and ctionbar_background_item_pressed_end since we decided to stick with the default values.
+If you don't like the default colors that is defined in the [colors.xml](https://github.com/johannilsson/android-actionbar/blob/master/actionbar/res/values/colors.xml) file simply override the default values in the main projects colors.xml file. To create a blue ActionBar create a colors.xml file that looks something like the one below. Note that we don't override the values for actionbar_background_item_pressed_start and actionbar_background_item_pressed_end since we decided to stick with the default values.
 
     <?xml version="1.0" encoding="utf-8"?>
     <resources>
