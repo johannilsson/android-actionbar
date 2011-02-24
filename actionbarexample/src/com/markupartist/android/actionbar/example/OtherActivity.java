@@ -22,6 +22,7 @@ public class OtherActivity extends Activity {
         // CharSequence or resource id.
         //actionBar.setTitle(R.string.some_title);
         actionBar.setHomeAction(new IntentAction(this, HomeActivity.createIntent(this), R.drawable.ic_title_home_default));
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.addAction(new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default));
         actionBar.addAction(new ExampleAction());
     }
