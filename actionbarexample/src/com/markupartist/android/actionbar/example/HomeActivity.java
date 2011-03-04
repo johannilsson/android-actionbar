@@ -39,6 +39,16 @@ public class HomeActivity extends Activity {
                 actionBar.setProgressBarVisibility(View.GONE);
             }
         });
+
+        Button removeActions = (Button) findViewById(R.id.remove_actions);
+        removeActions.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionBar.removeAllActions();
+            }
+        });
+
+
     }
 
     public static Intent createIntent(Context context) {

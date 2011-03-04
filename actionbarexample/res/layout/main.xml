@@ -28,5 +28,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Stop Progress" />
+        <Button
+                android:id="@+id/remove_actions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clear actionbar" />
     </LinearLayout>
 </LinearLayout>
