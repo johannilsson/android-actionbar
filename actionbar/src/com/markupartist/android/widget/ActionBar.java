@@ -181,7 +181,6 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mActionsView.addView(inflateAction(action), index);
     }
 
-
     /**
      * Removes all action views from this action bar
      */
@@ -189,6 +188,38 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mActionsView.removeAllViews();
     }
 
+    /**
+     * Remove a action from the action bar.
+     * @param index position of action to remove
+     */
+    public void removeActionAt(int index) {
+        mActionsView.removeViewAt(index);
+    }
+
+    /**
+     * Remove a action from the action bar.
+     * @param action The action to remove
+     */
+    public void removeAction(Action action) {
+        int childCount = mActionsView.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = mActionsView.getChildAt(i);
+            if (view != null) {
+                final Object tag = view.getTag();
+                if (tag instanceof Action && tag.equals(action)) {
+                    mActionsView.removeView(view);
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the number of actions currently registered with the action bar.
+     * @return action count
+     */
+    public int getActionCount() {
+        return mActionsView.getChildCount();
+    }
 
     /**
      * Inflates a {@link View} with the given {@link Action}.
