@@ -34,6 +34,7 @@
             android:layout_height="@dimen/actionbar_height"
             android:background="@drawable/actionbar_btn"
             android:padding="0dip"
+            style="@style/ActionBarHomeLogo"
             android:visibility="gone"
             />
         <RelativeLayout
