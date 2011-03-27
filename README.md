@@ -86,6 +86,7 @@ Yes it is, but there's no guarantees. The api however is still not stable so ple
 * RickardPettersson, <https://github.com/RickardPettersson>
 * Jake Wharton, <https://github.com/JakeWharton>
 * Jesse Vincent, <http://blog.fsck.com>
+* Gyuri Grell, <http://gyurigrell.com>
 
 ### Want to contribute?
 
