@@ -63,7 +63,7 @@ To handle on clicks on the title pass a `android.view.View.OnClickListener` to t
 
 Since the ActionBar is an Libary Project all resources will be merged to the project that referencing the ActionBar. The values in the main project will always be used before the default values of the ActionBar.
 
-If you don't like the default colors that is defined in the [colors.xml](https://github.com/johannilsson/android-actionbar/blob/master/actionbar/res/values/colors.xml) file simply override the default values in the main projects colors.xml file. To create a blue ActionBar create a colors.xml file that looks something like the one below. Note that we don't override the values for actionbar_background_item_pressed_start and actionbar_background_item_pressed_end since we decided to stick with the default values.
+If you don't like the default colors that is defined in the [colors.xml](https://github.com/johannilsson/android-actionbar/blob/master/actionbar/res/values/colors.xml) file simply override the default values in the main projects colors.xml file. To create a blue ActionBar create a colors.xml file that looks something like the one below. Note that we don't override the values for `actionbar_background_item_pressed_start` and `actionbar_background_item_pressed_end` since we decided to stick with the default values.
 
     <?xml version="1.0" encoding="utf-8"?>
     <resources>
@@ -78,7 +78,13 @@ The same can be done with the drawables, layouts and everything else that is loc
 
 Yes it is, but there's no guarantees. The api however is still not stable so please check all commits since the last pull. It might also be an good idea to depend on your own fork instead of this component directly. Eventually there will be more controlled releases but until then.
 
+## Are you using this widget?
+
+Want to be featured in a gallery of apps using it? Then please send a screenshot and details of your app to Johan Nilsson.
+
 ## Contributions
+
+This widget wouldn't be the same without the excellent contributions by;
 
 * ohhorob, <https://github.com/ohhorob>
 * denravonska, <https://github.com/denravonska>
