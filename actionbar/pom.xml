@@ -5,7 +5,7 @@
     <groupId>com.markupartist.android</groupId>
     <name>android-actionbar</name>
     <packaging>apklib</packaging>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
