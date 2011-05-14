@@ -67,7 +67,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     // * @see #setDisplayOptions(int)
     // * @see #setDisplayOptions(int, int)
     // */
-    //public static final int DISPLAY_SHOW_CUSTOM = 0x10;// = android.app.ActionBar.DISPLAY_SHOW_CUSTOM
+    //TODO public static final int DISPLAY_SHOW_CUSTOM = 0x10;// = android.app.ActionBar.DISPLAY_SHOW_CUSTOM
     
     /**
      * Show 'home' elements in this action bar, leaving more space for other
@@ -112,7 +112,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     private final TextView mTitleView;
     
     ///** Custom view. */
-    //private View mCustomView;
+    //TODO private View mCustomView;
     
     private final LinearLayout mActionsView;
     
@@ -228,7 +228,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     // * @see #setDisplayOptions(int)
     // * @see #setDisplayOptions(int, int)
     // */
-    //public void setDisplayShowCustomEnabled(boolean showCustom) {
+    //TODO public void setDisplayShowCustomEnabled(boolean showCustom) {
     //  setDisplayOption(DISPLAY_SHOW_CUSTOM, showCustom);
     //  reloadFromDisplayOptions();
     //}
@@ -355,7 +355,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         }
         
         mTitleView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_TITLE) ? View.VISIBLE : View.GONE);
-        //mCustomView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_CUSTOM) ? View.VISIBLE : View.GONE);
+        //TODO mCustomView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_CUSTOM) ? View.VISIBLE : View.GONE);
     }
 
     /**
