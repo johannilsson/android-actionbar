@@ -375,6 +375,14 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
             mHomeIconImage.setImageResource(action.getDrawable());
         }
     }
+    
+    /**
+     * @deprecated See {@link #setDisplayShowHomeEnabled(boolean)}.
+     */
+    @Deprecated
+    public void clearHomeAction() {
+    	this.setDisplayShowHomeEnabled(false);
+    }
 
     /**
      * <p>Set a logo for the action bar.</p>
