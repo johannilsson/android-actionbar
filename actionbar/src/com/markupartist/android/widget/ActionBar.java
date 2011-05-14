@@ -47,58 +47,58 @@ import android.widget.Toast;
  * @author Johan Nilsson <http://markupartist.com>
  */
 public class ActionBar extends RelativeLayout implements OnClickListener {
-	/**
-	 * Display the 'home' element such that it appears as an 'up' affordance.
-	 * e.g. show an arrow to the left indicating the action that will be
-	 * taken. Set this flag if selecting the 'home' button in the action bar
-	 * to return up by a single level in your UI rather than back to the top
-	 * level or front page.
+    /**
+     * Display the 'home' element such that it appears as an 'up' affordance.
+     * e.g. show an arrow to the left indicating the action that will be
+     * taken. Set this flag if selecting the 'home' button in the action bar
+     * to return up by a single level in your UI rather than back to the top
+     * level or front page.
      * 
      * @see #setDisplayHomeAsUpEnabled(boolean)
      * @see #setDisplayOptions(int)
      * @see #setDisplayOptions(int, int)
-	 */
-	public static final int DISPLAY_HOME_AS_UP = 0x04;// = android.app.ActionBar.DISPLAY_HOME_AS_UP
-	
-	///**
-	// * Show the custom view if one has been set.
-	// * 
+     */
+    public static final int DISPLAY_HOME_AS_UP = 0x04;// = android.app.ActionBar.DISPLAY_HOME_AS_UP
+    
+    ///**
+    // * Show the custom view if one has been set.
+    // * 
     // * @see #setDisplayShowCustomEnabled(boolean)
     // * @see #setDisplayOptions(int)
     // * @see #setDisplayOptions(int, int)
-	// */
-	//public static final int DISPLAY_SHOW_CUSTOM = 0x10;// = android.app.ActionBar.DISPLAY_SHOW_CUSTOM
-	
-	/**
-	 * Show 'home' elements in this action bar, leaving more space for other
-	 * navigation elements. This includes logo and icon.
-	 * 
+    // */
+    //public static final int DISPLAY_SHOW_CUSTOM = 0x10;// = android.app.ActionBar.DISPLAY_SHOW_CUSTOM
+    
+    /**
+     * Show 'home' elements in this action bar, leaving more space for other
+     * navigation elements. This includes logo and icon.
+     * 
      * @see #setDisplayShowHomeEnabled(boolean)
      * @see #setDisplayOptions(int)
      * @see #setDisplayOptions(int, int)
-	 */
-	public static final int DISPLAY_SHOW_HOME = 0x02;// = android.app.ActionBar.DISPLAY_SHOW_HOME
-	
-	/**
-	 * Show the activity title.
-	 * 
+     */
+    public static final int DISPLAY_SHOW_HOME = 0x02;// = android.app.ActionBar.DISPLAY_SHOW_HOME
+    
+    /**
+     * Show the activity title.
+     * 
      * @see #setDisplayShowTitleEnabled(boolean)
      * @see #setDisplayOptions(int)
      * @see #setDisplayOptions(int, int)
-	 */
-	public static final int DISPLAY_SHOW_TITLE = 0x08;// = android.app.ActionBar.DISPLAY_SHOW_TITLE
-	
-	/**
-	 * Use logo instead of icon if available. This flag will cause appropriate
-	 * navigation modes to use a wider logo in place of the standard icon.
-	 * 
+     */
+    public static final int DISPLAY_SHOW_TITLE = 0x08;// = android.app.ActionBar.DISPLAY_SHOW_TITLE
+    
+    /**
+     * Use logo instead of icon if available. This flag will cause appropriate
+     * navigation modes to use a wider logo in place of the standard icon.
+     * 
      * @see #setDisplayUseLogoEnabled(boolean)
      * @see #setDisplayOptions(int)
      * @see #setDisplayOptions(int, int)
-	 */
-	public static final int DISPLAY_USE_LOGO = 0x01;// = android.app.ActionBar.DISPLAY_USE_LOGO
+     */
+    public static final int DISPLAY_USE_LOGO = 0x01;// = android.app.ActionBar.DISPLAY_USE_LOGO
 
-	
+    
     private final LayoutInflater mInflater;
     
     private final RelativeLayout mBarView;
@@ -161,37 +161,37 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         if (title != null) {
             setTitle(title);
         } else if (context instanceof Activity) {
-        	//Try to load title from the Activity's manifest entry
-        	try {
-        		ComponentName componentName = ((Activity) context).getComponentName();
-				setTitle(context.getPackageManager().getActivityInfo(componentName, 0).labelRes);
-			} catch (NameNotFoundException e) {
-				//Can't load and/or find title. Eat exception.
-			}
+            //Try to load title from the Activity's manifest entry
+            try {
+                ComponentName componentName = ((Activity) context).getComponentName();
+                setTitle(context.getPackageManager().getActivityInfo(componentName, 0).labelRes);
+            } catch (NameNotFoundException e) {
+                //Can't load and/or find title. Eat exception.
+            }
         }
         
         a.recycle();
         
         //Must be >= gingerbread to look for a logo
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) && (context instanceof Activity)) {
-        	Drawable logo = null;
-    		Activity activity = (Activity) context;
-    		
-    		//Try to load the logo from the Activity's manifest entry
-        	try {
-        		context.getPackageManager().getActivityLogo(activity.getComponentName());
-        	} catch (NameNotFoundException e) {
-        		//Can't load and/or find logo. Eat exception.
-        	}
-        	
-        	if (logo == null) {
-        		//Try to load the logo from the Application's manifest entry
-            	logo = activity.getApplicationInfo().loadLogo(context.getPackageManager());
-        	}
-        	
-        	if (logo != null) {
-        		this.setHomeLogo(logo);
-        	}
+            Drawable logo = null;
+            Activity activity = (Activity) context;
+            
+            //Try to load the logo from the Activity's manifest entry
+            try {
+                context.getPackageManager().getActivityLogo(activity.getComponentName());
+            } catch (NameNotFoundException e) {
+                //Can't load and/or find logo. Eat exception.
+            }
+            
+            if (logo == null) {
+                //Try to load the logo from the Application's manifest entry
+                logo = activity.getApplicationInfo().loadLogo(context.getPackageManager());
+            }
+            
+            if (logo != null) {
+                this.setHomeLogo(logo);
+            }
         }
         
         //Show the home icon and title by default
@@ -212,8 +212,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #setDisplayOptions(int, int)
      */
     public void setDisplayHomeAsUpEnabled(boolean showHomeAsUp) {
-    	setDisplayOption(DISPLAY_HOME_AS_UP, showHomeAsUp);
-    	reloadFromDisplayOptions();
+        setDisplayOption(DISPLAY_HOME_AS_UP, showHomeAsUp);
+        reloadFromDisplayOptions();
     }
     
     ///**
@@ -229,8 +229,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     // * @see #setDisplayOptions(int, int)
     // */
     //public void setDisplayShowCustomEnabled(boolean showCustom) {
-    //	setDisplayOption(DISPLAY_SHOW_CUSTOM, showCustom);
-    //	reloadFromDisplayOptions();
+    //  setDisplayOption(DISPLAY_SHOW_CUSTOM, showCustom);
+    //  reloadFromDisplayOptions();
     //}
     
     /**
@@ -243,8 +243,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #setDisplayOptions(int, int)
      */
     public void setDisplayShowHomeEnabled(boolean showHome) {
-    	setDisplayOption(DISPLAY_SHOW_HOME, showHome);
-    	reloadFromDisplayOptions();
+        setDisplayOption(DISPLAY_SHOW_HOME, showHome);
+        reloadFromDisplayOptions();
     }
     
     /**
@@ -256,8 +256,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #setDisplayOptions(int, int)
      */
     public void setDisplayShowTitleEnabled(boolean showTitle) {
-    	setDisplayOption(DISPLAY_SHOW_TITLE, showTitle);
-    	reloadFromDisplayOptions();
+        setDisplayOption(DISPLAY_SHOW_TITLE, showTitle);
+        reloadFromDisplayOptions();
     }
     
     /**
@@ -271,8 +271,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #setDisplayOptions(int, int)
      */
     public void setDisplayUseLogoEnabled(boolean useLogo) {
-    	setDisplayOption(DISPLAY_USE_LOGO, useLogo);
-    	reloadFromDisplayOptions();
+        setDisplayOption(DISPLAY_USE_LOGO, useLogo);
+        reloadFromDisplayOptions();
     }
     
     /**
@@ -281,7 +281,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @return The current set of display options.
      */
     public int getDisplayOptions() {
-    	return mFlags;
+        return mFlags;
     }
     
     /**
@@ -293,8 +293,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * constants defined in ActionBar.
      */
     public void setDisplayOptions(int options) {
-    	mFlags = options;
-    	reloadFromDisplayOptions();
+        mFlags = options;
+        reloadFromDisplayOptions();
     }
     
     /**
@@ -313,8 +313,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @param mask A bit mask declaring which display options should be changed
      */
     public void setDisplayOptions(int options, int mask) {
-    	mFlags = (mFlags & ~mask) | options;
-    	reloadFromDisplayOptions();
+        mFlags = (mFlags & ~mask) | options;
+        reloadFromDisplayOptions();
     }
     
     /**
@@ -325,8 +325,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @param enabled New value.
      */
     private void setDisplayOption(int flag, boolean enabled) {
-    	//Remove current value and OR with new value
-    	mFlags = (mFlags & ~flag) | (enabled ? flag : 0);
+        //Remove current value and OR with new value
+        mFlags = (mFlags & ~flag) | (enabled ? flag : 0);
     }
     
     /**
@@ -336,26 +336,26 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @return Value.
      */
     private boolean getDisplayOptionValue(int flag) {
-    	return (mFlags & flag) != 0;
+        return (mFlags & flag) != 0;
     }
     
     /**
      * Reload the current action bar state from its flags.
      */
     private void reloadFromDisplayOptions() {
-    	if (getDisplayOptionValue(DISPLAY_SHOW_HOME)) {
-    		mHomeUpIndicator.setVisibility(getDisplayOptionValue(DISPLAY_HOME_AS_UP) ? View.VISIBLE : View.GONE);
-    		final boolean usingLogo = getDisplayOptionValue(DISPLAY_USE_LOGO);
-    		mHomeLogo.setVisibility(usingLogo ? View.VISIBLE : View.GONE);
-    		mHomeIcon.setVisibility(usingLogo ? View.GONE : View.VISIBLE);
-    	} else {
-    		mHomeUpIndicator.setVisibility(View.GONE);
-    		mHomeLogo.setVisibility(View.GONE);
-    		mHomeIcon.setVisibility(View.GONE);
-    	}
-    	
-    	mTitleView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_TITLE) ? View.VISIBLE : View.GONE);
-    	//mCustomView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_CUSTOM) ? View.VISIBLE : View.GONE);
+        if (getDisplayOptionValue(DISPLAY_SHOW_HOME)) {
+            mHomeUpIndicator.setVisibility(getDisplayOptionValue(DISPLAY_HOME_AS_UP) ? View.VISIBLE : View.GONE);
+            final boolean usingLogo = getDisplayOptionValue(DISPLAY_USE_LOGO);
+            mHomeLogo.setVisibility(usingLogo ? View.VISIBLE : View.GONE);
+            mHomeIcon.setVisibility(usingLogo ? View.GONE : View.VISIBLE);
+        } else {
+            mHomeUpIndicator.setVisibility(View.GONE);
+            mHomeLogo.setVisibility(View.GONE);
+            mHomeIcon.setVisibility(View.GONE);
+        }
+        
+        mTitleView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_TITLE) ? View.VISIBLE : View.GONE);
+        //mCustomView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_CUSTOM) ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -364,15 +364,15 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @param action Action to set.
      */
     public void setHomeAction(Action action) {
-    	mHomeLogo.setOnClickListener(this);
-    	mHomeLogo.setTag(action);
-    	
+        mHomeLogo.setOnClickListener(this);
+        mHomeLogo.setTag(action);
+        
         mHomeIconImage.setOnClickListener(this);
         mHomeIconImage.setTag(action);
         if (action.getIcon() != null) {
-        	mHomeIconImage.setImageDrawable(action.getIcon());
+            mHomeIconImage.setImageDrawable(action.getIcon());
         } else if (action.getDrawable() != NO_ID) {
-        	mHomeIconImage.setImageResource(action.getDrawable());
+            mHomeIconImage.setImageResource(action.getDrawable());
         }
     }
 
@@ -413,7 +413,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #setHomeLogo(int)
      */
     public void setHomeLogo(Drawable logo) {
-    	mHomeLogo.setImageDrawable(logo);
+        mHomeLogo.setImageDrawable(logo);
     }
 
 
@@ -451,11 +451,11 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #setDisplayShowTitleEnabled(boolean)
      */
     public CharSequence getTitle() {
-    	if (getDisplayOptionValue(DISPLAY_SHOW_TITLE)) {
-    		return this.mTitleView.getText();
-    	} else {
-    		return null;
-    	}
+        if (getDisplayOptionValue(DISPLAY_SHOW_TITLE)) {
+            return this.mTitleView.getText();
+        } else {
+            return null;
+        }
     }
     
     /**
@@ -465,7 +465,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #isShowing()
      */
     public void show() {
-    	this.setVisibility(View.VISIBLE);
+        this.setVisibility(View.VISIBLE);
     }
     
     /**
@@ -475,7 +475,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #isShowing()
      */
     public void hide() {
-    	this.setVisibility(View.GONE);
+        this.setVisibility(View.GONE);
     }
     
     /**
@@ -488,7 +488,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #show()
      */
     public boolean isShowing() {
-    	return this.getVisibility() == View.GONE;
+        return this.getVisibility() == View.GONE;
     }
 
     /**
@@ -626,9 +626,9 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
             (ImageButton) view.findViewById(R.id.actionbar_item);
         
         if (action.getIcon() != null) {
-        	labelView.setImageDrawable(action.getIcon());
+            labelView.setImageDrawable(action.getIcon());
         } else if (action.getDrawable() != NO_ID) {
-        	labelView.setImageResource(action.getDrawable());
+            labelView.setImageResource(action.getDrawable());
         }
 
         view.setTag(action);
@@ -640,10 +640,10 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * Definition of an action that can be performed along with a icon to show.
      */
     public interface Action {
-    	/**
-    	 * @deprecated Use {@link #getIcon()}.
-    	 */
-    	@Deprecated
+        /**
+         * @deprecated Use {@link #getIcon()}.
+         */
+        @Deprecated
         public int getDrawable();
         
         /**
@@ -678,8 +678,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
          * @param icon
          */
         public AbstractAction(Drawable icon) {
-        	mDrawable = NO_ID;
-        	mIcon = icon;
+            mDrawable = NO_ID;
+            mIcon = icon;
         }
 
         @Override
@@ -689,7 +689,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         
         @Override
         public Drawable getIcon() {
-        	return mIcon;
+            return mIcon;
         }
     }
 
@@ -698,13 +698,13 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         private final Intent mIntent;
 
         public IntentAction(Context context, Intent intent, int drawable) {
-        	//Load drawable from context and call sibling constructor
-        	this(context, intent, context.getResources().getDrawable(drawable));
+            //Load drawable from context and call sibling constructor
+            this(context, intent, context.getResources().getDrawable(drawable));
         }
         public IntentAction(Context context, Intent intent, Drawable icon) {
-        	super(icon);
-        	mContext = context;
-        	mIntent = intent;
+            super(icon);
+            mContext = context;
+            mIntent = intent;
         }
 
         @Override
@@ -712,9 +712,9 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
             try {
                 mContext.startActivity(mIntent); 
             } catch (ActivityNotFoundException e) {
-                 Toast.makeText(mContext,
-                         mContext.getText(R.string.actionbar_activity_not_found),
-                         Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,
+                        mContext.getText(R.string.actionbar_activity_not_found),
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }
