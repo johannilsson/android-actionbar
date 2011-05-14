@@ -137,6 +137,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     private int mFlags;
 
     
+    
     public ActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -199,6 +200,135 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         setDisplayOption(DISPLAY_SHOW_TITLE, true);
         reloadFromDisplayOptions();
     }
+    
+    
+    
+    // ------------------------------------------------------------------------
+    // PRIVATE HELPER METHODS
+    // ------------------------------------------------------------------------
+    
+    /**
+     * Helper to set a flag to a new value. This will also update the action
+     * bar accordingly to reflect the current state of the flags.
+     * 
+     * @param flag Flag to update.
+     * @param enabled New value.
+     */
+    private void setDisplayOption(int flag, boolean enabled) {
+        //Remove current value and OR with new value
+        mFlags = (mFlags & ~flag) | (enabled ? flag : 0);
+    }
+    
+    /**
+     * Helper to get a boolean value for a specific flag.
+     * 
+     * @param flag Target flag.
+     * @return Value.
+     */
+    private boolean getDisplayOptionValue(int flag) {
+        return (mFlags & flag) != 0;
+    }
+    
+    /**
+     * Reload the current action bar state from its flags.
+     */
+    private void reloadFromDisplayOptions() {
+        if (getDisplayOptionValue(DISPLAY_SHOW_HOME)) {
+            mHomeUpIndicator.setVisibility(getDisplayOptionValue(DISPLAY_HOME_AS_UP) ? View.VISIBLE : View.GONE);
+            final boolean usingLogo = getDisplayOptionValue(DISPLAY_USE_LOGO);
+            mHomeLogo.setVisibility(usingLogo ? View.VISIBLE : View.GONE);
+            mHomeIcon.setVisibility(usingLogo ? View.GONE : View.VISIBLE);
+        } else {
+            mHomeUpIndicator.setVisibility(View.GONE);
+            mHomeLogo.setVisibility(View.GONE);
+            mHomeIcon.setVisibility(View.GONE);
+        }
+        
+        mTitleView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_TITLE) ? View.VISIBLE : View.GONE);
+        //TODO mCustomView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_CUSTOM) ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Inflates a {@link View} with the given {@link Action}.
+     * 
+     * @param action The action to inflate
+     * @return View
+     */
+    private View inflateAction(Action action) {
+        View view = mInflater.inflate(R.layout.actionbar_item, mActionsView, false);
+
+        ImageButton labelView =
+            (ImageButton) view.findViewById(R.id.actionbar_item);
+        
+        if (action.getIcon() != null) {
+            labelView.setImageDrawable(action.getIcon());
+        } else if (action.getDrawable() != NO_ID) {
+            labelView.setImageResource(action.getDrawable());
+        }
+
+        view.setTag(action);
+        view.setOnClickListener(this);
+        return view;
+    }
+    
+    // ------------------------------------------------------------------------
+    // NATIVE ACTION BAR METHODS
+    // ------------------------------------------------------------------------
+    
+    /**
+     * Get the current display options.
+     * 
+     * @return The current set of display options.
+     */
+    public int getDisplayOptions() {
+        return mFlags;
+    }
+    
+    //Implemented by superclass:
+    //public int getHeight() {}
+    
+    /**
+     * Returns the current ActionBar title in standard mode.
+     * 
+     * @return The current ActionBar title or null.
+     * 
+     * @see #setTitle(CharSequence)
+     * @see #setTitle(int)
+     * @see #setDisplayShowTitleEnabled(boolean)
+     */
+    public CharSequence getTitle() {
+        if (getDisplayOptionValue(DISPLAY_SHOW_TITLE)) {
+            return this.mTitleView.getText();
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * Hide the action bar if it is currently showing.
+     * 
+     * @see #show()
+     * @see #isShowing()
+     */
+    public void hide() {
+        this.setVisibility(View.GONE);
+    }
+    
+    /**
+     * Get current visibility of the action bar.
+     * 
+     * @return {@code true} if the ActionBar is showing, {@code false}
+     * otherwise.
+     * 
+     * @see #hide()
+     * @see #show()
+     */
+    public boolean isShowing() {
+        return this.getVisibility() == View.GONE;
+    }
+    
+    //Implemented by superclass:
+    //public void setBackgroundDrawable(Drawable d) {}
 
     /**
      * Set whether home should be displayed as an "up" affordance. Set this to
@@ -213,6 +343,39 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     public void setDisplayHomeAsUpEnabled(boolean showHomeAsUp) {
         setDisplayOption(DISPLAY_HOME_AS_UP, showHomeAsUp);
+        reloadFromDisplayOptions();
+    }
+    
+    /**
+     * <p>Set selected display options. Only the options specified by mask will
+     * be changed. To change all display option bits at once, see
+     * {@link #setDisplayOptions(int)}.</p>
+     * 
+     * <p>Example: {@code setDisplayOptions(0, DISPLAY_SHOW_HOME)} will disable
+     * the {@link #DISPLAY_SHOW_HOME} option.
+     * {@code setDisplayOptions(DISPLAY_SHOW_HOME, DISPLAY_SHOW_HOME | DISPLAY_USE_LOGO)}
+     * will enable {@link #DISPLAY_SHOW_HOME} and disable
+     * {@link #DISPLAY_USE_LOGO}.</p>
+     * 
+     * @param options A combination of the bits defined by the DISPLAY_
+     * constants defined in ActionBar.
+     * @param mask A bit mask declaring which display options should be changed
+     */
+    public void setDisplayOptions(int options, int mask) {
+        mFlags = (mFlags & ~mask) | options;
+        reloadFromDisplayOptions();
+    }
+    
+    /**
+     * Set display options. This changes all display option bits at once. To
+     * change a limited subset of display options, see
+     * {@link #setDisplayOptions(int, int)}.
+     * 
+     * @param options A combination of the bits defined by the DISPLAY_
+     * constants defined in ActionBar.
+     */
+    public void setDisplayOptions(int options) {
+        mFlags = options;
         reloadFromDisplayOptions();
     }
     
@@ -274,89 +437,45 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         setDisplayOption(DISPLAY_USE_LOGO, useLogo);
         reloadFromDisplayOptions();
     }
-    
+
+
     /**
-     * Get the current display options.
+     * Set the action bar's title.
      * 
-     * @return The current set of display options.
+     * @param title Title to set.
+     * 
+     * @see #setTitle(int)
+     * @see #getTitle()
      */
-    public int getDisplayOptions() {
-        return mFlags;
+    public void setTitle(CharSequence title) {
+        mTitleView.setText(title);
+    }
+
+    /**
+     * Set the action bar's title.
+     * 
+     * @param resid Resource ID of title string to set.
+     * 
+     * @see #setTitle(CharSequence)
+     * @see #getTitle()
+     */
+    public void setTitle(int resid) {
+        mTitleView.setText(resid);
     }
     
     /**
-     * Set display options. This changes all display option bits at once. To
-     * change a limited subset of display options, see
-     * {@link #setDisplayOptions(int, int)}.
+     * Show the action bar if it is not currently showing.
      * 
-     * @param options A combination of the bits defined by the DISPLAY_
-     * constants defined in ActionBar.
+     * @see #hide()
+     * @see #isShowing()
      */
-    public void setDisplayOptions(int options) {
-        mFlags = options;
-        reloadFromDisplayOptions();
+    public void show() {
+        this.setVisibility(View.VISIBLE);
     }
     
-    /**
-     * <p>Set selected display options. Only the options specified by mask will
-     * be changed. To change all display option bits at once, see
-     * {@link #setDisplayOptions(int)}.</p>
-     * 
-     * <p>Example: {@code setDisplayOptions(0, DISPLAY_SHOW_HOME)} will disable
-     * the {@link #DISPLAY_SHOW_HOME} option.
-     * {@code setDisplayOptions(DISPLAY_SHOW_HOME, DISPLAY_SHOW_HOME | DISPLAY_USE_LOGO)}
-     * will enable {@link #DISPLAY_SHOW_HOME} and disable
-     * {@link #DISPLAY_USE_LOGO}.</p>
-     * 
-     * @param options A combination of the bits defined by the DISPLAY_
-     * constants defined in ActionBar.
-     * @param mask A bit mask declaring which display options should be changed
-     */
-    public void setDisplayOptions(int options, int mask) {
-        mFlags = (mFlags & ~mask) | options;
-        reloadFromDisplayOptions();
-    }
-    
-    /**
-     * Helper to set a flag to a new value. This will also update the action
-     * bar accordingly to reflect the current state of the flags.
-     * 
-     * @param flag Flag to update.
-     * @param enabled New value.
-     */
-    private void setDisplayOption(int flag, boolean enabled) {
-        //Remove current value and OR with new value
-        mFlags = (mFlags & ~flag) | (enabled ? flag : 0);
-    }
-    
-    /**
-     * Helper to get a boolean value for a specific flag.
-     * 
-     * @param flag Target flag.
-     * @return Value.
-     */
-    private boolean getDisplayOptionValue(int flag) {
-        return (mFlags & flag) != 0;
-    }
-    
-    /**
-     * Reload the current action bar state from its flags.
-     */
-    private void reloadFromDisplayOptions() {
-        if (getDisplayOptionValue(DISPLAY_SHOW_HOME)) {
-            mHomeUpIndicator.setVisibility(getDisplayOptionValue(DISPLAY_HOME_AS_UP) ? View.VISIBLE : View.GONE);
-            final boolean usingLogo = getDisplayOptionValue(DISPLAY_USE_LOGO);
-            mHomeLogo.setVisibility(usingLogo ? View.VISIBLE : View.GONE);
-            mHomeIcon.setVisibility(usingLogo ? View.GONE : View.VISIBLE);
-        } else {
-            mHomeUpIndicator.setVisibility(View.GONE);
-            mHomeLogo.setVisibility(View.GONE);
-            mHomeIcon.setVisibility(View.GONE);
-        }
-        
-        mTitleView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_TITLE) ? View.VISIBLE : View.GONE);
-        //TODO mCustomView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_CUSTOM) ? View.VISIBLE : View.GONE);
-    }
+    // ------------------------------------------------------------------------
+    // LEGACY AND DEPRECATED METHODS
+    // ------------------------------------------------------------------------
 
     /**
      * Set the special action for home icon and logo.
@@ -422,81 +541,6 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     public void setHomeLogo(Drawable logo) {
         mHomeLogo.setImageDrawable(logo);
-    }
-
-
-    /**
-     * Set the action bar's title.
-     * 
-     * @param title Title to set.
-     * 
-     * @see #setTitle(int)
-     * @see #getTitle()
-     */
-    public void setTitle(CharSequence title) {
-        mTitleView.setText(title);
-    }
-
-    /**
-     * Set the action bar's title.
-     * 
-     * @param resid Resource ID of title string to set.
-     * 
-     * @see #setTitle(CharSequence)
-     * @see #getTitle()
-     */
-    public void setTitle(int resid) {
-        mTitleView.setText(resid);
-    }
-    
-    /**
-     * Returns the current ActionBar title in standard mode.
-     * 
-     * @return The current ActionBar title or null.
-     * 
-     * @see #setTitle(CharSequence)
-     * @see #setTitle(int)
-     * @see #setDisplayShowTitleEnabled(boolean)
-     */
-    public CharSequence getTitle() {
-        if (getDisplayOptionValue(DISPLAY_SHOW_TITLE)) {
-            return this.mTitleView.getText();
-        } else {
-            return null;
-        }
-    }
-    
-    /**
-     * Show the action bar if it is not currently showing.
-     * 
-     * @see #hide()
-     * @see #isShowing()
-     */
-    public void show() {
-        this.setVisibility(View.VISIBLE);
-    }
-    
-    /**
-     * Hide the action bar if it is currently showing.
-     * 
-     * @see #show()
-     * @see #isShowing()
-     */
-    public void hide() {
-        this.setVisibility(View.GONE);
-    }
-    
-    /**
-     * Get current visibility of the action bar.
-     * 
-     * @return {@code true} if the ActionBar is showing, {@code false}
-     * otherwise.
-     * 
-     * @see #hide()
-     * @see #show()
-     */
-    public boolean isShowing() {
-        return this.getVisibility() == View.GONE;
     }
 
     /**
@@ -621,28 +665,10 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     public int getActionCount() {
         return mActionsView.getChildCount();
     }
-
-    /**
-     * Inflates a {@link View} with the given {@link Action}.
-     * @param action the action to inflate
-     * @return a view
-     */
-    private View inflateAction(Action action) {
-        View view = mInflater.inflate(R.layout.actionbar_item, mActionsView, false);
-
-        ImageButton labelView =
-            (ImageButton) view.findViewById(R.id.actionbar_item);
-        
-        if (action.getIcon() != null) {
-            labelView.setImageDrawable(action.getIcon());
-        } else if (action.getDrawable() != NO_ID) {
-            labelView.setImageResource(action.getDrawable());
-        }
-
-        view.setTag(action);
-        view.setOnClickListener(this);
-        return view;
-    }
+    
+    // ------------------------------------------------------------------------
+    // HELPER INTERFACES AND HELPER CLASSES
+    // ------------------------------------------------------------------------
 
     /**
      * Definition of an action that can be performed along with a icon to show.
