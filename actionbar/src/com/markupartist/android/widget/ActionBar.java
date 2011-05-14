@@ -381,7 +381,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     @Deprecated
     public void clearHomeAction() {
-    	this.setDisplayShowHomeEnabled(false);
+        this.setDisplayShowHomeEnabled(false);
     }
 
     /**
