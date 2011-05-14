@@ -13,40 +13,107 @@
         android:layout_height="wrap_content"
         >
 	    <LinearLayout
-	        android:layout_width="match_parent"
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
+	        android:padding="15dip"
 	        android:layout_marginTop="20dip">
 	        <Button
 	            android:id="@+id/start_progress"
-	            android:layout_width="wrap_content"
+	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
+	            android:gravity="center"
 	            android:text="Start Progress" />
 	        <Button
 	            android:id="@+id/stop_progress"
-	            android:layout_width="wrap_content"
+	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
+	            android:gravity="center"
 	            android:text="Stop Progress" />
 	        <Button
 	            android:id="@+id/remove_actions"
-	            android:layout_width="wrap_content"
+	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
+	            android:gravity="center"
 	            android:text="Clear actionbar" />
 	        <Button
 	            android:id="@+id/add_action"
-	            android:layout_width="wrap_content"
+	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
+	            android:gravity="center"
 	            android:text="Add action" />
 	        <Button
 	            android:id="@+id/remove_action"
-	            android:layout_width="wrap_content"
+	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
+	            android:gravity="center"
 	            android:text="Remove action" />
 	        <Button
 	            android:id="@+id/remove_share_action"
-	            android:layout_width="wrap_content"
+	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
+	            android:gravity="center"
 	            android:text="Remove share action" />
+	        <Button
+	            android:id="@+id/navigation_standard"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:text="Standard navigation" />
+	        <Button
+	            android:id="@+id/navigation_list"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:text="List navigation" />
+	        <Button
+	            android:id="@+id/display_title_show"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:text="Show title" />
+	        <Button
+	            android:id="@+id/display_title_hide"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:text="Hide title" />
+	        <Button
+	            android:id="@+id/display_home_show"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:text="Show home" />
+	        <Button
+	            android:id="@+id/display_home_hide"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:text="Hide home" />
+	        <Button
+	            android:id="@+id/display_logo_show"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:text="Use logo" />
+	        <Button
+	            android:id="@+id/display_logo_hide"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:text="Do not use logo" />
+	        <Button
+	            android:id="@+id/display_home_as_up_show"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:text="Show home as up" />
+	        <Button
+	            android:id="@+id/display_home_as_up_hide"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:text="Hide home as up" />
 	    </LinearLayout>
     </ScrollView>
 </LinearLayout>

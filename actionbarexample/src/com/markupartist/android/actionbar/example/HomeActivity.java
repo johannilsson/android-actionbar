@@ -7,10 +7,13 @@ import com.markupartist.android.widget.ActionBar.IntentAction;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
 public class HomeActivity extends Activity {
@@ -22,7 +25,16 @@ public class HomeActivity extends Activity {
 
         final ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
         //actionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.ic_title_home_demo));
-        actionBar.setTitle("Home");
+        actionBar.setTitle("Android-ActionBar Example");
+        
+        ListAdapter listAdapter = ArrayAdapter.createFromResource(this, R.array.locations, android.R.layout.select_dialog_item);
+        actionBar.setListNavigationCallbacks(listAdapter, new ActionBar.OnNavigationListener() {
+			@Override
+			public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+				Toast.makeText(HomeActivity.this, "List navigation location changed.", Toast.LENGTH_SHORT).show();
+				return true;
+			}
+		});
 
         final Action shareAction = new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default);
         actionBar.addAction(shareAction);
@@ -63,8 +75,8 @@ public class HomeActivity extends Activity {
                         Toast.makeText(HomeActivity.this, "Added action.", Toast.LENGTH_SHORT).show();
                     }
                     @Override
-                    public int getDrawable() {
-                        return R.drawable.ic_title_share_default;
+                    public Drawable getIcon() {
+                        return getResources().getDrawable(R.drawable.ic_title_share_default);
                     }
                 });
             }
@@ -87,6 +99,86 @@ public class HomeActivity extends Activity {
                 actionBar.removeAction(shareAction);
             }
         });
+        
+        Button standardNavigation = (Button) findViewById(R.id.navigation_standard);
+        standardNavigation.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			}
+		});
+        
+        Button listNavigation = (Button) findViewById(R.id.navigation_list);
+        listNavigation.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+			}
+		});
+        
+        Button showTitle = (Button) findViewById(R.id.display_title_show);
+        showTitle.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setDisplayShowTitleEnabled(true);
+			}
+		});
+        
+        Button hideTitle = (Button) findViewById(R.id.display_title_hide);
+        hideTitle.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setDisplayShowTitleEnabled(false);
+			}
+		});
+        
+        Button showHome = (Button) findViewById(R.id.display_home_show);
+        showHome.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setDisplayShowHomeEnabled(true);
+			}
+		});
+        
+        Button hideHome = (Button) findViewById(R.id.display_home_hide);
+        hideHome.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setDisplayShowHomeEnabled(false);
+			}
+		});
+        
+        Button useLogo = (Button) findViewById(R.id.display_logo_show);
+        useLogo.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setDisplayUseLogoEnabled(true);
+			}
+		});
+        
+        Button doNoUseLogo = (Button) findViewById(R.id.display_logo_hide);
+        doNoUseLogo.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setDisplayUseLogoEnabled(false);
+			}
+		});
+        
+        Button showHomeAsUp = (Button) findViewById(R.id.display_home_as_up_show);
+        showHomeAsUp.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setDisplayHomeAsUpEnabled(true);
+			}
+		});
+        
+        Button hideHomeAsUp = (Button) findViewById(R.id.display_home_as_up_hide);
+        hideHomeAsUp.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				actionBar.setDisplayHomeAsUpEnabled(false);
+			}
+		});
     }
 
     public static Intent createIntent(Context context) {

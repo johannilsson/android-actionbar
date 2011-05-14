@@ -21,9 +21,11 @@ import java.util.List;
 import com.markupartist.android.widget.actionbar.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.TypedArray;
@@ -32,10 +34,10 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,7 +48,26 @@ import android.widget.Toast;
  * 
  * @author Johan Nilsson <http://markupartist.com>
  */
-public class ActionBar extends RelativeLayout implements OnClickListener {
+public class ActionBar extends RelativeLayout implements View.OnClickListener {
+    
+    /**
+     * Listener interface for ActionBar navigation events.
+     */
+    public static interface OnNavigationListener {
+        /**
+         * This method is called whenever a navigation item in your action bar
+         * is selected.
+         * 
+         * @param itemPosition Position of the item clicked.
+         * @param itemId ID of the item clicked.
+         * @return {@code true} if the event was handled, {@code false}
+         * otherwise.
+         */
+        boolean onNavigationItemSelected(int itemPosition, long itemId);
+    }
+    
+    
+    
     /**
      * Display the 'home' element such that it appears as an 'up' affordance.
      * e.g. show an arrow to the left indicating the action that will be
@@ -58,7 +79,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #setDisplayOptions(int)
      * @see #setDisplayOptions(int, int)
      */
-    public static final int DISPLAY_HOME_AS_UP = 0x04;// = android.app.ActionBar.DISPLAY_HOME_AS_UP
+    public static final int DISPLAY_HOME_AS_UP = 0x04;// = android.app.ActionBar.DISPLAY_HOME_AS_UP;
     
     ///**
     // * Show the custom view if one has been set.
@@ -67,7 +88,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     // * @see #setDisplayOptions(int)
     // * @see #setDisplayOptions(int, int)
     // */
-    //TODO public static final int DISPLAY_SHOW_CUSTOM = 0x10;// = android.app.ActionBar.DISPLAY_SHOW_CUSTOM
+    //TODO public static final int DISPLAY_SHOW_CUSTOM = 0x10;// = android.app.ActionBar.DISPLAY_SHOW_CUSTOM;
     
     /**
      * Show 'home' elements in this action bar, leaving more space for other
@@ -77,7 +98,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #setDisplayOptions(int)
      * @see #setDisplayOptions(int, int)
      */
-    public static final int DISPLAY_SHOW_HOME = 0x02;// = android.app.ActionBar.DISPLAY_SHOW_HOME
+    public static final int DISPLAY_SHOW_HOME = 0x02;// = android.app.ActionBar.DISPLAY_SHOW_HOME;
     
     /**
      * Show the activity title.
@@ -86,7 +107,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #setDisplayOptions(int)
      * @see #setDisplayOptions(int, int)
      */
-    public static final int DISPLAY_SHOW_TITLE = 0x08;// = android.app.ActionBar.DISPLAY_SHOW_TITLE
+    public static final int DISPLAY_SHOW_TITLE = 0x08;// = android.app.ActionBar.DISPLAY_SHOW_TITLE;
     
     /**
      * Use logo instead of icon if available. This flag will cause appropriate
@@ -96,7 +117,28 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #setDisplayOptions(int)
      * @see #setDisplayOptions(int, int)
      */
-    public static final int DISPLAY_USE_LOGO = 0x01;// = android.app.ActionBar.DISPLAY_USE_LOGO
+    public static final int DISPLAY_USE_LOGO = 0x01;// = android.app.ActionBar.DISPLAY_USE_LOGO;
+    
+    /**
+     * List navigation mode. Instead of static title text this mode presents a
+     * list menu for navigation within the activity. e.g. this might be
+     * presented to the user as a dropdown list.
+     */
+    public static final int NAVIGATION_MODE_STANDARD = 0x0;// = android.app.ActionBar.NAVIGATION_MODE_STANDARD;
+    
+    /**
+     * Standard navigation mode. Consists of either a logo or icon and title
+     * text with an optional subtitle. Clicking any of these elements will
+     * dispatch onOptionsItemSelected to the host Activity with a MenuItem with
+     * item ID android.R.id.home.
+     */
+    public static final int NAVIGATION_MODE_LIST = 0x1;// = android.app.ActionBar.NAVIGATION_MODE_LIST;
+    
+    ///**
+    // * Tab navigation mode. Instead of static title text this mode presents a
+    // * series of tabs for navigation within the activity.
+    // */
+    //public static final int NAVIGATION_MODE_TABS = 0x2;// = android.app.ActionBar.NAVIGATION_MODE_TABS;
 
     
     private final LayoutInflater mInflater;
@@ -110,6 +152,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     
     /** Title view. */
     private final TextView mTitleView;
+    
+    /** List view. */
+    private final TextView mListView;
+    
+    /** List dropdown indicator. */
+    private final View mListIndicator;
     
     ///** Custom view. */
     //TODO private View mCustomView;
@@ -132,9 +180,56 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #setDisplayOptions(int)
      * @see #setDisplayOptions(int, int)
      * @see #setDisplayOption(int, boolean)
-     * @see #reloadFromDisplayOptions()
+     * @see #reloadDisplay()
      */
     private int mFlags;
+    
+    /**
+     * Current navigation mode
+     * 
+     * @see #getNavigationMode()
+     * @see #setNavigationMode(int)
+     */
+    private int mNavigationMode;
+    
+    /**
+     * Current selected index of either the list or tab navigation.
+     */
+    private int mSelectedIndex;
+    
+    /**
+     * Adapter for the list navigation contents.
+     */
+    private ListAdapter mListAdapter;
+    
+    /**
+     * Callback for the list navigation event.
+     */
+    private OnNavigationListener mListCallback;
+    
+    /**
+     * Listener for list title click. Will display a list dialog of all the
+     * options provided and execute the specified {@link OnNavigationListener}.
+     */
+    private final View.OnClickListener mListClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            new AlertDialog.Builder(getContext())
+                    .setAdapter(mListAdapter, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int position) {
+                            //Execute call back, if exists
+                            if (mListCallback != null) {
+                                mListCallback.onNavigationItemSelected(position, mListAdapter.getItemId(position));
+                            }
+                            
+                            //Update list view in action bar
+                            mListView.setText(mListAdapter.getItem(position).toString());
+                        }
+                    })
+                    .show();
+        }
+    };
 
     
     
@@ -152,6 +247,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mHomeUpIndicator = mBarView.findViewById(R.id.actionbar_home_is_back);
 
         mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
+        
+        mListView = (TextView) mBarView.findViewById(R.id.actionbar_list);
+        mListView.setOnClickListener(mListClicked);
+        
+        mListIndicator = mBarView.findViewById(R.id.actionbar_list_indicator);
+        
         mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
         
         mProgress = (ProgressBar) mBarView.findViewById(R.id.actionbar_progress);
@@ -180,7 +281,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
             
             //Try to load the logo from the Activity's manifest entry
             try {
-                context.getPackageManager().getActivityLogo(activity.getComponentName());
+                logo = context.getPackageManager().getActivityLogo(activity.getComponentName());
             } catch (NameNotFoundException e) {
                 //Can't load and/or find logo. Eat exception.
             }
@@ -191,14 +292,16 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
             }
             
             if (logo != null) {
-                this.setHomeLogo(logo);
+                setHomeLogo(logo);
             }
         }
         
         //Show the home icon and title by default
-        setDisplayOption(DISPLAY_SHOW_HOME, true);
         setDisplayOption(DISPLAY_SHOW_TITLE, true);
-        reloadFromDisplayOptions();
+        reloadDisplay();
+        
+        //Use standard navigation by default
+        setNavigationMode(NAVIGATION_MODE_STANDARD);
     }
     
     
@@ -230,9 +333,9 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     }
     
     /**
-     * Reload the current action bar state from its flags.
+     * Reload the current action bar display state.
      */
-    private void reloadFromDisplayOptions() {
+    private void reloadDisplay() {
         if (getDisplayOptionValue(DISPLAY_SHOW_HOME)) {
             mHomeUpIndicator.setVisibility(getDisplayOptionValue(DISPLAY_HOME_AS_UP) ? View.VISIBLE : View.GONE);
             final boolean usingLogo = getDisplayOptionValue(DISPLAY_USE_LOGO);
@@ -246,6 +349,24 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         
         mTitleView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_TITLE) ? View.VISIBLE : View.GONE);
         //TODO mCustomView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_CUSTOM) ? View.VISIBLE : View.GONE);
+    }
+    
+    /**
+     * Reload the current action bar navigation state.
+     */
+    private void reloadNavigation() {
+        boolean isList = mNavigationMode == NAVIGATION_MODE_LIST;
+        
+        if (isList) {
+            //Set the list view to the currently selected item
+            mListView.setText(mListAdapter.getItem(mSelectedIndex).toString());
+        }
+        
+        mListView.setVisibility(isList ? View.VISIBLE : View.GONE);
+        mListIndicator.setVisibility(isList ? View.VISIBLE : View.GONE);
+        
+        //Only hide title view if we are in list navigation or the show title flag is false
+        mTitleView.setVisibility(isList || !getDisplayOptionValue(DISPLAY_SHOW_TITLE) ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -287,6 +408,27 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     //Implemented by superclass:
     //public int getHeight() {}
     
+    public int getNavigationItemCount() {
+        if (mNavigationMode == NAVIGATION_MODE_LIST) {
+            return mListAdapter.getCount();
+        }
+        //if (this.mNavigationMode == NAVIGATION_MODE_TABS) {
+        //  //TODO
+        //}
+        return -1;
+    }
+    
+    public int getNavigationMode() {
+        return mNavigationMode;
+    }
+    
+    public int getSelectedNavigationIndex() {
+        if ((mNavigationMode == NAVIGATION_MODE_LIST)/* || (mNavigationMode == NAVIGATION_MODE_TABS*/) {
+            return mSelectedIndex;
+        }
+        return -1;
+    }
+    
     /**
      * Returns the current ActionBar title in standard mode.
      * 
@@ -298,7 +440,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     public CharSequence getTitle() {
         if (getDisplayOptionValue(DISPLAY_SHOW_TITLE)) {
-            return this.mTitleView.getText();
+            return mTitleView.getText();
         } else {
             return null;
         }
@@ -311,7 +453,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #isShowing()
      */
     public void hide() {
-        this.setVisibility(View.GONE);
+        setVisibility(View.GONE);
     }
     
     /**
@@ -324,7 +466,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #show()
      */
     public boolean isShowing() {
-        return this.getVisibility() == View.GONE;
+        return getVisibility() == View.GONE;
     }
     
     //Implemented by superclass:
@@ -343,7 +485,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     public void setDisplayHomeAsUpEnabled(boolean showHomeAsUp) {
         setDisplayOption(DISPLAY_HOME_AS_UP, showHomeAsUp);
-        reloadFromDisplayOptions();
+        reloadDisplay();
     }
     
     /**
@@ -363,7 +505,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     public void setDisplayOptions(int options, int mask) {
         mFlags = (mFlags & ~mask) | options;
-        reloadFromDisplayOptions();
+        reloadDisplay();
     }
     
     /**
@@ -376,7 +518,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     public void setDisplayOptions(int options) {
         mFlags = options;
-        reloadFromDisplayOptions();
+        reloadDisplay();
     }
     
     ///**
@@ -407,7 +549,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     public void setDisplayShowHomeEnabled(boolean showHome) {
         setDisplayOption(DISPLAY_SHOW_HOME, showHome);
-        reloadFromDisplayOptions();
+        reloadDisplay();
     }
     
     /**
@@ -420,7 +562,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     public void setDisplayShowTitleEnabled(boolean showTitle) {
         setDisplayOption(DISPLAY_SHOW_TITLE, showTitle);
-        reloadFromDisplayOptions();
+        reloadDisplay();
     }
     
     /**
@@ -435,9 +577,38 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     public void setDisplayUseLogoEnabled(boolean useLogo) {
         setDisplayOption(DISPLAY_USE_LOGO, useLogo);
-        reloadFromDisplayOptions();
+        reloadDisplay();
     }
-
+    
+    public void setListNavigationCallbacks(ListAdapter adapter, ActionBar.OnNavigationListener callback) {
+        //Reset selected item
+        mSelectedIndex = 0;
+        //Save adapter and callback
+        mListAdapter = adapter;
+        mListCallback = callback;
+        
+        reloadNavigation();
+    }
+    
+    public void setNavigationMode(int mode) {
+        if ((mode != NAVIGATION_MODE_STANDARD) && (mode != NAVIGATION_MODE_LIST)
+                /*TODO && (mode != NAVIGATION_MODE_TABS)*/) {
+            throw new IllegalArgumentException("Unknown navigation mode value " + Integer.toString(mode));
+        }
+        
+        if (mode != mNavigationMode) {
+            mNavigationMode = mode;
+            mSelectedIndex = (mode == NAVIGATION_MODE_STANDARD) ? -1 : 0;
+            reloadNavigation();
+        }
+    }
+    
+    public void setSelectedNavigationItem(int position) {
+        if ((mNavigationMode != NAVIGATION_MODE_STANDARD) && (position != mSelectedIndex)) {
+            mSelectedIndex = position;
+            reloadNavigation();
+        }
+    }
 
     /**
      * Set the action bar's title.
@@ -470,7 +641,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @see #isShowing()
      */
     public void show() {
-        this.setVisibility(View.VISIBLE);
+        setVisibility(View.VISIBLE);
     }
     
     // ------------------------------------------------------------------------
@@ -478,7 +649,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     // ------------------------------------------------------------------------
 
     /**
-     * Set the special action for home icon and logo.
+     * Set the special action for home icon and logo. This will automatically
+     * enable {@link #DISPLAY_SHOW_HOME}.
      * 
      * @param action Action to set.
      */
@@ -493,6 +665,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         } else if (action.getDrawable() != NO_ID) {
             mHomeIconImage.setImageResource(action.getDrawable());
         }
+        
+        setDisplayShowHomeEnabled(true);
     }
     
     /**
@@ -500,7 +674,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     @Deprecated
     public void clearHomeAction() {
-        this.setDisplayShowHomeEnabled(false);
+        setDisplayShowHomeEnabled(false);
     }
 
     /**
@@ -673,29 +847,31 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     /**
      * Definition of an action that can be performed along with a icon to show.
      */
-    public interface Action {
+    public static abstract class Action {
         /**
          * @deprecated Use {@link #getIcon()}.
          */
         @Deprecated
-        public int getDrawable();
+        public int getDrawable() {
+            return 0;
+        }
         
         /**
          * Get the icon of the action.
          * 
          * @return Drawable icon.
          */
-        public Drawable getIcon();
+        public abstract Drawable getIcon();
         
         /**
          * Callback when this action is clicked on.
          * 
          * @param view Action view.
          */
-        public void performAction(View view);
+        public abstract void performAction(View view);
     }
 
-    public static abstract class AbstractAction implements Action {
+    public static abstract class AbstractAction extends Action {
         private final int mDrawable;
         private final Drawable mIcon;
 
