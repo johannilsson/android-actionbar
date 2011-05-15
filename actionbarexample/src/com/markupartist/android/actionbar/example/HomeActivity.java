@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 public class HomeActivity extends Activity {
@@ -29,7 +29,7 @@ public class HomeActivity extends Activity {
         actionBar.setHomeLogo(R.drawable.logo);
         actionBar.setCustomView(R.layout.custom_view);
         
-        ListAdapter listAdapter = ArrayAdapter.createFromResource(this, R.array.locations, android.R.layout.select_dialog_item);
+        SpinnerAdapter listAdapter = ArrayAdapter.createFromResource(this, R.array.locations, R.layout.actionbar_title);
         actionBar.setListNavigationCallbacks(listAdapter, new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {

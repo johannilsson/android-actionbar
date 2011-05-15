@@ -21,7 +21,6 @@ import java.util.List;
 import com.markupartist.android.widget.actionbar.R;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -38,9 +37,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -166,7 +165,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     private final TextView mSubtitleView;
     
     /** List view. */
-    private final TextView mListView;
+    private final FrameLayout mListView;
     
     /** List dropdown indicator. */
     private final View mListIndicator;
@@ -212,7 +211,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     /**
      * Adapter for the list navigation contents.
      */
-    private ListAdapter mListAdapter;
+    private SpinnerAdapter mListAdapter;
     
     /**
      * Callback for the list navigation event.
@@ -227,7 +226,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             if (mListAdapter != null) {
-                new AlertDialog.Builder(getContext())
+                new ListNavigationDropdown.Builder(getContext())
                         .setAdapter(mListAdapter, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int position) {
@@ -236,10 +235,13 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
                                     mListCallback.onNavigationItemSelected(position, mListAdapter.getItemId(position));
                                 }
                                 
-                                //Update list view in action bar
-                                mListView.setText(mListAdapter.getItem(position).toString());
+                                if (position != mSelectedIndex) {
+                                    mSelectedIndex = position;
+                                    reloadDisplay();
+                                }
                             }
                         })
+                        .setParent(mListView)
                         .show();
             }
         }
@@ -263,7 +265,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
         mSubtitleView = (TextView) mBarView.findViewById(R.id.actionbar_subtitle);
         
-        mListView = (TextView) mBarView.findViewById(R.id.actionbar_list);
+        mListView = (FrameLayout) mBarView.findViewById(R.id.actionbar_list);
         mListView.setOnClickListener(mListClicked);
         
         mListIndicator = mBarView.findViewById(R.id.actionbar_list_indicator);
@@ -340,6 +342,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     private void reloadDisplay() {
         final boolean isList = mNavigationMode == NAVIGATION_MODE_LIST;
+        final boolean hasList = (mListAdapter != null) && (mListAdapter.getCount() > 0);
         final boolean showingTitle = getDisplayOptionValue(DISPLAY_SHOW_TITLE);
         final boolean showingCustom = getDisplayOptionValue(DISPLAY_SHOW_CUSTOM);
         final boolean usingLogo = getDisplayOptionValue(DISPLAY_USE_LOGO);
@@ -357,11 +360,16 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         
         //If we are a list, set the list view to the currently selected item
         if (isList) {
-            mListView.setText(mListAdapter.getItem(mSelectedIndex).toString());
+            View oldView = mListView.getChildAt(0);
+            mListView.removeAllViews();
+            if (hasList) {
+                mListView.addView(mListAdapter.getView(mSelectedIndex, oldView, mListView));
+            }
         }
         
-        mListView.setVisibility(isList ? View.VISIBLE : View.GONE);
-        mListIndicator.setVisibility(isList ? View.VISIBLE : View.GONE);
+        //Only show list if we are in list navigation and there are list items
+        mListView.setVisibility(isList && hasList ? View.VISIBLE : View.GONE);
+        mListIndicator.setVisibility(isList && hasList ? View.VISIBLE : View.GONE);
         
         //Show title view if we are not in list navigation, not showing custom
         //view, and the show title flag is true
@@ -693,9 +701,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * @param callback An OnNavigationListener that will receive events when
      * the user selects a navigation item.
      */
-    public void setListNavigationCallbacks(ListAdapter adapter, ActionBar.OnNavigationListener callback) {
-        //TODO Use SpinnerAdapter!
-        
+    public void setListNavigationCallbacks(SpinnerAdapter adapter, ActionBar.OnNavigationListener callback) {
         //Reset selected item
         mSelectedIndex = 0;
         //Save adapter and callback

@@ -131,23 +131,14 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:visibility="gone"
             />
-        <Button
+        <FrameLayout
             android:id="@+id/actionbar_list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@id/actionbar_progress"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dip"
-            android:paddingRight="10dip"
-            android:textSize="16dip"
-            android:textStyle="bold"
-            android:textColor="@color/actionbar_title"
-            android:lines="1"
-            android:scrollHorizontally="true"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
             android:background="@drawable/actionbar_btn"
+            android:focusable="true"
             android:visibility="gone"
             />
         <ImageView
