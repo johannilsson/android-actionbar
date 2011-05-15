@@ -482,7 +482,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * @see #setDisplayShowTitleEnabled(boolean)
      */
     public CharSequence getSubtitle() {
-        if (mNavigationMode == NAVIGATION_MODE_STANDARD) {
+        if ((mNavigationMode == NAVIGATION_MODE_STANDARD) && !mSubtitleView.getText().equals("")) {
             return mSubtitleView.getText();
         } else {
             return null;
