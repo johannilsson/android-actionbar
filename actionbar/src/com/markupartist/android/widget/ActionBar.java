@@ -410,6 +410,10 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     //Implemented by superclass:
     //public int getHeight() {}
     
+    /**
+     * Get the number of navigation items present in the current navigation
+     * mode.
+     */
     public int getNavigationItemCount() {
         if (mNavigationMode == NAVIGATION_MODE_LIST) {
             return mListAdapter.getCount();
@@ -417,13 +421,30 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         //if (this.mNavigationMode == NAVIGATION_MODE_TABS) {
         //  //TODO
         //}
-        return -1;
+        return 0;
     }
     
+    /**
+     * Returns the current navigation mode. The result will be one of:
+     * <ul>
+     *  <li>{@link #NAVIGATION_MODE_STANDARD}</li>
+     *  <li>{@link #NAVIGATION_MODE_LIST}</li>
+     * </ul>
+     * 
+     * @return The current navigation mode.
+     * 
+     * @see #setNavigationMode(int)
+     */
     public int getNavigationMode() {
         return mNavigationMode;
     }
     
+    /**
+     * Get the position of the selected navigation item in list or tabbed
+     * navigation modes.
+     * 
+     * @return Position of the selected item.
+     */
     public int getSelectedNavigationIndex() {
         if ((mNavigationMode == NAVIGATION_MODE_LIST)/* || (mNavigationMode == NAVIGATION_MODE_TABS*/) {
             return mSelectedIndex;
@@ -582,7 +603,21 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         reloadDisplay();
     }
     
+    /**
+     * Set the adapter and navigation callback for list navigation mode. The
+     * supplied adapter will provide views for the expanded list as well as the
+     * currently selected item. (These may be displayed differently.) The
+     * supplied OnNavigationListener will alert the application when the user
+     * changes the current list selection.
+     * 
+     * @param adapter An adapter that will provide a list of items to be
+     * rendered to string.
+     * @param callback An OnNavigationListener that will receive events when
+     * the user selects a navigation item.
+     */
     public void setListNavigationCallbacks(ListAdapter adapter, ActionBar.OnNavigationListener callback) {
+    	//TODO Use SpinnerAdapter!
+    	
         //Reset selected item
         mSelectedIndex = 0;
         //Save adapter and callback
@@ -592,6 +627,15 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         reloadNavigation();
     }
     
+    /**
+     * Set the current navigation mode.
+     * 
+     * @param mode The new mode to set.
+     * 
+     * @see #getNavigationMode()
+     * @see #NAVIGATION_MODE_STANDARD
+     * @see #NAVIGATION_MODE_LIST
+     */
     public void setNavigationMode(int mode) {
         if ((mode != NAVIGATION_MODE_STANDARD) && (mode != NAVIGATION_MODE_LIST)
                 /*TODO && (mode != NAVIGATION_MODE_TABS)*/) {
@@ -605,6 +649,11 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         }
     }
     
+    /**
+     * Set the selected navigation item in list or tabbed navigation modes.
+     * 
+     * @param position Position of the item to select.
+     */
     public void setSelectedNavigationItem(int position) {
         if ((mNavigationMode != NAVIGATION_MODE_STANDARD) && (position != mSelectedIndex)) {
             mSelectedIndex = position;
@@ -873,6 +922,9 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         public abstract void performAction(View view);
     }
 
+    /**
+     * Base class for an {@link Action} implementation.
+     */
     public static abstract class AbstractAction extends Action {
         private final int mDrawable;
         private final Drawable mIcon;
@@ -905,6 +957,10 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         }
     }
 
+    /**
+     * Helper class for an {@link Action} which will automatically launch an
+     * {@link Intent} when clicked.
+     */
     public static class IntentAction extends AbstractAction {
         private final Context mContext;
         private final Intent mIntent;
