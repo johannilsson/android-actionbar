@@ -292,22 +292,8 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         a.recycle();
         
         //Must be >= gingerbread to look for a logo
-        if ((Integer.parseInt(Build.VERSION.SDK) >= Build.VERSION_CODES.GINGERBREAD) && (context instanceof Activity)) {
-            Drawable logo = null;
-            Activity activity = (Activity) context;
-            
-            //Try to load the logo from the Activity's manifest entry
-            try {
-                logo = context.getPackageManager().getActivityLogo(activity.getComponentName());
-            } catch (NameNotFoundException e) {
-                //Can't load and/or find logo. Eat exception.
-            }
-            
-            if (logo == null) {
-                //Try to load the logo from the Application's manifest entry
-                logo = activity.getApplicationInfo().loadLogo(context.getPackageManager());
-            }
-            
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            Drawable logo = LogoLoader.loadLogo(context);
             if (logo != null) {
                 setHomeLogo(logo);
             }
