@@ -102,11 +102,29 @@ public class HomeActivity extends Activity {
             }
         });
         
+        final Button showSubtitle = (Button) findViewById(R.id.display_subtitle_show);
+        showSubtitle.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionBar.setSubtitle("The quick brown fox jumps over the lazy dog.");
+            }
+        });
+        
+        final Button hideSubtitle = (Button) findViewById(R.id.display_subtitle_hide);
+        hideSubtitle.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionBar.setSubtitle(null);
+            }
+        });
+        
         final Button showTitle = (Button) findViewById(R.id.display_title_show);
         showTitle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 actionBar.setDisplayShowTitleEnabled(true);
+                showSubtitle.setEnabled(true);
+                hideSubtitle.setEnabled(true);
             }
         });
         
@@ -115,6 +133,8 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 actionBar.setDisplayShowTitleEnabled(false);
+                showSubtitle.setEnabled(false);
+                hideSubtitle.setEnabled(false);
             }
         });
         
@@ -125,6 +145,8 @@ public class HomeActivity extends Activity {
                 actionBar.setDisplayShowCustomEnabled(true);
                 showTitle.setEnabled(false);
                 hideTitle.setEnabled(false);
+                showSubtitle.setEnabled(false);
+                hideSubtitle.setEnabled(false);
             }
         });
         
@@ -135,6 +157,8 @@ public class HomeActivity extends Activity {
                 actionBar.setDisplayShowCustomEnabled(false);
                 showTitle.setEnabled(true);
                 hideTitle.setEnabled(true);
+                showSubtitle.setEnabled(true);
+                hideSubtitle.setEnabled(true);
             }
         });
         
@@ -145,6 +169,8 @@ public class HomeActivity extends Activity {
                 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
                 showTitle.setEnabled(true);
                 hideTitle.setEnabled(true);
+                showSubtitle.setEnabled(true);
+                hideSubtitle.setEnabled(true);
                 showCustom.setEnabled(true);
                 hideCustom.setEnabled(true);
             }
@@ -157,6 +183,8 @@ public class HomeActivity extends Activity {
                 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
                 showTitle.setEnabled(false);
                 hideTitle.setEnabled(false);
+                showSubtitle.setEnabled(false);
+                hideSubtitle.setEnabled(false);
                 showCustom.setEnabled(false);
                 hideCustom.setEnabled(false);
             }

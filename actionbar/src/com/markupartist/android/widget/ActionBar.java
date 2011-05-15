@@ -162,6 +162,9 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     /** Title view. */
     private final TextView mTitleView;
     
+    /** Subtitle view. */
+    private final TextView mSubtitleView;
+    
     /** List view. */
     private final TextView mListView;
     
@@ -258,6 +261,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         mHomeUpIndicator = mBarView.findViewById(R.id.actionbar_home_is_back);
 
         mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
+        mSubtitleView = (TextView) mBarView.findViewById(R.id.actionbar_subtitle);
         
         mListView = (TextView) mBarView.findViewById(R.id.actionbar_list);
         mListView.setOnClickListener(mListClicked);
@@ -353,6 +357,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         final boolean showingTitle = getDisplayOptionValue(DISPLAY_SHOW_TITLE);
         final boolean showingCustom = getDisplayOptionValue(DISPLAY_SHOW_CUSTOM);
         final boolean usingLogo = getDisplayOptionValue(DISPLAY_USE_LOGO);
+        final boolean hasSubtitle = (mSubtitleView.getText() != null) && !mSubtitleView.getText().equals(""); 
         
         if (getDisplayOptionValue(DISPLAY_SHOW_HOME)) {
             mHomeUpIndicator.setVisibility(getDisplayOptionValue(DISPLAY_HOME_AS_UP) ? View.VISIBLE : View.GONE);
@@ -375,6 +380,9 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         //Show title view if we are not in list navigation, not showing custom
         //view, and the show title flag is true
         mTitleView.setVisibility(!isList && !showingCustom && showingTitle ? View.VISIBLE : View.GONE);
+        //Show subtitle view if we are not in list navigation, not showing
+        //custom view, show title flag is true, and a subtitle is set
+        mSubtitleView.setVisibility(!isList && !showingCustom && showingTitle && hasSubtitle ? View.VISIBLE : View.GONE);
         //Show custom view if we are not in list navigation and showing custom
         //flag is set
         mCustomView.setVisibility(!isList && showingCustom ? View.VISIBLE : View.GONE);
@@ -469,16 +477,37 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     }
     
     /**
-     * Returns the current ActionBar title in standard mode.
+     * Returns the current ActionBar subtitle in standard mode. Returns
+     * {@code null} if {@link #getNavigationMode()} would not return
+     * {@link #NAVIGATION_MODE_STANDARD}.
      * 
-     * @return The current ActionBar title or null.
+     * @return The current ActionBar subtitle or {@code null}.
+     * 
+     * @see #setSubtitle(CharSequence)
+     * @see #setSubtitle(int)
+     * @see #setDisplayShowTitleEnabled(boolean)
+     */
+    public CharSequence getSubtitle() {
+        if (mNavigationMode == NAVIGATION_MODE_STANDARD) {
+            return mSubtitleView.getText();
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * Returns the current ActionBar title in standard mode. Returns
+     * {@code null} if {@link #getNavigationMode()} would not return
+     * {@link #NAVIGATION_MODE_STANDARD}.
+     * 
+     * @return The current ActionBar title or {@code null}.
      * 
      * @see #setTitle(CharSequence)
      * @see #setTitle(int)
      * @see #setDisplayShowTitleEnabled(boolean)
      */
     public CharSequence getTitle() {
-        if (getDisplayOptionValue(DISPLAY_SHOW_TITLE)) {
+        if (mNavigationMode == NAVIGATION_MODE_STANDARD) {
             return mTitleView.getText();
         } else {
             return null;
@@ -723,6 +752,35 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
             reloadDisplay();
         }
     }
+    
+    /**
+     * Set the action bar's subtitle. This will only be displayed if
+     * {@link #DISPLAY_SHOW_TITLE} is set.
+     * 
+     * @param resId Resource ID of subtitle string to set.
+     * 
+     * @see #setSubtitle(CharSequence)
+     * @see #setDisplayShowTitleEnabled(boolean)
+     */
+    public void setSubtitle(int resId) {
+        mSubtitleView.setText(resId);
+        reloadDisplay();
+    }
+    
+    /**(
+     * Set the action bar's subtitle. This will only be displayed if
+     * {@link #DISPLAY_SHOW_TITLE} is set. Set to {@code null} to disable the
+     * subtitle entirely.
+     * 
+     * @param subtitle Subtitle to set
+     * 
+     * @see #setSubtitle(int)
+     * @see #setDisplayShowTitleEnabled(boolean)
+     */
+    public void setSubtitle(CharSequence subtitle) {
+        mSubtitleView.setText((subtitle == null) ? "" : subtitle);
+        reloadDisplay();
+    }
 
     /**
      * Set the action bar's title.
@@ -739,13 +797,13 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     /**
      * Set the action bar's title.
      * 
-     * @param resid Resource ID of title string to set.
+     * @param resId Resource ID of title string to set.
      * 
      * @see #setTitle(CharSequence)
      * @see #getTitle()
      */
-    public void setTitle(int resid) {
-        mTitleView.setText(resid);
+    public void setTitle(int resId) {
+        mTitleView.setText(resId);
     }
     
     /**

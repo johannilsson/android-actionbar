@@ -126,6 +126,33 @@
                     android:text="Hide" />
             </LinearLayout>
             
+            <!-- SUBTITLE DISPLAY -->
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dip"
+                android:text="Subtitle Display" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dip">
+                <Button
+                    android:id="@+id/display_subtitle_show"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Show" />
+                <Button
+                    android:id="@+id/display_subtitle_hide"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Hide" />
+            </LinearLayout>
+            
             <!-- CUSTOM VIEW DISPLAY -->
             <TextView
                 android:layout_width="fill_parent"

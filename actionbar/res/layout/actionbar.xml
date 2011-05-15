@@ -99,7 +99,8 @@
         <com.markupartist.android.widget.ScrollingTextView
             android:id="@+id/actionbar_title"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@id/actionbar_progress"
             android:gravity="center_vertical"
@@ -112,6 +113,24 @@
             android:scrollHorizontally="true"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
+            />
+        <com.markupartist.android.widget.ScrollingTextView
+            android:id="@+id/actionbar_subtitle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/actionbar_progress"
+            android:layout_below="@id/actionbar_title"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:textSize="12dip"
+            android:textColor="@color/actionbar_subtitle"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:visibility="gone"
             />
         <Button
             android:id="@+id/actionbar_list"
