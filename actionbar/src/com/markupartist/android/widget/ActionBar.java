@@ -118,19 +118,19 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * @see #setDisplayOptions(int, int)
      */
     public static final int DISPLAY_USE_LOGO = 0x01;// = android.app.ActionBar.DISPLAY_USE_LOGO;
-    
-    /**
-     * List navigation mode. Instead of static title text this mode presents a
-     * list menu for navigation within the activity. e.g. this might be
-     * presented to the user as a dropdown list.
-     */
-    public static final int NAVIGATION_MODE_STANDARD = 0x0;// = android.app.ActionBar.NAVIGATION_MODE_STANDARD;
-    
+
     /**
      * Standard navigation mode. Consists of either a logo or icon and title
      * text with an optional subtitle. Clicking any of these elements will
      * dispatch onOptionsItemSelected to the host Activity with a MenuItem with
      * item ID android.R.id.home.
+     */
+    public static final int NAVIGATION_MODE_STANDARD = 0x0;// = android.app.ActionBar.NAVIGATION_MODE_STANDARD;
+    
+    /**
+     * List navigation mode. Instead of static title text this mode presents a
+     * list menu for navigation within the activity. e.g. this might be
+     * presented to the user as a dropdown list.
      */
     public static final int NAVIGATION_MODE_LIST = 0x1;// = android.app.ActionBar.NAVIGATION_MODE_LIST;
     
@@ -616,8 +616,8 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * the user selects a navigation item.
      */
     public void setListNavigationCallbacks(ListAdapter adapter, ActionBar.OnNavigationListener callback) {
-    	//TODO Use SpinnerAdapter!
-    	
+        //TODO Use SpinnerAdapter!
+        
         //Reset selected item
         mSelectedIndex = 0;
         //Save adapter and callback
