@@ -64,84 +64,84 @@
             android:padding="0dip"
             android:visibility="gone"
             />
-        
-        <LinearLayout
-            android:id="@+id/actionbar_actions"
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:id="@+id/actionbar_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/actionbar_height"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        android:background="@color/actionbar_separator"
+        />
+    
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/actionbar_home"
+        android:layout_toLeftOf="@id/actionbar_actions"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_centerVertical="true"
+        >
+        <ProgressBar
+            android:id="@+id/actionbar_progress"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/actionbar_height"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            android:background="@color/actionbar_separator"
+            android:paddingRight="7dip"
+            android:indeterminateOnly="true"
+            android:visibility="gone"
+            style="@style/ActionBarProgressBar"
             />
-        
-        <RelativeLayout
+        <com.markupartist.android.widget.ScrollingTextView
+            android:id="@+id/actionbar_title"
             android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/actionbar_progress"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:textSize="16dip"
+            android:textStyle="bold"
+            android:textColor="@color/actionbar_title"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            />
+        <Button
+            android:id="@+id/actionbar_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/actionbar_progress"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:textSize="16dip"
+            android:textStyle="bold"
+            android:textColor="@color/actionbar_title"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:background="@drawable/actionbar_btn"
+            android:visibility="gone"
+            />
+        <ImageView
+            android:id="@+id/actionbar_list_indicator"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/actionbar_home_bg"
-            android:layout_toLeftOf="@id/actionbar_actions"
+            android:layout_alignParentBottom="true"
             android:layout_alignWithParentIfMissing="true"
-            android:layout_centerVertical="true"
-            >
-            <ProgressBar
-                android:id="@+id/actionbar_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingRight="7dip"
-                android:indeterminateOnly="true"
-                android:visibility="gone"
-                style="@style/ActionBarProgressBar"
-                />
-            <com.markupartist.android.widget.ScrollingTextView
-                android:id="@+id/actionbar_title"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@id/actionbar_progress"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:textSize="16dip"
-                android:textStyle="bold"
-                android:textColor="@color/actionbar_title"
-                android:lines="1"
-                android:scrollHorizontally="true"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                />
-            <Button
-                android:id="@+id/actionbar_list"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@id/actionbar_progress"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:textSize="16dip"
-                android:textStyle="bold"
-                android:textColor="@color/actionbar_title"
-                android:lines="1"
-                android:scrollHorizontally="true"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:background="@drawable/actionbar_btn"
-                android:visibility="gone"
-                />
-            <ImageView
-                android:id="@+id/actionbar_list_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignWithParentIfMissing="true"
-                android:layout_toLeftOf="@id/actionbar_progress"
-                android:background="@drawable/actionbar_list_indicator"
-                android:padding="0dip"
-                android:visibility="gone"
-                />
-        </RelativeLayout> 
+            android:layout_toLeftOf="@id/actionbar_progress"
+            android:background="@drawable/actionbar_list_indicator"
+            android:padding="0dip"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 </RelativeLayout>
