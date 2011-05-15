@@ -316,10 +316,11 @@ public class HomeActivity extends Activity {
         boolean isHomeShownAsUp = (mActionBar.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) != 0;
         boolean isShowingCustom = (mActionBar.getDisplayOptions() & ActionBar.DISPLAY_SHOW_CUSTOM) != 0;
         boolean isShowingTitle = (mActionBar.getDisplayOptions() & ActionBar.DISPLAY_SHOW_TITLE) != 0;
+        boolean isNavigationStandard = mActionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_STANDARD;
+        boolean isNavigationList = mActionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST;
         boolean hasSubtitle = mActionBar.getSubtitle() != null;
         boolean hasActions = mActionBar.getActionCount() > 0;
         boolean hasMaxActions = mActionBar.getActionCount() > 3;
-        int navigationMode = mActionBar.getNavigationMode();
         
         boolean hasActionShare = false;
         for (int i = 0; i < mActionBar.getActionCount(); i++) {
@@ -341,17 +342,17 @@ public class HomeActivity extends Activity {
         mHomeAsUpShow.setEnabled(isVisible && isShowingHome && !isHomeShownAsUp);
         mHomeAsUpHide.setEnabled(isVisible && isShowingHome && isHomeShownAsUp);
         
-        mNavigationList.setEnabled(isVisible && (navigationMode != ActionBar.NAVIGATION_MODE_LIST));
-        mNavigationStandard.setEnabled(isVisible && (navigationMode != ActionBar.NAVIGATION_MODE_STANDARD));
+        mNavigationList.setEnabled(isVisible && !isNavigationList);
+        mNavigationStandard.setEnabled(isVisible && !isNavigationStandard);
         
-        mCustomViewShow.setEnabled(isVisible && !isShowingCustom);
-        mCustomViewHide.setEnabled(isVisible && isShowingCustom);
+        mCustomViewShow.setEnabled(isVisible && !isNavigationList && !isShowingCustom);
+        mCustomViewHide.setEnabled(isVisible && !isNavigationList && isShowingCustom);
         
-        mTitleShow.setEnabled(isVisible && !isShowingCustom && !isShowingTitle);
-        mTitleHide.setEnabled(isVisible && !isShowingCustom && isShowingTitle);
+        mTitleShow.setEnabled(isVisible && !isNavigationList && !isShowingCustom && !isShowingTitle);
+        mTitleHide.setEnabled(isVisible && !isNavigationList && !isShowingCustom && isShowingTitle);
         
-        mSubtitleShow.setEnabled(isVisible && !isShowingCustom && isShowingTitle && !hasSubtitle);
-        mSubtitleHide.setEnabled(isVisible && !isShowingCustom && isShowingTitle && hasSubtitle);
+        mSubtitleShow.setEnabled(isVisible && !isNavigationList && !isShowingCustom && isShowingTitle && !hasSubtitle);
+        mSubtitleHide.setEnabled(isVisible && !isNavigationList && !isShowingCustom && isShowingTitle && hasSubtitle);
         
         mActionAdd.setEnabled(isVisible && !hasMaxActions);
         mActionRemoveOne.setEnabled(isVisible && hasActions);
