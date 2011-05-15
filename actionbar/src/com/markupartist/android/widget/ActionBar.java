@@ -214,20 +214,22 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     private final View.OnClickListener mListClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            new AlertDialog.Builder(getContext())
-                    .setAdapter(mListAdapter, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int position) {
-                            //Execute call back, if exists
-                            if (mListCallback != null) {
-                                mListCallback.onNavigationItemSelected(position, mListAdapter.getItemId(position));
+            if (mListAdapter != null) {
+                new AlertDialog.Builder(getContext())
+                        .setAdapter(mListAdapter, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int position) {
+                                //Execute call back, if exists
+                                if (mListCallback != null) {
+                                    mListCallback.onNavigationItemSelected(position, mListAdapter.getItemId(position));
+                                }
+                                
+                                //Update list view in action bar
+                                mListView.setText(mListAdapter.getItem(position).toString());
                             }
-                            
-                            //Update list view in action bar
-                            mListView.setText(mListAdapter.getItem(position).toString());
-                        }
-                    })
-                    .show();
+                        })
+                        .show();
+            }
         }
     };
 
