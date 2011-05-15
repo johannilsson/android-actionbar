@@ -277,7 +277,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         a.recycle();
         
         //Must be >= gingerbread to look for a logo
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) && (context instanceof Activity)) {
+        if ((Integer.parseInt(Build.VERSION.SDK) >= Build.VERSION_CODES.GINGERBREAD) && (context instanceof Activity)) {
             Drawable logo = null;
             Activity activity = (Activity) context;
             
