@@ -24,8 +24,9 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.main);
 
         final ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-        //actionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.ic_title_home_demo));
+        actionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.ic_title_home_default));
         actionBar.setTitle("Android-ActionBar Example");
+        actionBar.setHomeLogo(R.drawable.logo);
         
         ListAdapter listAdapter = ArrayAdapter.createFromResource(this, R.array.locations, android.R.layout.select_dialog_item);
         actionBar.setListNavigationCallbacks(listAdapter, new ActionBar.OnNavigationListener() {
@@ -100,11 +101,29 @@ public class HomeActivity extends Activity {
             }
         });
         
+        final Button showTitle = (Button) findViewById(R.id.display_title_show);
+        showTitle.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionBar.setDisplayShowTitleEnabled(true);
+            }
+        });
+        
+        final Button hideTitle = (Button) findViewById(R.id.display_title_hide);
+        hideTitle.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionBar.setDisplayShowTitleEnabled(false);
+            }
+        });
+        
         Button standardNavigation = (Button) findViewById(R.id.navigation_standard);
         standardNavigation.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                showTitle.setEnabled(true);
+                hideTitle.setEnabled(true);
             }
         });
         
@@ -113,22 +132,40 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+                showTitle.setEnabled(false);
+                hideTitle.setEnabled(false);
             }
         });
         
-        Button showTitle = (Button) findViewById(R.id.display_title_show);
-        showTitle.setOnClickListener(new OnClickListener() {
+        final Button showHomeAsUp = (Button) findViewById(R.id.display_home_as_up_show);
+        showHomeAsUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
             }
         });
         
-        Button hideTitle = (Button) findViewById(R.id.display_title_hide);
-        hideTitle.setOnClickListener(new OnClickListener() {
+        final Button hideHomeAsUp = (Button) findViewById(R.id.display_home_as_up_hide);
+        hideHomeAsUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayShowTitleEnabled(false);
+                actionBar.setDisplayHomeAsUpEnabled(false);
+            }
+        });
+        
+        final Button useLogo = (Button) findViewById(R.id.display_logo_show);
+        useLogo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionBar.setDisplayUseLogoEnabled(true);
+            }
+        });
+        
+        final Button doNoUseLogo = (Button) findViewById(R.id.display_logo_hide);
+        doNoUseLogo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionBar.setDisplayUseLogoEnabled(false);
             }
         });
         
@@ -137,6 +174,10 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 actionBar.setDisplayShowHomeEnabled(true);
+                showHomeAsUp.setEnabled(true);
+                hideHomeAsUp.setEnabled(true);
+                useLogo.setEnabled(true);
+                doNoUseLogo.setEnabled(true);
             }
         });
         
@@ -145,40 +186,17 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 actionBar.setDisplayShowHomeEnabled(false);
+                showHomeAsUp.setEnabled(false);
+                hideHomeAsUp.setEnabled(false);
+                useLogo.setEnabled(false);
+                doNoUseLogo.setEnabled(false);
             }
         });
         
-        Button useLogo = (Button) findViewById(R.id.display_logo_show);
-        useLogo.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actionBar.setDisplayUseLogoEnabled(true);
-            }
-        });
-        
-        Button doNoUseLogo = (Button) findViewById(R.id.display_logo_hide);
-        doNoUseLogo.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actionBar.setDisplayUseLogoEnabled(false);
-            }
-        });
-        
-        Button showHomeAsUp = (Button) findViewById(R.id.display_home_as_up_show);
-        showHomeAsUp.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
-        });
-        
-        Button hideHomeAsUp = (Button) findViewById(R.id.display_home_as_up_hide);
-        hideHomeAsUp.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actionBar.setDisplayHomeAsUpEnabled(false);
-            }
-        });
+        //Defaults
+        showTitle.performClick();
+        hideHome.performClick();
+        standardNavigation.performClick();
     }
 
     public static Intent createIntent(Context context) {
