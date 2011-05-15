@@ -34,6 +34,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -81,14 +82,18 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     public static final int DISPLAY_HOME_AS_UP = 0x04;// = android.app.ActionBar.DISPLAY_HOME_AS_UP;
     
-    ///**
-    // * Show the custom view if one has been set.
-    // * 
-    // * @see #setDisplayShowCustomEnabled(boolean)
-    // * @see #setDisplayOptions(int)
-    // * @see #setDisplayOptions(int, int)
-    // */
-    //TODO public static final int DISPLAY_SHOW_CUSTOM = 0x10;// = android.app.ActionBar.DISPLAY_SHOW_CUSTOM;
+    /**
+     * <p>Show the custom view if one has been set.</p>
+     * 
+     * <p>Due to the nature of screen real estate on a phone, this will only be
+     * displayed when in {@link #NAVIGATION_MODE_STANDARD} and will hide the
+     * flag {@link #DISPLAY_SHOW_TITLE}, if enabled.</p>
+     * 
+     * @see #setDisplayShowCustomEnabled(boolean)
+     * @see #setDisplayOptions(int)
+     * @see #setDisplayOptions(int, int)
+     */
+    public static final int DISPLAY_SHOW_CUSTOM = 0x10;// = android.app.ActionBar.DISPLAY_SHOW_CUSTOM;
     
     /**
      * Show 'home' elements in this action bar, leaving more space for other
@@ -101,7 +106,11 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     public static final int DISPLAY_SHOW_HOME = 0x02;// = android.app.ActionBar.DISPLAY_SHOW_HOME;
     
     /**
-     * Show the activity title.
+     * <p>Show the activity title.</p>
+     * 
+     * <p>Due to the nature of screen real estate on a phone, this will only be
+     * displayed when in {@link #NAVIGATION_MODE_STANDARD} and will require
+     * {@link #DISPLAY_SHOW_CUSTOM} to be disabled.</p>
      * 
      * @see #setDisplayShowTitleEnabled(boolean)
      * @see #setDisplayOptions(int)
@@ -159,8 +168,8 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     /** List dropdown indicator. */
     private final View mListIndicator;
     
-    ///** Custom view. */
-    //TODO private View mCustomView;
+    /** Custom view parent. */
+    private final FrameLayout mCustomView;
     
     private final LinearLayout mActionsView;
     
@@ -255,6 +264,8 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         
         mListIndicator = mBarView.findViewById(R.id.actionbar_list_indicator);
         
+        mCustomView = (FrameLayout) mBarView.findViewById(R.id.actionbar_custom);
+        
         mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
         
         mProgress = (ProgressBar) mBarView.findViewById(R.id.actionbar_progress);
@@ -338,9 +349,13 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * Reload the current action bar display state.
      */
     private void reloadDisplay() {
+        final boolean isList = mNavigationMode == NAVIGATION_MODE_LIST;
+        final boolean showingTitle = getDisplayOptionValue(DISPLAY_SHOW_TITLE);
+        final boolean showingCustom = getDisplayOptionValue(DISPLAY_SHOW_CUSTOM);
+        final boolean usingLogo = getDisplayOptionValue(DISPLAY_USE_LOGO);
+        
         if (getDisplayOptionValue(DISPLAY_SHOW_HOME)) {
             mHomeUpIndicator.setVisibility(getDisplayOptionValue(DISPLAY_HOME_AS_UP) ? View.VISIBLE : View.GONE);
-            final boolean usingLogo = getDisplayOptionValue(DISPLAY_USE_LOGO);
             mHomeLogo.setVisibility(usingLogo ? View.VISIBLE : View.GONE);
             mHomeIcon.setVisibility(usingLogo ? View.GONE : View.VISIBLE);
         } else {
@@ -349,26 +364,20 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
             mHomeIcon.setVisibility(View.GONE);
         }
         
-        mTitleView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_TITLE) ? View.VISIBLE : View.GONE);
-        //TODO mCustomView.setVisibility(getDisplayOptionValue(DISPLAY_SHOW_CUSTOM) ? View.VISIBLE : View.GONE);
-    }
-    
-    /**
-     * Reload the current action bar navigation state.
-     */
-    private void reloadNavigation() {
-        boolean isList = mNavigationMode == NAVIGATION_MODE_LIST;
-        
+        //If we are a list, set the list view to the currently selected item
         if (isList) {
-            //Set the list view to the currently selected item
             mListView.setText(mListAdapter.getItem(mSelectedIndex).toString());
         }
         
         mListView.setVisibility(isList ? View.VISIBLE : View.GONE);
         mListIndicator.setVisibility(isList ? View.VISIBLE : View.GONE);
         
-        //Only hide title view if we are in list navigation or the show title flag is false
-        mTitleView.setVisibility(isList || !getDisplayOptionValue(DISPLAY_SHOW_TITLE) ? View.GONE : View.VISIBLE);
+        //Show title view if we are not in list navigation, not showing custom
+        //view, and the show title flag is true
+        mTitleView.setVisibility(!isList && !showingCustom && showingTitle ? View.VISIBLE : View.GONE);
+        //Show custom view if we are not in list navigation and showing custom
+        //flag is set
+        mCustomView.setVisibility(!isList && showingCustom ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -397,6 +406,13 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     // ------------------------------------------------------------------------
     // NATIVE ACTION BAR METHODS
     // ------------------------------------------------------------------------
+    
+    /**
+     * @return The current custom view.
+     */
+    public View getCustomView() {
+        return this.mCustomView.getChildAt(0);
+    }
     
     /**
      * Get the current display options.
@@ -494,6 +510,45 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     
     //Implemented by superclass:
     //public void setBackgroundDrawable(Drawable d) {}
+    
+    /**
+     * <p>Set the action bar into custom navigation mode, supplying a view for
+     * custom navigation.</p>
+     * 
+     * <p>Custom navigation views appear between the application icon and any
+     * action buttons and may use any space available there. Common use cases
+     * for custom navigation views might include an auto-suggesting address bar
+     * for a browser or other navigation mechanisms that do not translate well
+     * to provided navigation modes.</p>
+     * 
+     * <p>The display option DISPLAY_SHOW_CUSTOM must be set for the custom
+     * view to be displayed.</p>
+     * 
+     * @param resId Resource ID of a layout to inflate into the ActionBar.
+     * 
+     * @see #getCustomView()
+     * @see #setCustomView(View)
+     */
+    public void setCustomView(int resId) {
+        mCustomView.removeAllViews();
+        mInflater.inflate(resId, mCustomView, true);
+        setDisplayShowCustomEnabled(true);
+    }
+    
+    /**
+     * Set the action bar into custom navigation mode, supplying a view for
+     * custom navigation. Custom navigation views appear between the
+     * application icon and any action buttons and may use any space available
+     * there. Common use cases for custom navigation views might include an
+     * auto-suggesting address bar for a browser or other navigation mechanisms
+     * that do not translate well to provided navigation modes.
+     * 
+     * @param view Custom navigation view to place in the ActionBar.
+     */
+    public void setCustomView(View view) {
+        mCustomView.addView(view);
+        setDisplayShowCustomEnabled(true);
+    }
 
     /**
      * Set whether home should be displayed as an "up" affordance. Set this to
@@ -544,22 +599,26 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         reloadDisplay();
     }
     
-    ///**
-    // * <p>Set whether a custom view should be displayed, if set.</p>
-    // * 
-    // * <p>To set several display options at once, see the setDisplayOptions
-    // * methods.</p>
-    // * 
-    // * @param showCustom {@code true} if the currently set custom view should
-    // * be displayed, {@code false} otherwise.
-    // * 
-    // * @see #setDisplayOptions(int)
-    // * @see #setDisplayOptions(int, int)
-    // */
-    //TODO public void setDisplayShowCustomEnabled(boolean showCustom) {
-    //  setDisplayOption(DISPLAY_SHOW_CUSTOM, showCustom);
-    //  reloadFromDisplayOptions();
-    //}
+    /**
+     * <p>Set whether a custom view should be displayed, if set.</p>
+     * 
+     * <p>To set several display options at once, see the setDisplayOptions
+     * methods.</p>
+     * 
+     * <p>Due to the nature of screen real estate on a phone, this will only be
+     * displayed when in {@link #NAVIGATION_MODE_STANDARD} and will hide the
+     * flag {@link #DISPLAY_SHOW_TITLE}, if enabled.</p>
+     * 
+     * @param showCustom {@code true} if the currently set custom view should
+     * be displayed, {@code false} otherwise.
+     * 
+     * @see #setDisplayOptions(int)
+     * @see #setDisplayOptions(int, int)
+     */
+    public void setDisplayShowCustomEnabled(boolean showCustom) {
+        setDisplayOption(DISPLAY_SHOW_CUSTOM, showCustom);
+        reloadDisplay();
+    }
     
     /**
      * Set whether to include the application home affordance in the action
@@ -576,7 +635,11 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     }
     
     /**
-     * Set whether an activity title should be displayed.
+     * <p>Set whether an activity title should be displayed.</p>
+     * 
+     * <p>Due to the nature of screen real estate on a phone, this will only be
+     * displayed when in {@link #NAVIGATION_MODE_STANDARD} and will require
+     * {@link #DISPLAY_SHOW_CUSTOM} to be disabled.</p>
      * 
      * @param showTitle {@code true} to display a title if present.
      * 
@@ -624,7 +687,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         mListAdapter = adapter;
         mListCallback = callback;
         
-        reloadNavigation();
+        reloadDisplay();
     }
     
     /**
@@ -645,7 +708,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         if (mode != mNavigationMode) {
             mNavigationMode = mode;
             mSelectedIndex = (mode == NAVIGATION_MODE_STANDARD) ? -1 : 0;
-            reloadNavigation();
+            reloadDisplay();
         }
     }
     
@@ -657,7 +720,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     public void setSelectedNavigationItem(int position) {
         if ((mNavigationMode != NAVIGATION_MODE_STANDARD) && (position != mSelectedIndex)) {
             mSelectedIndex = position;
-            reloadNavigation();
+            reloadDisplay();
         }
     }
 

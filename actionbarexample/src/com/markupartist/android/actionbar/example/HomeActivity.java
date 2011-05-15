@@ -27,6 +27,7 @@ public class HomeActivity extends Activity {
         actionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.ic_title_home_default));
         actionBar.setTitle("Android-ActionBar Example");
         actionBar.setHomeLogo(R.drawable.logo);
+        actionBar.setCustomView(R.layout.custom_view);
         
         ListAdapter listAdapter = ArrayAdapter.createFromResource(this, R.array.locations, android.R.layout.select_dialog_item);
         actionBar.setListNavigationCallbacks(listAdapter, new ActionBar.OnNavigationListener() {
@@ -117,6 +118,26 @@ public class HomeActivity extends Activity {
             }
         });
         
+        final Button showCustom = (Button) findViewById(R.id.display_custom_show);
+        showCustom.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionBar.setDisplayShowCustomEnabled(true);
+                showTitle.setEnabled(false);
+                hideTitle.setEnabled(false);
+            }
+        });
+        
+        final Button hideCustom = (Button) findViewById(R.id.display_custom_hide);
+        hideCustom.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionBar.setDisplayShowCustomEnabled(false);
+                showTitle.setEnabled(true);
+                hideTitle.setEnabled(true);
+            }
+        });
+        
         Button standardNavigation = (Button) findViewById(R.id.navigation_standard);
         standardNavigation.setOnClickListener(new OnClickListener() {
             @Override
@@ -124,6 +145,8 @@ public class HomeActivity extends Activity {
                 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
                 showTitle.setEnabled(true);
                 hideTitle.setEnabled(true);
+                showCustom.setEnabled(true);
+                hideCustom.setEnabled(true);
             }
         });
         
@@ -134,6 +157,8 @@ public class HomeActivity extends Activity {
                 actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
                 showTitle.setEnabled(false);
                 hideTitle.setEnabled(false);
+                showCustom.setEnabled(false);
+                hideCustom.setEnabled(false);
             }
         });
         
@@ -194,6 +219,7 @@ public class HomeActivity extends Activity {
         });
         
         //Defaults
+        hideCustom.performClick();
         showTitle.performClick();
         hideHome.performClick();
         standardNavigation.performClick();

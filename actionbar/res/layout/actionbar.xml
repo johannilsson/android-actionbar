@@ -143,5 +143,13 @@
             android:padding="0dip"
             android:visibility="gone"
             />
+        <FrameLayout
+            android:id="@+id/actionbar_custom"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/actionbar_progress"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 </RelativeLayout>
