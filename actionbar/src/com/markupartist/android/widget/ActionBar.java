@@ -758,6 +758,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     public void setSubtitle(int resId) {
         mSubtitleView.setText(resId);
+        reloadDisplay();
     }
     
     /**(
@@ -772,6 +773,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     public void setSubtitle(CharSequence subtitle) {
         mSubtitleView.setText((subtitle == null) ? "" : subtitle);
+        reloadDisplay();
     }
 
     /**
