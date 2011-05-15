@@ -19,6 +19,33 @@
             android:padding="15dip"
             android:layout_marginTop="20dip">
             
+            <!-- ACTION BAR DISPLAY -->
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dip"
+                android:text="ActionBar Display" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dip">
+                <Button
+                    android:id="@+id/display_actionbar_show"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Show" />
+                <Button
+                    android:id="@+id/display_actionbar_hide"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Hide" />
+            </LinearLayout>
+            
             <!-- ACTION ITEMS -->
             <TextView
                 android:layout_width="fill_parent"

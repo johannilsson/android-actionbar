@@ -16,21 +16,62 @@ import android.widget.Button;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+
 public class HomeActivity extends Activity {
-    /** Called when the activity is first created. */
+    
+    private ActionBar mActionBar;
+    
+    private Action mActionShare;
+    private Action mActionOther;
+    
+    private Button mActionBarShow;
+    private Button mActionBarHide;
+    
+    private Button mNavigationStandard;
+    private Button mNavigationList;
+    
+    private Button mHomeShow;
+    private Button mHomeHide;
+    
+    private Button mHomeLogoUse;
+    private Button mHomeLogoDoNotUse;
+    
+    private Button mHomeAsUpShow;
+    private Button mHomeAsUpHide;
+    
+    private Button mTitleShow;
+    private Button mTitleHide;
+    
+    private Button mSubtitleShow;
+    private Button mSubtitleHide;
+    
+    private Button mActionAdd;
+    private Button mActionRemoveOne;
+    private Button mActionRemoveShare;
+    private Button mActionRemoveAll;
+    
+    private Button mCustomViewShow;
+    private Button mCustomViewHide;
+    
+    private Button mProgressStart;
+    private Button mProgressStop;
+    
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        final ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-        actionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.ic_title_home_default));
-        actionBar.setTitle("Android-ActionBar Example");
-        actionBar.setHomeLogo(R.drawable.logo);
-        actionBar.setCustomView(R.layout.custom_view);
+        mActionBar = (ActionBar) findViewById(R.id.actionbar);
+        mActionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.ic_title_home_default));
+        mActionBar.setTitle("Android-ActionBar Example");
+        mActionBar.setHomeLogo(R.drawable.logo);
+        mActionBar.setCustomView(R.layout.custom_view);
+        mActionBar.setDisplayShowCustomEnabled(false);
+        mActionBar.setDisplayShowHomeEnabled(false);
         
         SpinnerAdapter listAdapter = ArrayAdapter.createFromResource(this, R.array.locations, R.layout.actionbar_title);
-        actionBar.setListNavigationCallbacks(listAdapter, new ActionBar.OnNavigationListener() {
+        mActionBar.setListNavigationCallbacks(listAdapter, new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
                 Toast.makeText(HomeActivity.this, "List navigation location changed.", Toast.LENGTH_SHORT).show();
@@ -38,303 +79,287 @@ public class HomeActivity extends Activity {
             }
         });
 
-        final Action shareAction = new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default);
-        actionBar.addAction(shareAction);
-        final Action otherAction = new IntentAction(this, new Intent(this, OtherActivity.class), R.drawable.ic_title_export_default);
-        actionBar.addAction(otherAction);
+        mActionShare = new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default);
+        mActionBar.addAction(mActionShare);
+        mActionOther = new IntentAction(this, new Intent(this, OtherActivity.class), R.drawable.ic_title_export_default);
+        mActionBar.addAction(mActionOther);
 
         
-        final Button startProgress = (Button) findViewById(R.id.start_progress);
-        final Button stopProgress = (Button) findViewById(R.id.stop_progress);
+        mProgressStart = (Button) findViewById(R.id.start_progress);
+        mProgressStop = (Button) findViewById(R.id.stop_progress);
         
-        startProgress.setOnClickListener(new OnClickListener() {
+        mProgressStart.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setProgressBarVisibility(View.VISIBLE);
-                startProgress.setEnabled(false);
-                stopProgress.setEnabled(true);
+                mActionBar.setProgressBarVisibility(View.VISIBLE);
+                updateButtonStates();
             }
         });
-        stopProgress.setOnClickListener(new OnClickListener() {
+        mProgressStop.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setProgressBarVisibility(View.GONE);
-                stopProgress.setEnabled(false);
-                startProgress.setEnabled(true);
+                mActionBar.setProgressBarVisibility(View.GONE);
+                updateButtonStates();
             }
         });
 
         
-        final Button addAction = (Button) findViewById(R.id.add_action);
-        final Button removeAction = (Button) findViewById(R.id.remove_action);
-        final Button removeShareAction = (Button) findViewById(R.id.remove_share_action);
-        final Button removeActions = (Button) findViewById(R.id.remove_actions);
+        mActionAdd = (Button) findViewById(R.id.add_action);
+        mActionRemoveOne = (Button) findViewById(R.id.remove_action);
+        mActionRemoveShare = (Button) findViewById(R.id.remove_share_action);
+        mActionRemoveAll = (Button) findViewById(R.id.remove_actions);
         
-        addAction.setOnClickListener(new OnClickListener() {
+        mActionAdd.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (actionBar.getActionCount() == 0) {
-                    actionBar.addAction(shareAction);
-                    removeShareAction.setEnabled(true);
+                if (mActionBar.getActionCount() == 0) {
+                    mActionBar.addAction(mActionShare);
                 } else {
-                    actionBar.addAction(new Action() {
+                    mActionBar.addAction(new Action() {
                         @Override
                         public void performAction(View view) {
                             Toast.makeText(HomeActivity.this, "Added action.", Toast.LENGTH_SHORT).show();
                         }
                         @Override
                         public Drawable getIcon() {
-                            return getResources().getDrawable(R.drawable.ic_title_share_default);
+                            return getResources().getDrawable(R.drawable.ic_title_export_default);
                         }
                     });
                 }
-
-                removeAction.setEnabled(true);
-                removeActions.setEnabled(true);
+                updateButtonStates();
             }
         });
-        removeAction.setOnClickListener(new OnClickListener() {
+        mActionRemoveOne.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                int actionCount = actionBar.getActionCount();
-                actionBar.removeActionAt(actionCount - 1);
+                int actionCount = mActionBar.getActionCount();
+                mActionBar.removeActionAt(actionCount - 1);
                 Toast.makeText(HomeActivity.this, "Removed action." , Toast.LENGTH_SHORT).show();
-                
-                if (actionBar.getActionCount() == 0) {
-                    removeShareAction.setEnabled(false);
-                    removeAction.setEnabled(false);
-                    removeActions.setEnabled(false);
-                }
+                updateButtonStates();
             }
         });
-        removeShareAction.setOnClickListener(new OnClickListener() {
+        mActionRemoveShare.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionBar.removeAction(shareAction);
-                removeShareAction.setEnabled(false);
-                
-                if (actionBar.getActionCount() == 0) {
-                    removeAction.setEnabled(false);
-                    removeActions.setEnabled(false);
-                }
+                mActionBar.removeAction(mActionShare);
+                updateButtonStates();
             }
         });
-        removeActions.setOnClickListener(new OnClickListener() {
+        mActionRemoveAll.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionBar.removeAllActions();
-                removeAction.setEnabled(false);
-                removeActions.setEnabled(false);
-                removeShareAction.setEnabled(false);
+                mActionBar.removeAllActions();
+                updateButtonStates();
             }
         });
         
         
-        final Button showSubtitle = (Button) findViewById(R.id.display_subtitle_show);
-        final Button hideSubtitle = (Button) findViewById(R.id.display_subtitle_hide);
+        mSubtitleShow = (Button) findViewById(R.id.display_subtitle_show);
+        mSubtitleHide = (Button) findViewById(R.id.display_subtitle_hide);
         
-        showSubtitle.setOnClickListener(new OnClickListener() {
+        mSubtitleShow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setSubtitle("The quick brown fox jumps over the lazy dog.");
-                showSubtitle.setEnabled(false);
-                hideSubtitle.setEnabled(true);
+                mActionBar.setSubtitle("The quick brown fox jumps over the lazy dog.");
+                updateButtonStates();
             }
         });
-        hideSubtitle.setOnClickListener(new OnClickListener() {
+        mSubtitleHide.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setSubtitle(null);
-                hideSubtitle.setEnabled(false);
-                showSubtitle.setEnabled(true);
+                mActionBar.setSubtitle(null);
+                updateButtonStates();
             }
         });
         
         
-        final Button showTitle = (Button) findViewById(R.id.display_title_show);
-        final Button hideTitle = (Button) findViewById(R.id.display_title_hide);
+        mTitleShow = (Button) findViewById(R.id.display_title_show);
+        mTitleHide = (Button) findViewById(R.id.display_title_hide);
         
-        showTitle.setOnClickListener(new OnClickListener() {
+        mTitleShow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayShowTitleEnabled(true);
-                showTitle.setEnabled(false);
-                hideTitle.setEnabled(true);
-                
-                boolean hasSubtitle = actionBar.getSubtitle() != null;
-                showSubtitle.setEnabled(!hasSubtitle);
-                hideSubtitle.setEnabled(hasSubtitle);
+                mActionBar.setDisplayShowTitleEnabled(true);
+                updateButtonStates();
             }
         });
-        hideTitle.setOnClickListener(new OnClickListener() {
+        mTitleHide.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayShowTitleEnabled(false);
-                hideTitle.setEnabled(false);
-                showTitle.setEnabled(true);
-                
-                showSubtitle.setEnabled(false);
-                hideSubtitle.setEnabled(false);
+                mActionBar.setDisplayShowTitleEnabled(false);
+                updateButtonStates();
             }
         });
         
         
-        final Button showCustom = (Button) findViewById(R.id.display_custom_show);
-        final Button hideCustom = (Button) findViewById(R.id.display_custom_hide);
+        mCustomViewShow = (Button) findViewById(R.id.display_custom_show);
+        mCustomViewHide = (Button) findViewById(R.id.display_custom_hide);
         
-        showCustom.setOnClickListener(new OnClickListener() {
+        mCustomViewShow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayShowCustomEnabled(true);
-                showCustom.setEnabled(false);
-                hideCustom.setEnabled(true);
-                
-                showTitle.setEnabled(false);
-                hideTitle.setEnabled(false);
-                showSubtitle.setEnabled(false);
-                hideSubtitle.setEnabled(false);
+                mActionBar.setDisplayShowCustomEnabled(true);
+                updateButtonStates();
             }
         });
-        hideCustom.setOnClickListener(new OnClickListener() {
+        mCustomViewHide.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayShowCustomEnabled(false);
-                hideCustom.setEnabled(false);
-                showCustom.setEnabled(true);
-
-                boolean isShowingTitle = (actionBar.getDisplayOptions() & ActionBar.DISPLAY_SHOW_TITLE) != 0;
-                showTitle.setEnabled(!isShowingTitle);
-                hideTitle.setEnabled(isShowingTitle);
-                
-                boolean hasSubtitle = actionBar.getSubtitle() != null;
-                showSubtitle.setEnabled(!hasSubtitle);
-                hideSubtitle.setEnabled(hasSubtitle);
+                mActionBar.setDisplayShowCustomEnabled(false);
+                updateButtonStates();
             }
         });
         
         
-        final Button standardNavigation = (Button) findViewById(R.id.navigation_standard);
-        final Button listNavigation = (Button) findViewById(R.id.navigation_list);
+        mNavigationStandard = (Button) findViewById(R.id.navigation_standard);
+        mNavigationList = (Button) findViewById(R.id.navigation_list);
         
-        standardNavigation.setOnClickListener(new OnClickListener() {
+        mNavigationStandard.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-                standardNavigation.setEnabled(false);
-                listNavigation.setEnabled(true);
-                
-                boolean isShowingTitle = (actionBar.getDisplayOptions() & ActionBar.DISPLAY_SHOW_TITLE) != 0;
-                showTitle.setEnabled(!isShowingTitle);
-                hideTitle.setEnabled(isShowingTitle);
-                
-                boolean hasSubtitle = actionBar.getSubtitle() != null;
-                showSubtitle.setEnabled(!hasSubtitle);
-                hideSubtitle.setEnabled(hasSubtitle);
-                
-                boolean isShowingCustom = (actionBar.getDisplayOptions() & ActionBar.DISPLAY_SHOW_CUSTOM) != 0;
-                showCustom.setEnabled(!isShowingCustom);
-                hideCustom.setEnabled(isShowingCustom);
+                mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                updateButtonStates();
             }
         });
-        listNavigation.setOnClickListener(new OnClickListener() {
+        mNavigationList.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-                listNavigation.setEnabled(false);
-                standardNavigation.setEnabled(true);
-                
-                showTitle.setEnabled(false);
-                hideTitle.setEnabled(false);
-                showSubtitle.setEnabled(false);
-                hideSubtitle.setEnabled(false);
-                showCustom.setEnabled(false);
-                hideCustom.setEnabled(false);
+                mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+                updateButtonStates();
             }
         });
         
         
-        final Button showHomeAsUp = (Button) findViewById(R.id.display_home_as_up_show);
-        final Button hideHomeAsUp = (Button) findViewById(R.id.display_home_as_up_hide);
+        mHomeAsUpShow = (Button) findViewById(R.id.display_home_as_up_show);
+        mHomeAsUpHide = (Button) findViewById(R.id.display_home_as_up_hide);
         
-        showHomeAsUp.setOnClickListener(new OnClickListener() {
+        mHomeAsUpShow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                showHomeAsUp.setEnabled(false);
-                hideHomeAsUp.setEnabled(true);
+                mActionBar.setDisplayHomeAsUpEnabled(true);
+                updateButtonStates();
             }
         });
-        hideHomeAsUp.setOnClickListener(new OnClickListener() {
+        mHomeAsUpHide.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayHomeAsUpEnabled(false);
-                hideHomeAsUp.setEnabled(false);
-                showHomeAsUp.setEnabled(true);
+                mActionBar.setDisplayHomeAsUpEnabled(false);
+                updateButtonStates();
             }
         });
         
         
-        final Button useLogo = (Button) findViewById(R.id.display_logo_show);
-        final Button doNoUseLogo = (Button) findViewById(R.id.display_logo_hide);
+        mHomeLogoUse = (Button) findViewById(R.id.display_logo_show);
+        mHomeLogoDoNotUse = (Button) findViewById(R.id.display_logo_hide);
         
-        useLogo.setOnClickListener(new OnClickListener() {
+        mHomeLogoUse.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayUseLogoEnabled(true);
-                useLogo.setEnabled(false);
-                doNoUseLogo.setEnabled(true);
+                mActionBar.setDisplayUseLogoEnabled(true);
+                updateButtonStates();
             }
         });
-        doNoUseLogo.setOnClickListener(new OnClickListener() {
+        mHomeLogoDoNotUse.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayUseLogoEnabled(false);
-                doNoUseLogo.setEnabled(false);
-                useLogo.setEnabled(true);
+                mActionBar.setDisplayUseLogoEnabled(false);
+                updateButtonStates();
             }
         });
         
         
-        final Button showHome = (Button) findViewById(R.id.display_home_show);
-        final Button hideHome = (Button) findViewById(R.id.display_home_hide);
+        mHomeShow = (Button) findViewById(R.id.display_home_show);
+        mHomeHide = (Button) findViewById(R.id.display_home_hide);
         
-        showHome.setOnClickListener(new OnClickListener() {
+        mHomeShow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayShowHomeEnabled(true);
-                showHome.setEnabled(false);
-                hideHome.setEnabled(true);
-                
-                boolean isHomeAsUp = (actionBar.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) != 0;
-                showHomeAsUp.setEnabled(!isHomeAsUp);
-                hideHomeAsUp.setEnabled(isHomeAsUp);
-                
-                boolean isUsingLogo = (actionBar.getDisplayOptions() & ActionBar.DISPLAY_USE_LOGO) != 0;
-                useLogo.setEnabled(!isUsingLogo);
-                doNoUseLogo.setEnabled(isUsingLogo);
+                mActionBar.setDisplayShowHomeEnabled(true);
+                updateButtonStates();
             }
         });
-        hideHome.setOnClickListener(new OnClickListener() {
+        mHomeHide.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionBar.setDisplayShowHomeEnabled(false);
-                hideHome.setEnabled(false);
-                showHome.setEnabled(true);
-                
-                showHomeAsUp.setEnabled(false);
-                hideHomeAsUp.setEnabled(false);
-                useLogo.setEnabled(false);
-                doNoUseLogo.setEnabled(false);
+                mActionBar.setDisplayShowHomeEnabled(false);
+                updateButtonStates();
+            }
+        });
+        
+        mActionBarShow = (Button) findViewById(R.id.display_actionbar_show);
+        mActionBarHide= (Button) findViewById(R.id.display_actionbar_hide);
+        
+        mActionBarShow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionBar.show();
+                updateButtonStates();
+            }
+        });
+        mActionBarHide.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionBar.hide();
+                updateButtonStates();
             }
         });
         
         
-        //Defaults
-        stopProgress.performClick();
-        hideCustom.performClick();
-        showTitle.performClick();
-        hideHome.performClick();
-        standardNavigation.performClick();
+        updateButtonStates();
+    }
+    
+    private void updateButtonStates() {
+        boolean isVisible = mActionBar.isShowing();
+        boolean isProgressStarted = mActionBar.getProgressBarVisibility() == View.VISIBLE;
+        boolean isShowingHome = (mActionBar.getDisplayOptions() & ActionBar.DISPLAY_SHOW_HOME) != 0;
+        boolean isUsingHomeLogo = (mActionBar.getDisplayOptions() & ActionBar.DISPLAY_USE_LOGO) != 0;
+        boolean isHomeShownAsUp = (mActionBar.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) != 0;
+        boolean isShowingCustom = (mActionBar.getDisplayOptions() & ActionBar.DISPLAY_SHOW_CUSTOM) != 0;
+        boolean isShowingTitle = (mActionBar.getDisplayOptions() & ActionBar.DISPLAY_SHOW_TITLE) != 0;
+        boolean hasSubtitle = mActionBar.getSubtitle() != null;
+        boolean hasActions = mActionBar.getActionCount() > 0;
+        boolean hasMaxActions = mActionBar.getActionCount() > 3;
+        int navigationMode = mActionBar.getNavigationMode();
+        
+        boolean hasActionShare = false;
+        for (int i = 0; i < mActionBar.getActionCount(); i++) {
+            if (mActionBar.getActionAt(i).equals(mActionShare)) {
+                hasActionShare = true;
+                break;
+            }
+        }
+        
+        mActionBarShow.setEnabled(!isVisible);
+        mActionBarHide.setEnabled(isVisible);
+        
+        mHomeShow.setEnabled(isVisible && !isShowingHome);
+        mHomeHide.setEnabled(isVisible && isShowingHome);
+        
+        mHomeLogoUse.setEnabled(isVisible && isShowingHome && !isUsingHomeLogo);
+        mHomeLogoDoNotUse.setEnabled(isVisible && isShowingHome && isUsingHomeLogo);
+        
+        mHomeAsUpShow.setEnabled(isVisible && isShowingHome && !isHomeShownAsUp);
+        mHomeAsUpHide.setEnabled(isVisible && isShowingHome && isHomeShownAsUp);
+        
+        mNavigationList.setEnabled(isVisible && (navigationMode != ActionBar.NAVIGATION_MODE_LIST));
+        mNavigationStandard.setEnabled(isVisible && (navigationMode != ActionBar.NAVIGATION_MODE_STANDARD));
+        
+        mCustomViewShow.setEnabled(isVisible && !isShowingCustom);
+        mCustomViewHide.setEnabled(isVisible && isShowingCustom);
+        
+        mTitleShow.setEnabled(isVisible && !isShowingCustom && !isShowingTitle);
+        mTitleHide.setEnabled(isVisible && !isShowingCustom && isShowingTitle);
+        
+        mSubtitleShow.setEnabled(isVisible && !isShowingCustom && isShowingTitle && !hasSubtitle);
+        mSubtitleHide.setEnabled(isVisible && !isShowingCustom && isShowingTitle && hasSubtitle);
+        
+        mActionAdd.setEnabled(isVisible && !hasMaxActions);
+        mActionRemoveOne.setEnabled(isVisible && hasActions);
+        mActionRemoveAll.setEnabled(isVisible && hasActions);
+        mActionRemoveShare.setEnabled(isVisible && hasActionShare);
+        
+        mProgressStart.setEnabled(isVisible && !isProgressStarted);
+        mProgressStop.setEnabled(isVisible && isProgressStarted);
     }
 
     public static Intent createIntent(Context context) {

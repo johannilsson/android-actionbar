@@ -530,7 +530,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * @see #show()
      */
     public boolean isShowing() {
-        return getVisibility() == View.GONE;
+        return getVisibility() == View.VISIBLE;
     }
     
     //Implemented by superclass:
@@ -1005,6 +1005,22 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     public int getActionCount() {
         return mActionsView.getChildCount();
+    }
+    
+    /**
+     * Return an action at the specified index if it exists.
+     * 
+     * @param index Index of the action.
+     * @return Action or {@code null} if it does not exist.
+     * 
+     * @see #getActionCount()
+     */
+    public Action getActionAt(int index) {
+        View view = mActionsView.getChildAt(index);
+        if ((view != null) && (view.getTag() instanceof Action)) {
+            return (Action)view.getTag();
+        }
+        return null;
     }
     
     // ------------------------------------------------------------------------
