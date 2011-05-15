@@ -44,7 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * Implementation of the action bar design pattern for use on Android 1.5+.
+ * Implementation of the action bar design pattern for use on Android 1.6+.
  * 
  * @author Johan Nilsson <http://markupartist.com>
  */
@@ -146,13 +146,17 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     // * Tab navigation mode. Instead of static title text this mode presents a
     // * series of tabs for navigation within the activity.
     // */
-    //public static final int NAVIGATION_MODE_TABS = 0x2;// = android.app.ActionBar.NAVIGATION_MODE_TABS;
+    //TODO public static final int NAVIGATION_MODE_TABS = 0x2;// = android.app.ActionBar.NAVIGATION_MODE_TABS;
 
     
+    
+    /** Layout inflation service. */
     private final LayoutInflater mInflater;
     
+    /** Parent view of the action bar. */
     private final RelativeLayout mBarView;
     
+    /** Home logo. */
     private final ImageView mHomeLogo;
     
     /** Home button up indicator. */
@@ -173,14 +177,16 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     /** Custom view parent. */
     private final FrameLayout mCustomView;
     
+    /** Container for all action items. */
     private final LinearLayout mActionsView;
     
+    /** Indeterminate progress bar. */
     private final ProgressBar mProgress;
     
-    /** Home logo. */
+    /** Home item icon. */
     private final ImageButton mHomeIconImage;
     
-    /** Home button. */
+    /** Home item. */
     private final RelativeLayout mHomeIcon;
     
     /**
@@ -267,7 +273,6 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         
         mListView = (FrameLayout) mBarView.findViewById(R.id.actionbar_list);
         mListView.setOnClickListener(mListClicked);
-        
         mListIndicator = mBarView.findViewById(R.id.actionbar_list_indicator);
         
         mCustomView = (FrameLayout) mBarView.findViewById(R.id.actionbar_custom);
@@ -301,11 +306,9 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
             }
         }
         
-        //Show the home icon and title by default
+        //Show the title by default
         setDisplayOption(DISPLAY_SHOW_TITLE, true);
-        reloadDisplay();
-        
-        //Use standard navigation by default
+        //Use standard navigation by default (this will call reloadDisplay)
         setNavigationMode(NAVIGATION_MODE_STANDARD);
     }
     
@@ -316,8 +319,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     // ------------------------------------------------------------------------
     
     /**
-     * Helper to set a flag to a new value. This will also update the action
-     * bar accordingly to reflect the current state of the flags.
+     * Helper to set a flag to a new value.
      * 
      * @param flag Flag to update.
      * @param enabled New value.
@@ -501,7 +503,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * @see #setDisplayShowTitleEnabled(boolean)
      */
     public CharSequence getTitle() {
-        if (mNavigationMode == NAVIGATION_MODE_STANDARD) {
+        if ((mNavigationMode == NAVIGATION_MODE_STANDARD) && !mTitleView.getText().equals("")) {
             return mTitleView.getText();
         } else {
             return null;
@@ -756,7 +758,6 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     public void setSubtitle(int resId) {
         mSubtitleView.setText(resId);
-        reloadDisplay();
     }
     
     /**(
@@ -771,7 +772,6 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     public void setSubtitle(CharSequence subtitle) {
         mSubtitleView.setText((subtitle == null) ? "" : subtitle);
-        reloadDisplay();
     }
 
     /**
@@ -783,7 +783,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * @see #getTitle()
      */
     public void setTitle(CharSequence title) {
-        mTitleView.setText(title);
+        mTitleView.setText((title == null) ? "" : title);
     }
 
     /**
@@ -906,12 +906,13 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     }
 
     /**
-     * Function to set a click listener for Title TextView
+     * Function to set a click listener for title and subtitle TextView.
      * 
-     * @param listener the onClickListener
+     * @param listener The callback listener.
      */
     public void setOnTitleClickListener(OnClickListener listener) {
         mTitleView.setOnClickListener(listener);
+        mSubtitleView.setOnClickListener(listener);
     }
 
     @Override
@@ -925,22 +926,22 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
 
     /**
      * Adds a list of {@link Action}s.
-     * @param actionList the actions to add
+     * 
+     * @param actions List of actions to add.
      * 
      * @see #addAction(Action)
      * @see #addAction(Action, int)
      */
-    public void addActions(List<Action> actionList) {
-        int actions = actionList.size();
-        for (int i = 0; i < actions; i++) {
-            addAction(actionList.get(i));
+    public void addActions(List<Action> actions) {
+        for (Action action : actions) {
+            addAction(action);
         }
     }
 
     /**
      * Adds a new {@link Action}.
      * 
-     * @param action the action to add
+     * @param action Action to add.
      * 
      * @see #addAction(Action, int)
      * @see #addActions(List)
@@ -953,8 +954,8 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     /**
      * Adds a new {@link Action} at the specified index.
      * 
-     * @param action the action to add
-     * @param index the position at which to add the action
+     * @param action Action to add.
+     * @param index The position at which to add the action.
      * 
      * @see #addAction(Action)
      * @see #addActions(List)
@@ -964,24 +965,25 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     }
 
     /**
-     * Removes all action views from this action bar
+     * Removes all action views from this action bar.
      */
     public void removeAllActions() {
         mActionsView.removeAllViews();
     }
 
     /**
-     * Remove a action from the action bar.
+     * Remove an action from the action bar.
      * 
-     * @param index position of action to remove
+     * @param index Position of action to remove.
      */
     public void removeActionAt(int index) {
         mActionsView.removeViewAt(index);
     }
 
     /**
-     * Remove a action from the action bar.
-     * @param action The action to remove
+     * Remove an action from the action bar.
+     * 
+     * @param action The action to remove.
      */
     public void removeAction(Action action) {
         int childCount = mActionsView.getChildCount();
@@ -998,7 +1000,8 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
 
     /**
      * Returns the number of actions currently registered with the action bar.
-     * @return action count
+     * 
+     * @return Action count.
      */
     public int getActionCount() {
         return mActionsView.getChildCount();
