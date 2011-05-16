@@ -18,8 +18,6 @@ package com.markupartist.android.widget;
 
 import java.util.List;
 
-import com.markupartist.android.widget.actionbar.R;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
@@ -29,6 +27,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -43,6 +42,8 @@ import android.widget.RelativeLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.markupartist.android.widget.actionbar.R;
 
 /**
  * Implementation of the action bar design pattern for use on Android 1.6+.
@@ -143,14 +144,12 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     public static final int NAVIGATION_MODE_LIST = 0x1;// = android.app.ActionBar.NAVIGATION_MODE_LIST;
     
-    ///**
-    // * Tab navigation mode. Instead of static title text this mode presents a
-    // * series of tabs for navigation within the activity.
-    // */
-    //TODO public static final int NAVIGATION_MODE_TABS = 0x2;// = android.app.ActionBar.NAVIGATION_MODE_TABS;
+    /**
+     * Tab navigation mode. Instead of static title text this mode presents a
+     * series of tabs for navigation within the activity.
+     */
+    public static final int NAVIGATION_MODE_TABS = 0x2;// = android.app.ActionBar.NAVIGATION_MODE_TABS;
 
-    
-    
     /** Layout inflation service. */
     private final LayoutInflater mInflater;
     
@@ -180,7 +179,13 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     
     /** Container for all action items. */
     private final LinearLayout mActionsView;
+
+    /** Container for all tab items. */
+    private final LinearLayout mTabsView;
     
+    /** Bottom line when in tabs navigation mode. */
+    private final View mTabsBottomLine;
+
     /** Indeterminate progress bar. */
     private final ProgressBar mProgress;
     
@@ -279,7 +284,10 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         mCustomView = (FrameLayout) mBarView.findViewById(R.id.actionbar_custom);
         
         mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
-        
+
+        mTabsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_tabs);
+        mTabsBottomLine = mBarView.findViewById(R.id.actionbar_tabs_bottom_line);
+
         mProgress = (ProgressBar) mBarView.findViewById(R.id.actionbar_progress);
 
         TypedArray a = context.obtainStyledAttributes(attrs,
@@ -346,6 +354,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     private void reloadDisplay() {
         final boolean isList = mNavigationMode == NAVIGATION_MODE_LIST;
+        final boolean isTab = mNavigationMode == NAVIGATION_MODE_TABS;
         final boolean hasList = (mListAdapter != null) && (mListAdapter.getCount() > 0);
         final boolean showingTitle = getDisplayOptionValue(DISPLAY_SHOW_TITLE);
         final boolean showingCustom = getDisplayOptionValue(DISPLAY_SHOW_CUSTOM);
@@ -374,7 +383,11 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         //Only show list if we are in list navigation and there are list items
         mListView.setVisibility(isList && hasList ? View.VISIBLE : View.GONE);
         mListIndicator.setVisibility(isList && hasList ? View.VISIBLE : View.GONE);
-        
+
+        // Show tabs if in tabs navigation mode.
+        mTabsView.setVisibility(isTab ? View.VISIBLE : View.GONE);
+        mTabsBottomLine.setVisibility(isTab ? View.VISIBLE : View.GONE);
+
         //Show title view if we are not in list navigation, not showing custom
         //view, and the show title flag is true
         mTitleView.setVisibility(!isList && !showingCustom && showingTitle ? View.VISIBLE : View.GONE);
@@ -408,7 +421,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         view.setOnClickListener(this);
         return view;
     }
-    
+
     // ------------------------------------------------------------------------
     // NATIVE ACTION BAR METHODS
     // ------------------------------------------------------------------------
@@ -440,9 +453,9 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         if (mNavigationMode == NAVIGATION_MODE_LIST) {
             return mListAdapter.getCount();
         }
-        //if (this.mNavigationMode == NAVIGATION_MODE_TABS) {
-        //  //TODO
-        //}
+        if (this.mNavigationMode == NAVIGATION_MODE_TABS) {
+            return mTabsView.getChildCount();
+        }
         return 0;
     }
     
@@ -468,7 +481,8 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * @return Position of the selected item.
      */
     public int getSelectedNavigationIndex() {
-        if ((mNavigationMode == NAVIGATION_MODE_LIST)/* || (mNavigationMode == NAVIGATION_MODE_TABS*/) {
+        if ((mNavigationMode == NAVIGATION_MODE_LIST)
+                || (mNavigationMode == NAVIGATION_MODE_TABS)) {
             return mSelectedIndex;
         }
         return -1;
@@ -724,13 +738,14 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * @see #getNavigationMode()
      * @see #NAVIGATION_MODE_STANDARD
      * @see #NAVIGATION_MODE_LIST
+     * @see #NAVIGATION_MODE_TABS
      */
     public void setNavigationMode(int mode) {
         if ((mode != NAVIGATION_MODE_STANDARD) && (mode != NAVIGATION_MODE_LIST)
-                /*TODO && (mode != NAVIGATION_MODE_TABS)*/) {
+                && (mode != NAVIGATION_MODE_TABS)) {
             throw new IllegalArgumentException("Unknown navigation mode value " + Integer.toString(mode));
         }
-        
+
         if (mode != mNavigationMode) {
             mNavigationMode = mode;
             mSelectedIndex = (mode == NAVIGATION_MODE_STANDARD) ? -1 : 0;
@@ -812,7 +827,57 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     public void show() {
         setVisibility(View.VISIBLE);
     }
-    
+
+    /**
+     * Create and return a new {@link ActionBar.Tab}. This tab will not be
+     * included in the action bar until it is added.
+     * 
+     * @return A new Tab.
+     * 
+     * @see #addTab(Tab)
+     */
+    public Tab newTab() {
+        return new Tab();
+    }
+
+    /**
+     * Add a tab for use in tabbed navigation mode. The tab will be added at
+     * the end of the list. If this is the first tab to be added it will become
+     * the selected tab.
+     * 
+     * @param tab A new Tab.
+     */
+    public void addTab(Tab tab) {
+        final int position = mTabsView.getChildCount();
+        addTab(tab, position, position == 0 ? true : false);
+    }
+
+    /**
+     * Add a tab for use in tabbed navigation mode. The tab will be inserted at
+     * position. If this is the first tab to be added it will become the
+     * selected tab.
+     * 
+     * @param tab Tab to add.
+     * @param position The new position of the tab.
+     */
+    public void addTab(Tab tab, int position) {
+        final int count = mTabsView.getChildCount();
+        addTab(tab, position, count == 0 ? true : false);
+    }
+
+    /**
+     * Add a tab for use in tabbed navigation mode. The tab will be insterted
+     * at position.
+     * 
+     * @param tab The tab to add
+     * @param position The new position of the tab.
+     * @param setSelected True if the added tab should become the selected tab.
+     */
+    public void addTab(Tab tab, int position, boolean setSelected) {
+        // TODO: Handle setSelected.
+        mTabsView.addView(tab.inflate(setSelected), position);
+    }
+
     // ------------------------------------------------------------------------
     // LEGACY AND DEPRECATED METHODS
     // ------------------------------------------------------------------------
@@ -926,6 +991,14 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         if (tag instanceof Action) {
             final Action action = (Action) tag;
             action.performAction(view);
+        } else if  (tag instanceof Tab) {
+            final Tab tab = (Tab) tag;
+
+            if (tab.mIsSelected) {
+                tab.mListener.onTabReselected(tab);
+            } else {
+                tab.select();
+            }
         }
     }
 
@@ -1027,7 +1100,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         }
         return null;
     }
-    
+
     // ------------------------------------------------------------------------
     // HELPER INTERFACES AND HELPER CLASSES
     // ------------------------------------------------------------------------
@@ -1131,4 +1204,128 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         }
     }
     */
+
+    /**
+     * A tab in the action bar.
+     */
+    public class Tab {
+        private View mView;
+        private CharSequence mText;
+        private ActionBar.TabListener mListener;
+        private boolean mIsSelected;
+
+        /**
+         * Return the text of this tab.
+         * 
+         * @return The tab's text.
+         */
+        public CharSequence getText() {
+            return mText;
+        }
+
+        /**
+         * Set the text displayed on this tab. Text may be truncated if there
+         * is not room to display the entire string.
+         * 
+         * @param text The text to display.
+         */
+        public ActionBar.Tab setText(CharSequence text) {
+            mText = text;
+
+            return this;
+        }
+
+        /**
+         * Set the {@link ActionBar.TabListener} that will handle switching to
+         * and from this tab. All tabs must have a TabListener set before being
+         * added to the ActionBar.
+         * 
+         * @param listener Listener to handle tab selection events.
+         */
+        public ActionBar.Tab setTabListener(ActionBar.TabListener listener) {
+            mListener = listener;
+
+            return this;
+        }
+
+        /**
+         * Select this tab. Only valid if the tab has been added to the action
+         * bar.
+         */
+        public void select() {
+            View selectedView = mView.findViewById(R.id.actionbar_tab_selected);
+            selectedView.setBackgroundColor(Color.WHITE);
+
+            final int tabs = mTabsView.getChildCount();
+            for (int tabIndex = 0; tabIndex < tabs; tabIndex++) {
+                View tabView = mTabsView.getChildAt(tabIndex);
+                if ((tabView != null) && (tabView.getTag() instanceof Tab)) {
+                    ((Tab)tabView.getTag()).unselect();
+                }
+            }
+
+            mIsSelected = true;
+            mListener.onTabSelected(this);
+        }
+
+        void unselect() {
+            if (mIsSelected) {
+                View selectedView = mView.findViewById(R.id.actionbar_tab_selected);
+                selectedView.setBackgroundColor(Color.TRANSPARENT);
+
+                mListener.onTabUnselected(this);
+            }
+            mIsSelected = false;
+        }
+
+        private View inflate(boolean isSelected) {
+            mView = mInflater.inflate(R.layout.actionbar_tab, mTabsView, false);
+
+            TextView textView =
+                (TextView) mView.findViewById(R.id.actionbar_tab);
+            textView.setText(getText());
+
+            View selectedView = mView.findViewById(R.id.actionbar_tab_selected);
+            if (!isSelected) {
+                selectedView.setBackgroundColor(Color.TRANSPARENT);
+            } else {
+                mIsSelected = true;
+            }
+
+            mView.setTag(this);
+            mView.setOnClickListener(ActionBar.this);
+
+            return mView;
+        }
+
+    }
+
+    /**
+     * Callback interface invoked when a tab is focused, unfocused, added, or
+     * removed.
+     */
+    public interface TabListener {
+        /**
+         * Called when a tab that is already selected is chosen again by the
+         * user. Some applications may use this action to return to the top
+         * level of a category.
+         * 
+         * @param tab The tab that was reselected.
+         */
+        public void onTabReselected(ActionBar.Tab tab);
+
+        /**
+         * Called when a tab enters the selected state.
+         * 
+         * @param tab The tab that was selected.
+         */
+        public void onTabSelected(ActionBar.Tab tab);
+
+        /**
+         * Called when a tab exits the selected state.
+         * 
+         * @param tab The tab that was unselected.
+         */
+        public void onTabUnselected(ActionBar.Tab tab);
+    }
 }

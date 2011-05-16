@@ -141,6 +141,28 @@
             android:focusable="true"
             android:visibility="gone"
             />
+        <LinearLayout
+            android:id="@+id/actionbar_tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/actionbar_progress"
+            android:background="@drawable/actionbar_btn"
+            android:focusable="true"
+            android:visibility="visible"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+        </LinearLayout>
+        <!-- TODO: Make configurable. -->
+        <View
+            android:id="@+id/actionbar_tabs_bottom_line"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="2dip"
+            android:background="#FFFFFF"
+            android:layout_alignParentBottom="true"
+            />
         <ImageView
             android:id="@+id/actionbar_list_indicator"
             android:layout_width="wrap_content"
