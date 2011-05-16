@@ -571,6 +571,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * @param view Custom navigation view to place in the ActionBar.
      */
     public void setCustomView(View view) {
+        mCustomView.removeAllViews();
         mCustomView.addView(view);
         setDisplayShowCustomEnabled(true);
     }
