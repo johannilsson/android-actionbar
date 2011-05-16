@@ -26,6 +26,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -290,7 +291,8 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
             //Try to load title from the Activity's manifest entry
             try {
                 ComponentName componentName = ((Activity) context).getComponentName();
-                setTitle(context.getPackageManager().getActivityInfo(componentName, 0).labelRes);
+                PackageManager packageManager = ((Activity) context).getPackageManager();
+                setTitle(packageManager.getActivityInfo(componentName, PackageManager.GET_ACTIVITIES).loadLabel(packageManager));
             } catch (NameNotFoundException e) {
                 //Can't load and/or find title. Eat exception.
             }

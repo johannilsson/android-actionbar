@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, HomeActivity!</string>
-    <string name="app_name">ActionBarExample</string>
+    <string name="app_name">Android-ActionBar Example</string>
     <string name="some_title">Other</string>
 </resources>

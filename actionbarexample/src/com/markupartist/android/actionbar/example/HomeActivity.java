@@ -64,7 +64,6 @@ public class HomeActivity extends Activity {
 
         mActionBar = (ActionBar) findViewById(R.id.actionbar);
         mActionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.ic_title_home_default));
-        mActionBar.setTitle("Android-ActionBar Example");
         mActionBar.setHomeLogo(R.drawable.logo);
         mActionBar.setCustomView(R.layout.custom_view);
         mActionBar.setDisplayShowCustomEnabled(false);
