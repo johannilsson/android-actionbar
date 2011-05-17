@@ -1349,7 +1349,6 @@ public class ActionBar extends RelativeLayout implements Menu {
         Intent mIntent;
         CharSequence mTitle;
         boolean mIsEnabled;
-        boolean mIsVisible;
         boolean mIsCheckable;
         boolean mIsChecked;
         
@@ -1374,7 +1373,6 @@ public class ActionBar extends RelativeLayout implements Menu {
             mGroupId = groupId;
             mItemId = itemId;
             mOrder = order;
-            mIsVisible = true;
             mIsEnabled = true;
         }
         
@@ -1448,7 +1446,7 @@ public class ActionBar extends RelativeLayout implements Menu {
 
         @Override
         public final boolean isChecked() {
-            return mIsChecked;
+            return mIsCheckable && mIsChecked;
         }
 
         @Override
@@ -1458,7 +1456,7 @@ public class ActionBar extends RelativeLayout implements Menu {
 
         @Override
         public boolean isVisible() {
-            return mIsVisible;
+            return mView.getVisibility() == View.VISIBLE;
         }
 
         @Override
@@ -1475,7 +1473,9 @@ public class ActionBar extends RelativeLayout implements Menu {
 
         @Override
         public MenuItem setChecked(boolean checked) {
-            mIsChecked = checked;
+            if (mIsCheckable) {
+                mIsChecked = checked;
+            }
             return this;
         }
 
@@ -1538,7 +1538,7 @@ public class ActionBar extends RelativeLayout implements Menu {
 
         @Override
         public MenuItem setVisible(boolean visible) {
-            mIsVisible = visible;
+            mView.setVisibility(visible ? View.VISIBLE : View.GONE);
             return this;
         }
     }
