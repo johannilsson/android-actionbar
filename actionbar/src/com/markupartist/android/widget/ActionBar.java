@@ -415,22 +415,22 @@ public class ActionBar extends RelativeLayout implements Menu {
     // ------------------------------------------------------------------------
     
     @Override
-    public MenuItem add(CharSequence title) {
+    public Action add(CharSequence title) {
         return new Action().setTitle(title);
     }
     
     @Override
-    public MenuItem add(int titleRes) {
+    public Action add(int titleRes) {
         return new Action().setTitle(titleRes);
     }
 
     @Override
-    public MenuItem add(int groupId, int itemId, int order, CharSequence title) {
+    public Action add(int groupId, int itemId, int order, CharSequence title) {
         return new Action(groupId, itemId, order).setTitle(title);
     }
 
     @Override
-    public MenuItem add(int groupId, int itemId, int order, int titleRes) {
+    public Action add(int groupId, int itemId, int order, int titleRes) {
         return new Action(groupId, itemId, order).setTitle(titleRes);
     }
 
@@ -454,7 +454,7 @@ public class ActionBar extends RelativeLayout implements Menu {
             rintent.setComponent(new ComponentName(
                     ri.activityInfo.applicationInfo.packageName,
                     ri.activityInfo.name));
-            final MenuItem item = add(groupId, itemId, order, ri.loadLabel(pm))
+            final Action item = add(groupId, itemId, order, ri.loadLabel(pm))
                     .setIcon(ri.loadIcon(pm))
                     .setIntent(rintent);
             if ((outSpecificItems != null) && (ri.specificIndex > 0)) {
@@ -500,15 +500,15 @@ public class ActionBar extends RelativeLayout implements Menu {
     }
 
     @Override
-    public MenuItem findItem(int id) {
+    public Action findItem(int id) {
         if (id == R.id.actionbar_item_home) {
             View home = mHomeView.getChildAt(0);
-            return (home != null) ? (MenuItem) home.getTag() : null;
+            return (home != null) ? (Action) home.getTag() : null;
         }
         
         final int count = size();
         for (int i = 0; i < count; i++) {
-            MenuItem item = getItem(i);
+        	Action item = getItem(i);
             if (item.getItemId() == id) {
                 return item;
             }
@@ -517,9 +517,9 @@ public class ActionBar extends RelativeLayout implements Menu {
     }
 
     @Override
-    public MenuItem getItem(int index) {
+    public Action getItem(int index) {
         View view = mActionsView.getChildAt(index);
-        return (view != null) ? (MenuItem) view.getTag() : null;
+        return (view != null) ? (Action) view.getTag() : null;
     }
 
     @Override
@@ -576,7 +576,7 @@ public class ActionBar extends RelativeLayout implements Menu {
     public void setGroupCheckable(int group, boolean checkable, boolean exclusive) {
         final int count = size();
         for (int i = 0; i < count; i++) {
-            MenuItem item = getItem(i);
+        	Action item = getItem(i);
             if (item.getGroupId() == group) {
                 item.setCheckable(true);
             }
@@ -587,7 +587,7 @@ public class ActionBar extends RelativeLayout implements Menu {
     public void setGroupEnabled(int group, boolean enabled) {
         final int count = size();
         for (int i = 0; i < count; i++) {
-            MenuItem item = getItem(i);
+        	Action item = getItem(i);
             if (item.getGroupId() == group) {
                 item.setEnabled(enabled);
             }
@@ -598,7 +598,7 @@ public class ActionBar extends RelativeLayout implements Menu {
     public void setGroupVisible(int group, boolean visible) {
         final int count = size();
         for (int i = 0; i < count; i++) {
-            MenuItem item = getItem(i);
+        	Action item = getItem(i);
             if (item.getGroupId() == group) {
                 item.setVisible(visible);
             }
@@ -1202,7 +1202,7 @@ public class ActionBar extends RelativeLayout implements Menu {
      * 
      * @return The newly added menu item. 
      */
-    public MenuItem add() {
+    public Action add() {
         return add("");
     }
     
@@ -1213,7 +1213,7 @@ public class ActionBar extends RelativeLayout implements Menu {
      * @param iconRes Icon resource ID.
      * @return The newly added menu item. 
      */
-    public MenuItem add(int itemId, int iconRes) {
+    public Action add(int itemId, int iconRes) {
         return add(0, itemId, 0, "").setIcon(iconRes);
     }
     
@@ -1225,7 +1225,7 @@ public class ActionBar extends RelativeLayout implements Menu {
      * @param intent Intent to be executed when clicked.
      * @return The newly added menu item. 
      */
-    public MenuItem add(int itemId, int iconRes, Intent intent) {
+    public Action add(int itemId, int iconRes, Intent intent) {
         return add(itemId, iconRes).setIntent(intent);
     }
     
@@ -1237,7 +1237,7 @@ public class ActionBar extends RelativeLayout implements Menu {
      * @param listener Item click listener.
      * @return The newly added menu item. 
      */
-    public MenuItem add(int itemId, int iconRes, OnMenuItemClickListener listener) {
+    public Action add(int itemId, int iconRes, OnMenuItemClickListener listener) {
         return add(itemId, iconRes).setOnMenuItemClickListener(listener);
     }
     
@@ -1338,7 +1338,7 @@ public class ActionBar extends RelativeLayout implements Menu {
     /**
      * Definition of an action that can be performed along with a icon to show.
      */
-    final class Action implements MenuItem {
+    public final class Action implements MenuItem {
         private final View mView;
         private final ImageView mIcon;
         private final int mItemId;
@@ -1378,13 +1378,13 @@ public class ActionBar extends RelativeLayout implements Menu {
         
 
         @Override
-        public final char getAlphabeticShortcut() {
+        public char getAlphabeticShortcut() {
             //We do not support shortcut keys.
             throw new NotImplementedException();
         }
 
         @Override
-        public final int getGroupId() {
+        public int getGroupId() {
             return mGroupId;
         }
         
@@ -1399,28 +1399,28 @@ public class ActionBar extends RelativeLayout implements Menu {
         }
 
         @Override
-        public final int getItemId() {
+        public int getItemId() {
             return mItemId;
         }
 
         @Override
-        public final ContextMenuInfo getMenuInfo() {
+        public ContextMenuInfo getMenuInfo() {
             return null;
         }
 
         @Override
-        public final char getNumericShortcut() {
+        public char getNumericShortcut() {
             //We do not support shortcut keys.
             throw new NotImplementedException();
         }
 
         @Override
-        public final int getOrder() {
+        public int getOrder() {
             return mOrder;
         }
 
         @Override
-        public final SubMenu getSubMenu() {
+        public SubMenu getSubMenu() {
             return null;
         }
 
@@ -1430,22 +1430,22 @@ public class ActionBar extends RelativeLayout implements Menu {
         }
 
         @Override
-        public final CharSequence getTitleCondensed() {
+        public CharSequence getTitleCondensed() {
             return getTitle();
         }
 
         @Override
-        public final boolean hasSubMenu() {
+        public boolean hasSubMenu() {
             return false;
         }
 
         @Override
-        public final boolean isCheckable() {
+        public boolean isCheckable() {
             return mIsCheckable;
         }
 
         @Override
-        public final boolean isChecked() {
+        public boolean isChecked() {
             return mIsCheckable && mIsChecked;
         }
 
@@ -1460,19 +1460,19 @@ public class ActionBar extends RelativeLayout implements Menu {
         }
 
         @Override
-        public final MenuItem setAlphabeticShortcut(char alphaChar) {
+        public Action setAlphabeticShortcut(char alphaChar) {
             //We do not support shortcut keys.
             return this;
         }
 
         @Override
-        public MenuItem setCheckable(boolean checkable) {
+        public Action setCheckable(boolean checkable) {
             mIsCheckable = checkable;
             return this;
         }
 
         @Override
-        public MenuItem setChecked(boolean checked) {
+        public Action setChecked(boolean checked) {
             if (mIsCheckable) {
                 mIsChecked = checked;
             }
@@ -1480,64 +1480,64 @@ public class ActionBar extends RelativeLayout implements Menu {
         }
 
         @Override
-        public MenuItem setEnabled(boolean enabled) {
+        public Action setEnabled(boolean enabled) {
             mIsEnabled = enabled;
             return this;
         }
 
         @Override
-        public MenuItem setIcon(Drawable icon) {
+        public Action setIcon(Drawable icon) {
             mIcon.setImageDrawable(icon);
             return this;
         }
 
         @Override
-        public MenuItem setIcon(int iconRes) {
+        public Action setIcon(int iconRes) {
             return setIcon(getContext().getResources().getDrawable(iconRes));
         }
 
         @Override
-        public MenuItem setIntent(Intent intent) {
+        public Action setIntent(Intent intent) {
             mIntent = intent;
             return this;
         }
 
         @Override
-        public MenuItem setNumericShortcut(char numericChar) {
+        public Action setNumericShortcut(char numericChar) {
             //We do not support shortcut keys.
             return this;
         }
 
         @Override
-        public MenuItem setOnMenuItemClickListener(OnMenuItemClickListener menuItemClickListener) {
+        public Action setOnMenuItemClickListener(OnMenuItemClickListener menuItemClickListener) {
             mListener = menuItemClickListener;
             return this;
         }
 
         @Override
-        public MenuItem setShortcut(char numericChar, char alphaChar) {
+        public Action setShortcut(char numericChar, char alphaChar) {
             //We do not support shortcut keys.
             return this;
         }
 
         @Override
-        public MenuItem setTitle(CharSequence title) {
+        public Action setTitle(CharSequence title) {
             mTitle = title;
             return this;
         }
 
         @Override
-        public MenuItem setTitle(int title) {
+        public Action setTitle(int title) {
             return setTitle(getContext().getResources().getText(title));
         }
 
         @Override
-        public MenuItem setTitleCondensed(CharSequence title) {
+        public Action setTitleCondensed(CharSequence title) {
             return setTitle(title);
         }
 
         @Override
-        public MenuItem setVisible(boolean visible) {
+        public Action setVisible(boolean visible) {
             mView.setVisibility(visible ? View.VISIBLE : View.GONE);
             return this;
         }
