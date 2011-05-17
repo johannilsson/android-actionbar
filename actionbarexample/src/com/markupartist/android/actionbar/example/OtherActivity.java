@@ -43,7 +43,7 @@ public class OtherActivity extends Activity implements TabListener {
     private class ExampleAction extends AbstractAction {
 
         public ExampleAction() {
-            super(R.drawable.ic_title_export_default);
+            super(getResources().getDrawable(R.drawable.ic_title_export_default));
         }
 
         @Override

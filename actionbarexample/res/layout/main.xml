@@ -117,13 +117,60 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="List" />
-                <!--Button
-                    android:id="@+id/navigation_list"
+                <Button
+                    android:id="@+id/navigation_tabs"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Tab" /-->
+                    android:text="Tabs" />
+            </LinearLayout>
+	            
+            <!-- TAB DISPLAY -->
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dip"
+                android:text="Tab Display" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dip">
+                <Button
+                    android:id="@+id/display_tab_add"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Add" />
+                <Button
+                    android:id="@+id/display_tab_select"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Select Random" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dip">
+                <Button
+                    android:id="@+id/display_tab_remove"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Remove" />
+                <Button
+                    android:id="@+id/display_tab_remove_all"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Remove All" />
             </LinearLayout>
             
             <!-- TITLE DISPLAY -->

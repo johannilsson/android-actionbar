@@ -1,5 +1,7 @@
 package com.markupartist.android.actionbar.example;
 
+import java.util.Random;
+
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 import com.markupartist.android.widget.ActionBar.IntentAction;
@@ -18,6 +20,13 @@ import android.widget.Toast;
 
 
 public class HomeActivity extends Activity {
+    private static final Random RANDOM = new Random();
+    private static final String[] TAB_TEXT = new String[] {
+    	"Tab1",
+    	"Tab2",
+    	"This is some really long tab text!",
+    	"Tab4",
+    };
     
     private ActionBar mActionBar;
     
@@ -29,6 +38,12 @@ public class HomeActivity extends Activity {
     
     private Button mNavigationStandard;
     private Button mNavigationList;
+    private Button mNavigationTabs;
+    
+    private Button mTabAdd;
+    private Button mTabSelect;
+    private Button mTabRemove;
+    private Button mTabRemoveAll;
     
     private Button mHomeShow;
     private Button mHomeHide;
@@ -212,6 +227,7 @@ public class HomeActivity extends Activity {
         
         mNavigationStandard = (Button) findViewById(R.id.navigation_standard);
         mNavigationList = (Button) findViewById(R.id.navigation_list);
+        mNavigationTabs = (Button) findViewById(R.id.navigation_tabs);
         
         mNavigationStandard.setOnClickListener(new OnClickListener() {
             @Override
@@ -224,6 +240,13 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+                updateButtonStates();
+            }
+        });
+        mNavigationTabs.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
                 updateButtonStates();
             }
         });
@@ -303,6 +326,42 @@ public class HomeActivity extends Activity {
             }
         });
         
+        mTabAdd = (Button) findViewById(R.id.display_tab_add);
+        mTabSelect = (Button) findViewById(R.id.display_tab_select);
+        mTabRemove = (Button) findViewById(R.id.display_tab_remove);
+        mTabRemoveAll = (Button) findViewById(R.id.display_tab_remove_all);
+        
+        mTabAdd.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tabText = TAB_TEXT[mActionBar.getTabCount()];
+                mActionBar.addTab(mActionBar.newTab().setText(tabText));
+                updateButtonStates();
+            }
+        });
+        mTabSelect.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int newIndex = RANDOM.nextInt(mActionBar.getTabCount());
+                mActionBar.setSelectedNavigationItem(newIndex);
+                updateButtonStates();
+            }
+        });
+        mTabRemove.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionBar.removeTabAt(mActionBar.getTabCount() - 1);
+                updateButtonStates();
+            }
+        });
+        mTabRemoveAll.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionBar.removeAllTabs();
+                updateButtonStates();
+            }
+        });
+        
         
         updateButtonStates();
     }
@@ -317,7 +376,10 @@ public class HomeActivity extends Activity {
         boolean isShowingTitle = (mActionBar.getDisplayOptions() & ActionBar.DISPLAY_SHOW_TITLE) != 0;
         boolean isNavigationStandard = mActionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_STANDARD;
         boolean isNavigationList = mActionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST;
+        boolean isNavigationTabs = mActionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS;
         boolean hasSubtitle = mActionBar.getSubtitle() != null;
+        boolean hasTabs = mActionBar.getTabCount() > 0;
+        boolean hasMaxTabs = mActionBar.getTabCount() > 3;
         boolean hasActions = mActionBar.getActionCount() > 0;
         boolean hasMaxActions = mActionBar.getActionCount() > 3;
         
@@ -343,20 +405,26 @@ public class HomeActivity extends Activity {
         
         mNavigationList.setEnabled(isVisible && !isNavigationList);
         mNavigationStandard.setEnabled(isVisible && !isNavigationStandard);
+        mNavigationTabs.setEnabled(isVisible && !isNavigationTabs);
         
-        mCustomViewShow.setEnabled(isVisible && !isNavigationList && !isShowingCustom);
-        mCustomViewHide.setEnabled(isVisible && !isNavigationList && isShowingCustom);
+        mCustomViewShow.setEnabled(isVisible && isNavigationStandard && !isShowingCustom);
+        mCustomViewHide.setEnabled(isVisible && isNavigationStandard && isShowingCustom);
         
-        mTitleShow.setEnabled(isVisible && !isNavigationList && !isShowingCustom && !isShowingTitle);
-        mTitleHide.setEnabled(isVisible && !isNavigationList && !isShowingCustom && isShowingTitle);
+        mTitleShow.setEnabled(isVisible && isNavigationStandard && !isShowingCustom && !isShowingTitle);
+        mTitleHide.setEnabled(isVisible && isNavigationStandard && !isShowingCustom && isShowingTitle);
         
-        mSubtitleShow.setEnabled(isVisible && !isNavigationList && !isShowingCustom && isShowingTitle && !hasSubtitle);
-        mSubtitleHide.setEnabled(isVisible && !isNavigationList && !isShowingCustom && isShowingTitle && hasSubtitle);
+        mSubtitleShow.setEnabled(isVisible && isNavigationStandard && !isShowingCustom && isShowingTitle && !hasSubtitle);
+        mSubtitleHide.setEnabled(isVisible && isNavigationStandard && !isShowingCustom && isShowingTitle && hasSubtitle);
         
         mActionAdd.setEnabled(isVisible && !hasMaxActions);
         mActionRemoveOne.setEnabled(isVisible && hasActions);
         mActionRemoveAll.setEnabled(isVisible && hasActions);
         mActionRemoveShare.setEnabled(isVisible && hasActionShare);
+        
+        mTabAdd.setEnabled(isVisible && isNavigationTabs && !hasMaxTabs);
+        mTabRemove.setEnabled(isVisible && isNavigationTabs && hasTabs);
+        mTabRemoveAll.setEnabled(isVisible && isNavigationTabs && hasTabs);
+        mTabSelect.setEnabled(isVisible && isNavigationTabs && hasTabs);
         
         mProgressStart.setEnabled(isVisible && !isProgressStarted);
         mProgressStop.setEnabled(isVisible && isProgressStarted);
