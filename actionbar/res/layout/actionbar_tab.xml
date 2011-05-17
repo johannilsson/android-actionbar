@@ -20,11 +20,20 @@
     android:layout_alignParentLeft="true"
     android:layout_weight="1"
     >
-    <TextView
+    <com.markupartist.android.widget.ScrollingTextView
         android:id="@+id/actionbar_tab"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:padding="5dip"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textSize="16dip"
+        android:textStyle="bold"
+        android:textColor="@color/actionbar_title"
+        android:lines="1"
+        android:scrollHorizontally="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
         />
     <!-- TODO: Make configurable. -->
     <View
