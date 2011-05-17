@@ -1,15 +1,14 @@
 package com.markupartist.android.actionbar.example;
 
 import com.markupartist.android.widget.ActionBar;
-import com.markupartist.android.widget.ActionBar.AbstractAction;
-import com.markupartist.android.widget.ActionBar.IntentAction;
 import com.markupartist.android.widget.ActionBar.Tab;
 import com.markupartist.android.widget.ActionBar.TabListener;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.Toast;
 
 public class OtherActivity extends Activity implements TabListener {
@@ -20,17 +19,19 @@ public class OtherActivity extends Activity implements TabListener {
         setContentView(R.layout.other);
 
         ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-        // You can also assign the title programmatically by passing a
-        // CharSequence or resource id.
-        //actionBar.setTitle(R.string.some_title);
-        actionBar.setHomeAction(new IntentAction(this, HomeActivity.createIntent(this), R.drawable.ic_title_home_default));
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.addAction(new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default));
-        actionBar.addAction(new ExampleAction());
+        
+        getMenuInflater().inflate(R.menu.other_actionbar, actionBar);
+        Toast.makeText(this, "Count: " + actionBar.size(), Toast.LENGTH_LONG).show();
+        actionBar.findItem(R.id.actionbar_item_home).setIntent(HomeActivity.createIntent(this));
+        actionBar.findItem(R.id.item_share).setIntent(createShareIntent());
+        actionBar.findItem(R.id.item_export).setOnMenuItemClickListener(exampleListener);
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.addTab(actionBar.newTab().setText("Tab 1").setTabListener(this));
         actionBar.addTab(actionBar.newTab().setText("Tab 2").setTabListener(this));
+        
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private Intent createShareIntent() {
@@ -40,19 +41,14 @@ public class OtherActivity extends Activity implements TabListener {
         return Intent.createChooser(intent, "Share");
     }
 
-    private class ExampleAction extends AbstractAction {
-
-        public ExampleAction() {
-            super(getResources().getDrawable(R.drawable.ic_title_export_default));
-        }
-
+    private final OnMenuItemClickListener exampleListener = new OnMenuItemClickListener() {
         @Override
-        public void performAction(View view) {
+        public boolean onMenuItemClick(MenuItem item) {
             Toast.makeText(OtherActivity.this,
                     "Example action", Toast.LENGTH_SHORT).show();
+            return true;
         }
-
-    }
+    };
 
     @Override
     public void onTabReselected(Tab tab) {

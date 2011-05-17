@@ -3,15 +3,14 @@ package com.markupartist.android.actionbar.example;
 import java.util.Random;
 
 import com.markupartist.android.widget.ActionBar;
-import com.markupartist.android.widget.ActionBar.Action;
-import com.markupartist.android.widget.ActionBar.IntentAction;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,16 +21,13 @@ import android.widget.Toast;
 public class HomeActivity extends Activity {
     private static final Random RANDOM = new Random();
     private static final String[] TAB_TEXT = new String[] {
-    	"Tab1",
-    	"Tab2",
-    	"This is some really long tab text!",
-    	"Tab4",
+        "Tab1",
+        "Tab2",
+        "This is some really long tab text!",
+        "Tab4",
     };
     
     private ActionBar mActionBar;
-    
-    private Action mActionShare;
-    private Action mActionOther;
     
     private Button mActionBarShow;
     private Button mActionBarHide;
@@ -78,11 +74,19 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.main);
 
         mActionBar = (ActionBar) findViewById(R.id.actionbar);
-        mActionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.ic_title_home_default));
+
+        // The title will automatically be pulled from the AndroidManifest.xml.
+        // You can also assign the title programmatically by passing a
+        // CharSequence or resource id.
+        //actionBar.setTitle(R.string.some_title);
+        
         mActionBar.setHomeLogo(R.drawable.logo);
         mActionBar.setCustomView(R.layout.custom_view);
         mActionBar.setDisplayShowCustomEnabled(false);
         mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.add(0, R.id.actionbar_item_home, 0, "")
+            .setIcon(R.drawable.ic_title_home_default)
+            .setIntent(createIntent(this));
         
         SpinnerAdapter listAdapter = ArrayAdapter.createFromResource(this, R.array.locations, R.layout.actionbar_title);
         mActionBar.setListNavigationCallbacks(listAdapter, new ActionBar.OnNavigationListener() {
@@ -93,11 +97,8 @@ public class HomeActivity extends Activity {
             }
         });
 
-        mActionShare = new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default);
-        mActionBar.addAction(mActionShare);
-        mActionOther = new IntentAction(this, new Intent(this, OtherActivity.class), R.drawable.ic_title_export_default);
-        mActionBar.addAction(mActionOther);
-
+        addShareItem();
+        addOtherItem();
         
         mProgressStart = (Button) findViewById(R.id.start_progress);
         mProgressStop = (Button) findViewById(R.id.stop_progress);
@@ -126,19 +127,17 @@ public class HomeActivity extends Activity {
         mActionAdd.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mActionBar.getActionCount() == 0) {
-                    mActionBar.addAction(mActionShare);
+                if (mActionBar.size() == 0) {
+                    addShareItem();
                 } else {
-                    mActionBar.addAction(new Action() {
-                        @Override
-                        public void performAction(View view) {
-                            Toast.makeText(HomeActivity.this, "Added action.", Toast.LENGTH_SHORT).show();
-                        }
-                        @Override
-                        public Drawable getIcon() {
-                            return getResources().getDrawable(R.drawable.ic_title_export_default);
-                        }
-                    });
+                    mActionBar.add(0, R.drawable.ic_title_export_default)
+                        .setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                Toast.makeText(HomeActivity.this, "Action clicked!", Toast.LENGTH_SHORT).show();
+                                return true;
+                            }
+                        });
                 }
                 updateButtonStates();
             }
@@ -146,8 +145,8 @@ public class HomeActivity extends Activity {
         mActionRemoveOne.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                int actionCount = mActionBar.getActionCount();
-                mActionBar.removeActionAt(actionCount - 1);
+                int actionCount = mActionBar.size();
+                mActionBar.removeItemAt(actionCount - 1);
                 Toast.makeText(HomeActivity.this, "Removed action." , Toast.LENGTH_SHORT).show();
                 updateButtonStates();
             }
@@ -155,14 +154,14 @@ public class HomeActivity extends Activity {
         mActionRemoveShare.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mActionBar.removeAction(mActionShare);
+                mActionBar.removeItem(R.id.item_share);
                 updateButtonStates();
             }
         });
         mActionRemoveAll.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mActionBar.removeAllActions();
+                mActionBar.clear();
                 updateButtonStates();
             }
         });
@@ -366,6 +365,18 @@ public class HomeActivity extends Activity {
         updateButtonStates();
     }
     
+    private void addShareItem() {
+        mActionBar.add(0, R.id.item_share, 0, "")
+            .setIcon(R.drawable.ic_title_share_default)
+            .setIntent(createShareIntent());
+    }
+    
+    private void addOtherItem() {
+        mActionBar.add()
+        .setIcon(R.drawable.ic_title_export_default)
+        .setIntent(new Intent(this, OtherActivity.class));
+    }
+    
     private void updateButtonStates() {
         boolean isVisible = mActionBar.isShowing();
         boolean isProgressStarted = mActionBar.getProgressBarVisibility() == View.VISIBLE;
@@ -380,16 +391,9 @@ public class HomeActivity extends Activity {
         boolean hasSubtitle = mActionBar.getSubtitle() != null;
         boolean hasTabs = mActionBar.getTabCount() > 0;
         boolean hasMaxTabs = mActionBar.getTabCount() > 3;
-        boolean hasActions = mActionBar.getActionCount() > 0;
-        boolean hasMaxActions = mActionBar.getActionCount() > 3;
-        
-        boolean hasActionShare = false;
-        for (int i = 0; i < mActionBar.getActionCount(); i++) {
-            if (mActionBar.getActionAt(i).equals(mActionShare)) {
-                hasActionShare = true;
-                break;
-            }
-        }
+        boolean hasActions = mActionBar.size() > 0;
+        boolean hasMaxActions = mActionBar.size() > 3;
+        boolean hasActionShare = mActionBar.findItem(R.id.item_share) != null;
         
         mActionBarShow.setEnabled(!isVisible);
         mActionBarHide.setEnabled(isVisible);

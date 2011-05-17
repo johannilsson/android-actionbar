@@ -36,23 +36,17 @@
             style="@style/ActionBarHomeLogo"
             android:visibility="gone"
             />
-        <RelativeLayout
-            android:id="@+id/actionbar_home_bg"
+        <FrameLayout
+            android:id="@+id/actionbar_home_view"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/actionbar_height"
-            android:orientation="horizontal"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_margin="0dp"
+            android:padding="0dp"
             android:background="@color/actionbar_separator"
             android:visibility="gone"
-            >
-            <!-- TODO: Make configurable. -->
-            <ImageButton
-                android:id="@+id/actionbar_home_btn"
-                style="@style/ActionBarHomeItem"
-                android:background="@drawable/actionbar_btn"
-                />
-        </RelativeLayout>
+            />
         <ImageView
             android:id="@+id/actionbar_home_is_back"
             android:layout_width="wrap_content"

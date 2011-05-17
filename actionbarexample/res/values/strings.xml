@@ -3,4 +3,5 @@
     <string name="hello">Hello World, HomeActivity!</string>
     <string name="app_name">Android-ActionBar Example</string>
     <string name="some_title">Other</string>
+    <string name="other_content">Hey! Another activity!\n\nThe action items on the action bar in this activity have been inflated from an XML resource, just like you would with the context menu or the native action bar on Android 3.0+.</string>
 </resources>

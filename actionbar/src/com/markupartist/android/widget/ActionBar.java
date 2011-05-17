@@ -19,20 +19,26 @@ package com.markupartist.android.widget;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -41,7 +47,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.markupartist.android.widget.actionbar.R;
 
@@ -50,26 +55,7 @@ import com.markupartist.android.widget.actionbar.R;
  * 
  * @author Johan Nilsson <http://markupartist.com>
  */
-public class ActionBar extends RelativeLayout implements View.OnClickListener {
-    
-    /**
-     * Listener interface for ActionBar navigation events.
-     */
-    public static interface OnNavigationListener {
-        /**
-         * This method is called whenever a navigation item in your action bar
-         * is selected.
-         * 
-         * @param itemPosition Position of the item clicked.
-         * @param itemId ID of the item clicked.
-         * @return {@code true} if the event was handled, {@code false}
-         * otherwise.
-         */
-        boolean onNavigationItemSelected(int itemPosition, long itemId);
-    }
-    
-    
-    
+public class ActionBar extends RelativeLayout implements Menu {
     /**
      * Display the 'home' element such that it appears as an 'up' affordance.
      * e.g. show an arrow to the left indicating the action that will be
@@ -150,11 +136,16 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     public static final int NAVIGATION_MODE_TABS = 0x2;// = android.app.ActionBar.NAVIGATION_MODE_TABS;
 
+    
+    
     /** Layout inflation service. */
     private final LayoutInflater mInflater;
     
     /** Parent view of the action bar. */
     private final RelativeLayout mBarView;
+    
+    /** Home item view. */
+    private final FrameLayout mHomeView;
     
     /** Home logo. */
     private final ImageView mHomeLogo;
@@ -188,12 +179,6 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
 
     /** Indeterminate progress bar. */
     private final ProgressBar mProgress;
-    
-    /** Home item icon. */
-    private final ImageButton mHomeIconImage;
-    
-    /** Home item. */
-    private final RelativeLayout mHomeIcon;
     
     /**
      * Display state flags.
@@ -230,6 +215,8 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     private OnNavigationListener mListCallback;
     
+    
+    
     /**
      * Listener for list title click. Will display a list dialog of all the
      * options provided and execute the specified {@link OnNavigationListener}.
@@ -258,6 +245,31 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
             }
         }
     };
+    
+    private final View.OnClickListener mActionClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            final Action action = (Action) view.getTag();    
+            if (action.mListener != null) {
+                action.mListener.onMenuItemClick(action);
+            }
+            if (action.getIntent() != null) {
+                getContext().startActivity(action.getIntent());
+            }
+        }
+    };
+    
+    private final View.OnClickListener mTabClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            final Tab tab = (Tab) view.getTag();
+            if (tab.mIsSelected) {
+                tab.mListener.onTabReselected(tab);
+            } else {
+                tab.select();
+            }
+        }
+    };
 
     
     
@@ -269,9 +281,8 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         mBarView = (RelativeLayout) mInflater.inflate(R.layout.actionbar, null);
         addView(mBarView);
 
+        mHomeView = (FrameLayout) mBarView.findViewById(R.id.actionbar_home_view);
         mHomeLogo = (ImageView) mBarView.findViewById(R.id.actionbar_home_logo);
-        mHomeIcon = (RelativeLayout) mBarView.findViewById(R.id.actionbar_home_bg);
-        mHomeIconImage = (ImageButton) mBarView.findViewById(R.id.actionbar_home_btn);
         mHomeUpIndicator = mBarView.findViewById(R.id.actionbar_home_is_back);
 
         mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
@@ -364,11 +375,11 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         if (getDisplayOptionValue(DISPLAY_SHOW_HOME)) {
             mHomeUpIndicator.setVisibility(getDisplayOptionValue(DISPLAY_HOME_AS_UP) ? View.VISIBLE : View.GONE);
             mHomeLogo.setVisibility(usingLogo ? View.VISIBLE : View.GONE);
-            mHomeIcon.setVisibility(usingLogo ? View.GONE : View.VISIBLE);
+            mHomeView.setVisibility(usingLogo ? View.GONE : View.VISIBLE);
         } else {
             mHomeUpIndicator.setVisibility(View.GONE);
             mHomeLogo.setVisibility(View.GONE);
-            mHomeIcon.setVisibility(View.GONE);
+            mHomeView.setVisibility(View.GONE);
         }
         
         //If we are a list, set the list view to the currently selected item
@@ -399,27 +410,209 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         mCustomView.setVisibility(!isList && !isList && showingCustom ? View.VISIBLE : View.GONE);
     }
 
-    /**
-     * Inflates a {@link View} with the given {@link Action}.
-     * 
-     * @param action The action to inflate
-     * @return View
-     */
-    private View inflateAction(Action action) {
-        View view = mInflater.inflate(R.layout.actionbar_item, mActionsView, false);
+    // ------------------------------------------------------------------------
+    // MENU INTERFACE METHODS
+    // ------------------------------------------------------------------------
+    
+    @Override
+    public MenuItem add(CharSequence title) {
+        return new Action().setTitle(title);
+    }
+    
+    @Override
+    public MenuItem add(int titleRes) {
+        return new Action().setTitle(titleRes);
+    }
 
-        ImageButton labelView =
-            (ImageButton) view.findViewById(R.id.actionbar_item);
+    @Override
+    public MenuItem add(int groupId, int itemId, int order, CharSequence title) {
+        return new Action(groupId, itemId, order).setTitle(title);
+    }
+
+    @Override
+    public MenuItem add(int groupId, int itemId, int order, int titleRes) {
+        return new Action(groupId, itemId, order).setTitle(titleRes);
+    }
+
+    @Override
+    public int addIntentOptions(int groupId, int itemId, int order, ComponentName caller, Intent[] specifics, Intent intent, int flags, MenuItem[] outSpecificItems) {
+        //DISCLAIMER: I have no idea what this does. Taken verbatim from
+        // http://android.git.kernel.org/?p=platform/frameworks/base.git;a=blob;f=core/java/com/android/internal/view/menu/MenuBuilder.java;h=228d5d09b0ab2efdd1a5bbc73853c92ef40b7cf7;hb=HEAD#l420
+        PackageManager pm = getContext().getPackageManager();
+        final List<ResolveInfo> lri =
+            pm.queryIntentActivityOptions(caller, specifics, intent, 0);
+        final int count = (lri != null) ? lri.size() : 0;
         
-        if (action.getIcon() != null) {
-            labelView.setImageDrawable(action.getIcon());
-        } else if (action.getDrawable() != NO_ID) {
-            labelView.setImageResource(action.getDrawable());
+        if ((flags & Menu.FLAG_APPEND_TO_GROUP) == 0) {
+            removeGroup(groupId);
         }
+        
+        for (int i = 0; i < count; i++) {
+            final ResolveInfo ri = lri.get(i);
+            Intent rintent = new Intent(
+                (ri.specificIndex < 0) ? intent : specifics[ri.specificIndex]);
+            rintent.setComponent(new ComponentName(
+                    ri.activityInfo.applicationInfo.packageName,
+                    ri.activityInfo.name));
+            final MenuItem item = add(groupId, itemId, order, ri.loadLabel(pm))
+                    .setIcon(ri.loadIcon(pm))
+                    .setIntent(rintent);
+            if ((outSpecificItems != null) && (ri.specificIndex > 0)) {
+                outSpecificItems[ri.specificIndex] = item;
+            }
+        }
+        
+        return count;
+    }
 
-        view.setTag(action);
-        view.setOnClickListener(this);
-        return view;
+    @Override
+    public SubMenu addSubMenu(CharSequence title) {
+        //We do not support sub-menus.
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public SubMenu addSubMenu(int titleRes) {
+        //We do not support sub-menus.
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public SubMenu addSubMenu(int groupId, int itemId, int order, CharSequence title) {
+        //We do not support sub-menus.
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public SubMenu addSubMenu(int groupId, int itemId, int order, int titleRes) {
+        //We do not support sub-menus.
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void clear() {
+        mActionsView.removeAllViews();
+    }
+
+    @Override
+    public void close() {
+        //Negative. We are always open.
+    }
+
+    @Override
+    public MenuItem findItem(int id) {
+        if (id == R.id.actionbar_item_home) {
+            View home = mHomeView.getChildAt(0);
+            return (home != null) ? (MenuItem) home.getTag() : null;
+        }
+        
+        final int count = size();
+        for (int i = 0; i < count; i++) {
+            MenuItem item = getItem(i);
+            if (item.getItemId() == id) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public MenuItem getItem(int index) {
+        View view = mActionsView.getChildAt(index);
+        return (view != null) ? (MenuItem) view.getTag() : null;
+    }
+
+    @Override
+    public boolean hasVisibleItems() {
+        final int count = size();
+        for (int i = 0; i < count; i++) {
+            if (getItem(i).isVisible()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isShortcutKey(int keyCode, KeyEvent event) {
+        //We do not support shortcut keys.
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public boolean performIdentifierAction(int id, int flags) {
+        //We do not support shortcut keys.
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public boolean performShortcut(int keyCode, KeyEvent event, int flags) {
+        //We do not support shortcut keys.
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void removeGroup(int groupId) {
+        final int count = size();
+        for (int i = 0; i < count; i++) {
+            if (getItem(i).getGroupId() == groupId) {
+                mActionsView.removeViewAt(i);
+            }
+        }
+    }
+
+    @Override
+    public void removeItem(int id) {
+        final int count = size();
+        for (int i = 0; i < count; i++) {
+            if (getItem(i).getItemId() == id) {
+                mActionsView.removeViewAt(i);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void setGroupCheckable(int group, boolean checkable, boolean exclusive) {
+        final int count = size();
+        for (int i = 0; i < count; i++) {
+            MenuItem item = getItem(i);
+            if (item.getGroupId() == group) {
+                item.setCheckable(true);
+            }
+        }
+    }
+
+    @Override
+    public void setGroupEnabled(int group, boolean enabled) {
+        final int count = size();
+        for (int i = 0; i < count; i++) {
+            MenuItem item = getItem(i);
+            if (item.getGroupId() == group) {
+                item.setEnabled(enabled);
+            }
+        }
+    }
+
+    @Override
+    public void setGroupVisible(int group, boolean visible) {
+        final int count = size();
+        for (int i = 0; i < count; i++) {
+            MenuItem item = getItem(i);
+            if (item.getGroupId() == group) {
+                item.setVisible(visible);
+            }
+        }
+    }
+
+    @Override
+    public void setQwertyMode(boolean isQwerty) {
+        //Do nothing. We do not support shortcuts.
+    }
+
+    @Override
+    public int size() {
+        return mActionsView.getChildCount();
     }
 
     // ------------------------------------------------------------------------
@@ -1001,36 +1194,60 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     }
 
     // ------------------------------------------------------------------------
-    // LEGACY AND DEPRECATED METHODS
+    // CUSTOM METHODS
     // ------------------------------------------------------------------------
 
     /**
-     * Set the special action for home icon and logo. This will automatically
-     * enable {@link #DISPLAY_SHOW_HOME}.
+     * Add a new item to the menu.
      * 
-     * @param action Action to set.
+     * @return The newly added menu item. 
      */
-    public void setHomeAction(Action action) {
-        mHomeLogo.setOnClickListener(this);
-        mHomeLogo.setTag(action);
-        
-        mHomeIconImage.setOnClickListener(this);
-        mHomeIconImage.setTag(action);
-        if (action.getIcon() != null) {
-            mHomeIconImage.setImageDrawable(action.getIcon());
-        } else if (action.getDrawable() != NO_ID) {
-            mHomeIconImage.setImageResource(action.getDrawable());
-        }
-        
-        setDisplayShowHomeEnabled(true);
+    public MenuItem add() {
+        return add("");
     }
     
     /**
-     * @deprecated See {@link #setDisplayShowHomeEnabled(boolean)}.
+     * Add a new item to the menu with the given icon.
+     * 
+     * @param itemId Unique item id.
+     * @param iconRes Icon resource ID.
+     * @return The newly added menu item. 
      */
-    @Deprecated
-    public void clearHomeAction() {
-        setDisplayShowHomeEnabled(false);
+    public MenuItem add(int itemId, int iconRes) {
+        return add(0, itemId, 0, "").setIcon(iconRes);
+    }
+    
+    /**
+     * Add a new item to the menu with the given id, icon, and intent.
+     * 
+     * @param itemId Unique item id.
+     * @param iconRes Icon resource ID.
+     * @param intent Intent to be executed when clicked.
+     * @return The newly added menu item. 
+     */
+    public MenuItem add(int itemId, int iconRes, Intent intent) {
+        return add(itemId, iconRes).setIntent(intent);
+    }
+    
+    /**
+     * Add a new item to the menu with the given id, icon, and click listener.
+     * 
+     * @param itemId Unique item id.
+     * @param iconRes Icon resource ID.
+     * @param listener Item click listener.
+     * @return The newly added menu item. 
+     */
+    public MenuItem add(int itemId, int iconRes, OnMenuItemClickListener listener) {
+        return add(itemId, iconRes).setOnMenuItemClickListener(listener);
+    }
+    
+    /**
+     * Remove the item at the specified index.
+     * 
+     * @param index The position of the item to remove.
+     */
+    public void removeItemAt(int index) {
+        mActionsView.removeViewAt(index);
     }
 
     /**
@@ -1107,225 +1324,224 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         mSubtitleView.setOnClickListener(listener);
     }
 
-    @Override
-    public void onClick(View view) {
-        final Object tag = view.getTag();
-        if (tag instanceof Action) {
-            final Action action = (Action) tag;
-            action.performAction(view);
-        } else if  (tag instanceof Tab) {
-            final Tab tab = (Tab) tag;
-
-            if (tab.mIsSelected) {
-                tab.mListener.onTabReselected(tab);
-            } else {
-                tab.select();
-            }
-        }
-    }
-
-    /**
-     * Adds a list of {@link Action}s.
-     * 
-     * @param actions List of actions to add.
-     * 
-     * @see #addAction(Action)
-     * @see #addAction(Action, int)
-     */
-    public void addActions(List<Action> actions) {
-        for (Action action : actions) {
-            addAction(action);
-        }
-    }
-
-    /**
-     * Adds a new {@link Action}.
-     * 
-     * @param action Action to add.
-     * 
-     * @see #addAction(Action, int)
-     * @see #addActions(List)
-     */
-    public void addAction(Action action) {
-        final int index = mActionsView.getChildCount();
-        addAction(action, index);
-    }
-
-    /**
-     * Adds a new {@link Action} at the specified index.
-     * 
-     * @param action Action to add.
-     * @param index The position at which to add the action.
-     * 
-     * @see #addAction(Action)
-     * @see #addActions(List)
-     */
-    public void addAction(Action action, int index) {
-        mActionsView.addView(inflateAction(action), index);
-    }
-
-    /**
-     * Removes all action views from this action bar.
-     */
-    public void removeAllActions() {
-        mActionsView.removeAllViews();
-    }
-
-    /**
-     * Remove an action from the action bar.
-     * 
-     * @param index Position of action to remove.
-     */
-    public void removeActionAt(int index) {
-        mActionsView.removeViewAt(index);
-    }
-
-    /**
-     * Remove an action from the action bar.
-     * 
-     * @param action The action to remove.
-     */
-    public void removeAction(Action action) {
-        int childCount = mActionsView.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View view = mActionsView.getChildAt(i);
-            if (view != null) {
-                final Object tag = view.getTag();
-                if (tag instanceof Action && tag.equals(action)) {
-                    mActionsView.removeView(view);
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns the number of actions currently registered with the action bar.
-     * 
-     * @return Action count.
-     */
-    public int getActionCount() {
-        return mActionsView.getChildCount();
-    }
-    
-    /**
-     * Return an action at the specified index if it exists.
-     * 
-     * @param index Index of the action.
-     * @return Action or {@code null} if it does not exist.
-     * 
-     * @see #getActionCount()
-     */
-    public Action getActionAt(int index) {
-        View view = mActionsView.getChildAt(index);
-        if ((view != null) && (view.getTag() instanceof Action)) {
-            return (Action)view.getTag();
-        }
-        return null;
-    }
-
     // ------------------------------------------------------------------------
     // HELPER INTERFACES AND HELPER CLASSES
     // ------------------------------------------------------------------------
 
     /**
-     * Definition of an action that can be performed along with a icon to show.
+     * Exception which conveys a particular feature or method is not implemented.
      */
-    public static abstract class Action {
-        /**
-         * @deprecated Use {@link #getIcon()}.
-         */
-        @Deprecated
-        public int getDrawable() {
-            return 0;
-        }
-        
-        /**
-         * Get the icon of the action.
-         * 
-         * @return Drawable icon.
-         */
-        public abstract Drawable getIcon();
-        
-        /**
-         * Callback when this action is clicked on.
-         * 
-         * @param view Action view.
-         */
-        public abstract void performAction(View view);
+    public static class NotImplementedException extends RuntimeException {
+        private static final long serialVersionUID = -7062769349049315824L;
     }
 
     /**
-     * Base class for an {@link Action} implementation.
+     * Definition of an action that can be performed along with a icon to show.
      */
-    public static abstract class AbstractAction extends Action {
-        private final int mDrawable;
-        private final Drawable mIcon;
-
-        /**
-         * @deprecated Use {@link #AbstractAction(Drawable)}.
-         */
-        @Deprecated
-        public AbstractAction(int drawable) {
-            mDrawable = drawable;
-            mIcon = null;
+    final class Action implements MenuItem {
+        private final View mView;
+        private final ImageView mIcon;
+        private final int mItemId;
+        private final int mGroupId;
+        private final int mOrder;
+        
+        OnMenuItemClickListener mListener;
+        Intent mIntent;
+        CharSequence mTitle;
+        boolean mIsEnabled;
+        boolean mIsVisible;
+        boolean mIsCheckable;
+        boolean mIsChecked;
+        
+        
+        Action() {
+            this(0, 0, 0);
         }
-        /**
-         * 
-         * @param icon
-         */
-        public AbstractAction(Drawable icon) {
-            mDrawable = NO_ID;
-            mIcon = icon;
+        Action(int groupId, int itemId, int order) {
+            mView = mInflater.inflate(R.layout.actionbar_item, mActionsView, false);
+            mView.setTag(this);
+            mView.setOnClickListener(ActionBar.this.mActionClicked);
+            
+            if (itemId == R.id.actionbar_item_home) {
+                mHomeView.removeAllViews();
+                mHomeView.addView(mView);
+            } else {
+                mActionsView.addView(mView);
+            }
+            
+            mIcon = (ImageButton) mView.findViewById(R.id.actionbar_item);
+            
+            mGroupId = groupId;
+            mItemId = itemId;
+            mOrder = order;
+            mIsVisible = true;
+            mIsEnabled = true;
+        }
+        
+
+        @Override
+        public final char getAlphabeticShortcut() {
+            //We do not support shortcut keys.
+            throw new NotImplementedException();
         }
 
         @Override
-        public int getDrawable() {
-            return mDrawable;
+        public final int getGroupId() {
+            return mGroupId;
         }
         
         @Override
         public Drawable getIcon() {
-            return mIcon;
-        }
-    }
-
-    /**
-     * Helper class for an {@link Action} which will automatically launch an
-     * {@link Intent} when clicked.
-     */
-    public static class IntentAction extends AbstractAction {
-        private final Context mContext;
-        private final Intent mIntent;
-
-        public IntentAction(Context context, Intent intent, int drawable) {
-            //Load drawable from context and call sibling constructor
-            this(context, intent, context.getResources().getDrawable(drawable));
-        }
-        public IntentAction(Context context, Intent intent, Drawable icon) {
-            super(icon);
-            mContext = context;
-            mIntent = intent;
+            return mIcon.getDrawable();
         }
 
         @Override
-        public void performAction(View view) {
-            try {
-                mContext.startActivity(mIntent); 
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(mContext,
-                        mContext.getText(R.string.actionbar_activity_not_found),
-                        Toast.LENGTH_SHORT).show();
-            }
+        public Intent getIntent() {
+            return mIntent;
         }
-    }
 
-    /*
-    public static abstract class SearchAction extends AbstractAction {
-        public SearchAction() {
-            super(R.drawable.actionbar_search);
+        @Override
+        public final int getItemId() {
+            return mItemId;
+        }
+
+        @Override
+        public final ContextMenuInfo getMenuInfo() {
+            return null;
+        }
+
+        @Override
+        public final char getNumericShortcut() {
+            //We do not support shortcut keys.
+            throw new NotImplementedException();
+        }
+
+        @Override
+        public final int getOrder() {
+            return mOrder;
+        }
+
+        @Override
+        public final SubMenu getSubMenu() {
+            return null;
+        }
+
+        @Override
+        public CharSequence getTitle() {
+            return mTitle;
+        }
+
+        @Override
+        public final CharSequence getTitleCondensed() {
+            return getTitle();
+        }
+
+        @Override
+        public final boolean hasSubMenu() {
+            return false;
+        }
+
+        @Override
+        public final boolean isCheckable() {
+            return mIsCheckable;
+        }
+
+        @Override
+        public final boolean isChecked() {
+            return mIsChecked;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return mIsEnabled;
+        }
+
+        @Override
+        public boolean isVisible() {
+            return mIsVisible;
+        }
+
+        @Override
+        public final MenuItem setAlphabeticShortcut(char alphaChar) {
+            //We do not support shortcut keys.
+            return this;
+        }
+
+        @Override
+        public MenuItem setCheckable(boolean checkable) {
+            mIsCheckable = checkable;
+            return this;
+        }
+
+        @Override
+        public MenuItem setChecked(boolean checked) {
+            mIsChecked = checked;
+            return this;
+        }
+
+        @Override
+        public MenuItem setEnabled(boolean enabled) {
+            mIsEnabled = enabled;
+            return this;
+        }
+
+        @Override
+        public MenuItem setIcon(Drawable icon) {
+            mIcon.setImageDrawable(icon);
+            return this;
+        }
+
+        @Override
+        public MenuItem setIcon(int iconRes) {
+            return setIcon(getContext().getResources().getDrawable(iconRes));
+        }
+
+        @Override
+        public MenuItem setIntent(Intent intent) {
+            mIntent = intent;
+            return this;
+        }
+
+        @Override
+        public MenuItem setNumericShortcut(char numericChar) {
+            //We do not support shortcut keys.
+            return this;
+        }
+
+        @Override
+        public MenuItem setOnMenuItemClickListener(OnMenuItemClickListener menuItemClickListener) {
+            mListener = menuItemClickListener;
+            return this;
+        }
+
+        @Override
+        public MenuItem setShortcut(char numericChar, char alphaChar) {
+            //We do not support shortcut keys.
+            return this;
+        }
+
+        @Override
+        public MenuItem setTitle(CharSequence title) {
+            mTitle = title;
+            return this;
+        }
+
+        @Override
+        public MenuItem setTitle(int title) {
+            return setTitle(getContext().getResources().getText(title));
+        }
+
+        @Override
+        public MenuItem setTitleCondensed(CharSequence title) {
+            return setTitle(title);
+        }
+
+        @Override
+        public MenuItem setVisible(boolean visible) {
+            mIsVisible = visible;
+            return this;
         }
     }
-    */
 
     /**
      * A tab in the action bar.
@@ -1435,7 +1651,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
             }
 
             mView.setTag(this);
-            mView.setOnClickListener(ActionBar.this);
+            mView.setOnClickListener(ActionBar.this.mTabClicked);
 
             return mView;
         }
@@ -1468,5 +1684,21 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
          * @param tab The tab that was unselected.
          */
         public void onTabUnselected(ActionBar.Tab tab);
+    }
+    
+    /**
+     * Listener interface for ActionBar navigation events.
+     */
+    public static interface OnNavigationListener {
+        /**
+         * This method is called whenever a navigation item in your action bar
+         * is selected.
+         * 
+         * @param itemPosition Position of the item clicked.
+         * @param itemId ID of the item clicked.
+         * @return {@code true} if the event was handled, {@code false}
+         * otherwise.
+         */
+        boolean onNavigationItemSelected(int itemPosition, long itemId);
     }
 }
