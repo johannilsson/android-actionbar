@@ -216,7 +216,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     private int mNavigationMode;
     
     /**
-     * Current selected index of either the list or tab navigation.
+     * Current selected index of list navigation.
      */
     private int mSelectedIndex;
     
@@ -394,9 +394,9 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         //Show subtitle view if we are not in list navigation, not showing
         //custom view, show title flag is true, and a subtitle is set
         mSubtitleView.setVisibility(!isList && !showingCustom && showingTitle && hasSubtitle ? View.VISIBLE : View.GONE);
-        //Show custom view if we are not in list navigation and showing custom
-        //flag is set
-        mCustomView.setVisibility(!isList && showingCustom ? View.VISIBLE : View.GONE);
+        //Show custom view if we are not in list navigation, not in tab
+        //navigation, and the showing custom flag is set
+        mCustomView.setVisibility(!isList && !isList && showingCustom ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -425,6 +425,54 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
     // ------------------------------------------------------------------------
     // NATIVE ACTION BAR METHODS
     // ------------------------------------------------------------------------
+
+    /**
+     * Add a tab for use in tabbed navigation mode. The tab will be added at
+     * the end of the list. If this is the first tab to be added it will become
+     * the selected tab.
+     * 
+     * @param tab A new Tab.
+     */
+    public void addTab(Tab tab) {
+        final int position = getTabCount();
+        addTab(tab, position, position == 0 ? true : false);
+    }
+    
+    /**
+     * Add a tab for use in tabbed navigation mode. The tab will be added at the
+     * end of the list.
+     * 
+     * @param tab Tab to add
+     * @param setSelected True if the added tab should become the selected tab.
+     */
+    public void addTab(Tab tab, boolean setSelected) {
+        final int position = getTabCount();
+        addTab(tab, position, setSelected);
+    }
+
+    /**
+     * Add a tab for use in tabbed navigation mode. The tab will be inserted at
+     * position. If this is the first tab to be added it will become the
+     * selected tab.
+     * 
+     * @param tab Tab to add.
+     * @param position The new position of the tab.
+     */
+    public void addTab(Tab tab, int position) {
+        addTab(tab, position, getTabCount() == 0 ? true : false);
+    }
+
+    /**
+     * Add a tab for use in tabbed navigation mode. The tab will be insterted
+     * at position.
+     * 
+     * @param tab The tab to add
+     * @param position The new position of the tab.
+     * @param setSelected True if the added tab should become the selected tab.
+     */
+    public void addTab(Tab tab, int position, boolean setSelected) {
+        mTabsView.addView(tab.inflate(setSelected), position);
+    }
     
     /**
      * @return The current custom view.
@@ -454,7 +502,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
             return mListAdapter.getCount();
         }
         if (this.mNavigationMode == NAVIGATION_MODE_TABS) {
-            return mTabsView.getChildCount();
+            return getTabCount();
         }
         return 0;
     }
@@ -481,11 +529,35 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * @return Position of the selected item.
      */
     public int getSelectedNavigationIndex() {
-        if ((mNavigationMode == NAVIGATION_MODE_LIST)
-                || (mNavigationMode == NAVIGATION_MODE_TABS)) {
+        if (mNavigationMode == NAVIGATION_MODE_LIST) {
             return mSelectedIndex;
         }
+        if (mNavigationMode == NAVIGATION_MODE_TABS) {
+            final int count = getTabCount();
+            for (int i = 0; i < count; i++) {
+                if (getTabAt(i).isSelected()) {
+                    return i;
+                }
+            }
+        }
         return -1;
+    }
+    
+    /**
+     * Returns the currently selected tab if in tabbed navigation mode and there
+     * is at least one tab present.
+     * 
+     * @return The currently selected tab or {@code null}.
+     */
+    public Tab getSelectedTab() {
+        final int count = getTabCount();
+        for (int i = 0; i < count; i++) {
+            Tab tab = getTabAt(i);
+            if (tab.isSelected()) {
+                return tab;
+            }
+        }
+        return null;
     }
     
     /**
@@ -505,6 +577,26 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * Returns the tab at the specified index.
+     * 
+     * @param index Index value.
+     * @return Tab at index or {@code null} if it does not exist.
+     */
+    public Tab getTabAt(int index) {
+        View tab = mTabsView.getChildAt(index);
+        return (tab != null) ? (Tab)tab.getTag() : null;
+    }
+    
+    /**
+     * Returns the number of tabs currently registered with the action bar.
+     * 
+     * @return Tab count.
+     */
+    public int getTabCount() {
+        return mTabsView.getChildCount();
     }
     
     /**
@@ -547,6 +639,84 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     public boolean isShowing() {
         return getVisibility() == View.VISIBLE;
+    }
+
+    /**
+     * Create and return a new {@link ActionBar.Tab}. This tab will not be
+     * included in the action bar until it is added.
+     * 
+     * @return A new Tab.
+     * 
+     * @see #addTab(Tab)
+     */
+    public Tab newTab() {
+        return new Tab();
+    }
+    
+    /**
+     * Remove all tabs from the action bar and deselect the current tab.
+     */
+    public void removeAllTabs() {
+        getSelectedTab().unselect();
+        mTabsView.removeAllViews();
+    }
+    
+    /**
+     * Remove a tab from the action bar. If the removed tab was selected it will
+     * be deselected and another tab will be selected if present.
+     * 
+     * @param tab The tab to remove.
+     */
+    public void removeTab(Tab tab) {
+        final int count = getTabCount();
+        for (int i = 0; i < count; i++) {
+            if (getTabAt(i).equals(tab)) {
+                removeTabAt(i);
+            }
+        }
+    }
+    
+    /**
+     * Remove a tab from the action bar. If the removed tab was selected it will
+     * be deselected and another tab will be selected if present.
+     * 
+     * @param index Position of the tab to remove.
+     */
+    public void removeTabAt(int index) {
+        Tab tab = getTabAt(index);
+        if (tab != null) {
+            tab.unselect();
+            mTabsView.removeViewAt(index);
+        
+            if (index > 0) {
+                //Select previous tab
+                ((Tab)mTabsView.getChildAt(index - 1).getTag()).select();
+            } else if (mTabsView.getChildCount() > 0) {
+                //Select first tab
+                ((Tab)mTabsView.getChildAt(0).getTag()).select();
+            }
+        }
+    }
+    
+    /**
+     * <p>Select the specified tab. If it is not a child of this action bar it
+     * will be added.</p>
+     * 
+     * <p>Note: If you want to select by index, use
+     * {@link #setSelectedNavigationItem(int)}.</p>
+     * 
+     * @param tab Tab to select.
+     */
+    public void selectTab(Tab tab) {
+        final int count = getTabCount();
+        for (int i = 0; i < count; i++) {
+            Tab existingTab = getTabAt(i);
+            if (existingTab.equals(tab)) {
+                existingTab.select();
+                return;
+            }
+        }
+        addTab(tab, true);
     }
     
     //Implemented by superclass:
@@ -748,7 +918,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
 
         if (mode != mNavigationMode) {
             mNavigationMode = mode;
-            mSelectedIndex = (mode == NAVIGATION_MODE_STANDARD) ? -1 : 0;
+            mSelectedIndex = (mode != NAVIGATION_MODE_LIST) ? -1 : 0;
             reloadDisplay();
         }
     }
@@ -759,9 +929,11 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      * @param position Position of the item to select.
      */
     public void setSelectedNavigationItem(int position) {
-        if ((mNavigationMode != NAVIGATION_MODE_STANDARD) && (position != mSelectedIndex)) {
+        if (mNavigationMode == NAVIGATION_MODE_LIST) {
             mSelectedIndex = position;
             reloadDisplay();
+        } else if (mNavigationMode == NAVIGATION_MODE_TABS) {
+            getTabAt(position).select();
         }
     }
     
@@ -826,56 +998,6 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
      */
     public void show() {
         setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Create and return a new {@link ActionBar.Tab}. This tab will not be
-     * included in the action bar until it is added.
-     * 
-     * @return A new Tab.
-     * 
-     * @see #addTab(Tab)
-     */
-    public Tab newTab() {
-        return new Tab();
-    }
-
-    /**
-     * Add a tab for use in tabbed navigation mode. The tab will be added at
-     * the end of the list. If this is the first tab to be added it will become
-     * the selected tab.
-     * 
-     * @param tab A new Tab.
-     */
-    public void addTab(Tab tab) {
-        final int position = mTabsView.getChildCount();
-        addTab(tab, position, position == 0 ? true : false);
-    }
-
-    /**
-     * Add a tab for use in tabbed navigation mode. The tab will be inserted at
-     * position. If this is the first tab to be added it will become the
-     * selected tab.
-     * 
-     * @param tab Tab to add.
-     * @param position The new position of the tab.
-     */
-    public void addTab(Tab tab, int position) {
-        final int count = mTabsView.getChildCount();
-        addTab(tab, position, count == 0 ? true : false);
-    }
-
-    /**
-     * Add a tab for use in tabbed navigation mode. The tab will be insterted
-     * at position.
-     * 
-     * @param tab The tab to add
-     * @param position The new position of the tab.
-     * @param setSelected True if the added tab should become the selected tab.
-     */
-    public void addTab(Tab tab, int position, boolean setSelected) {
-        // TODO: Handle setSelected.
-        mTabsView.addView(tab.inflate(setSelected), position);
     }
 
     // ------------------------------------------------------------------------
@@ -1213,6 +1335,15 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         private CharSequence mText;
         private ActionBar.TabListener mListener;
         private boolean mIsSelected;
+        
+        /**
+         * Get whether or not this tab is currently selected.
+         * 
+         * @return Tab selection state.
+         */
+        boolean isSelected() {
+            return mIsSelected;
+        }
 
         /**
          * Return the text of this tab.
@@ -1253,6 +1384,13 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
          * bar.
          */
         public void select() {
+            if (mIsSelected) {
+                if (mListener != null) {
+                    mListener.onTabReselected(this);
+                }
+                return;
+            }
+            
             View selectedView = mView.findViewById(R.id.actionbar_tab_selected);
             selectedView.setBackgroundColor(Color.WHITE);
 
@@ -1265,7 +1403,9 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
             }
 
             mIsSelected = true;
-            mListener.onTabSelected(this);
+            if (mListener != null) {
+                mListener.onTabSelected(this);
+            }
         }
 
         void unselect() {
@@ -1273,7 +1413,9 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
                 View selectedView = mView.findViewById(R.id.actionbar_tab_selected);
                 selectedView.setBackgroundColor(Color.TRANSPARENT);
 
-                mListener.onTabUnselected(this);
+                if (mListener != null) {
+                    mListener.onTabUnselected(this);
+                }
             }
             mIsSelected = false;
         }
@@ -1289,7 +1431,7 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
             if (!isSelected) {
                 selectedView.setBackgroundColor(Color.TRANSPARENT);
             } else {
-                mIsSelected = true;
+                select();
             }
 
             mView.setTag(this);
@@ -1297,7 +1439,6 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
 
             return mView;
         }
-
     }
 
     /**
