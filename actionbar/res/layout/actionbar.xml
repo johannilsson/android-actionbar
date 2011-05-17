@@ -147,7 +147,6 @@
             android:layout_height="fill_parent"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@id/actionbar_progress"
-            android:background="@drawable/actionbar_btn"
             android:focusable="true"
             android:visibility="visible"
             android:orientation="horizontal"
