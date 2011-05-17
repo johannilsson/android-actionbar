@@ -401,13 +401,13 @@ public class ActionBar extends RelativeLayout implements Menu {
 
         //Show title view if we are not in list navigation, not showing custom
         //view, and the show title flag is true
-        mTitleView.setVisibility(!isList && !showingCustom && showingTitle ? View.VISIBLE : View.GONE);
+        mTitleView.setVisibility(!isList && !showingCustom && !isTab && showingTitle ? View.VISIBLE : View.GONE);
         //Show subtitle view if we are not in list navigation, not showing
         //custom view, show title flag is true, and a subtitle is set
-        mSubtitleView.setVisibility(!isList && !showingCustom && showingTitle && hasSubtitle ? View.VISIBLE : View.GONE);
+        mSubtitleView.setVisibility(!isList && !showingCustom && !isTab && showingTitle && hasSubtitle ? View.VISIBLE : View.GONE);
         //Show custom view if we are not in list navigation, not in tab
         //navigation, and the showing custom flag is set
-        mCustomView.setVisibility(!isList && !isList && showingCustom ? View.VISIBLE : View.GONE);
+        mCustomView.setVisibility(!isList && !isList && !isTab && showingCustom ? View.VISIBLE : View.GONE);
     }
 
     // ------------------------------------------------------------------------

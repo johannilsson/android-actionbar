@@ -19,6 +19,8 @@
     android:orientation="vertical"
     android:layout_alignParentLeft="true"
     android:layout_weight="1"
+    android:focusable="true"
+    android:background="@drawable/actionbar_btn"
     >
     <com.markupartist.android.widget.ScrollingTextView
         android:id="@+id/actionbar_tab"
