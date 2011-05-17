@@ -249,12 +249,15 @@ public class ActionBar extends RelativeLayout implements Menu {
     private final View.OnClickListener mActionClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            final Action action = (Action) view.getTag();    
+            final Action action = (Action) view.getTag();
+            if (action.mIsCheckable) {
+                action.mIsChecked = !action.mIsChecked;
+            }
             if (action.mListener != null) {
                 action.mListener.onMenuItemClick(action);
             }
-            if (action.getIntent() != null) {
-                getContext().startActivity(action.getIntent());
+            if (action.mIntent != null) {
+                getContext().startActivity(action.mIntent);
             }
         }
     };
@@ -508,8 +511,8 @@ public class ActionBar extends RelativeLayout implements Menu {
         
         final int count = size();
         for (int i = 0; i < count; i++) {
-        	Action item = getItem(i);
-            if (item.getItemId() == id) {
+            Action item = getItem(i);
+            if (item.mItemId == id) {
                 return item;
             }
         }
@@ -555,7 +558,7 @@ public class ActionBar extends RelativeLayout implements Menu {
     public void removeGroup(int groupId) {
         final int count = size();
         for (int i = 0; i < count; i++) {
-            if (getItem(i).getGroupId() == groupId) {
+            if (getItem(i).mGroupId == groupId) {
                 mActionsView.removeViewAt(i);
             }
         }
@@ -565,7 +568,7 @@ public class ActionBar extends RelativeLayout implements Menu {
     public void removeItem(int id) {
         final int count = size();
         for (int i = 0; i < count; i++) {
-            if (getItem(i).getItemId() == id) {
+            if (getItem(i).mItemId == id) {
                 mActionsView.removeViewAt(i);
                 break;
             }
@@ -576,9 +579,9 @@ public class ActionBar extends RelativeLayout implements Menu {
     public void setGroupCheckable(int group, boolean checkable, boolean exclusive) {
         final int count = size();
         for (int i = 0; i < count; i++) {
-        	Action item = getItem(i);
-            if (item.getGroupId() == group) {
-                item.setCheckable(true);
+            Action item = getItem(i);
+            if (item.mGroupId == group) {
+                item.mIsCheckable = true;
             }
         }
     }
@@ -587,9 +590,9 @@ public class ActionBar extends RelativeLayout implements Menu {
     public void setGroupEnabled(int group, boolean enabled) {
         final int count = size();
         for (int i = 0; i < count; i++) {
-        	Action item = getItem(i);
-            if (item.getGroupId() == group) {
-                item.setEnabled(enabled);
+            Action item = getItem(i);
+            if (item.mGroupId == group) {
+                item.mIsEnabled = enabled;
             }
         }
     }
@@ -598,8 +601,8 @@ public class ActionBar extends RelativeLayout implements Menu {
     public void setGroupVisible(int group, boolean visible) {
         final int count = size();
         for (int i = 0; i < count; i++) {
-        	Action item = getItem(i);
-            if (item.getGroupId() == group) {
+            Action item = getItem(i);
+            if (item.mGroupId == group) {
                 item.setVisible(visible);
             }
         }
@@ -728,7 +731,7 @@ public class ActionBar extends RelativeLayout implements Menu {
         if (mNavigationMode == NAVIGATION_MODE_TABS) {
             final int count = getTabCount();
             for (int i = 0; i < count; i++) {
-                if (getTabAt(i).isSelected()) {
+                if (getTabAt(i).mIsSelected) {
                     return i;
                 }
             }
@@ -746,7 +749,7 @@ public class ActionBar extends RelativeLayout implements Menu {
         final int count = getTabCount();
         for (int i = 0; i < count; i++) {
             Tab tab = getTabAt(i);
-            if (tab.isSelected()) {
+            if (tab.mIsSelected) {
                 return tab;
             }
         }
@@ -1493,7 +1496,8 @@ public class ActionBar extends RelativeLayout implements Menu {
 
         @Override
         public Action setIcon(int iconRes) {
-            return setIcon(getContext().getResources().getDrawable(iconRes));
+            mIcon.setImageDrawable(getContext().getResources().getDrawable(iconRes));
+            return this;
         }
 
         @Override
@@ -1528,12 +1532,14 @@ public class ActionBar extends RelativeLayout implements Menu {
 
         @Override
         public Action setTitle(int title) {
-            return setTitle(getContext().getResources().getText(title));
+            mTitle = getContext().getResources().getText(title);
+            return this;
         }
 
         @Override
         public Action setTitleCondensed(CharSequence title) {
-            return setTitle(title);
+            mTitle = title;
+            return this;
         }
 
         @Override
