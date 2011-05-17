@@ -1319,14 +1319,6 @@ public class ActionBar extends RelativeLayout implements View.OnClickListener {
         }
     }
 
-    /*
-    public static abstract class SearchAction extends AbstractAction {
-        public SearchAction() {
-            super(R.drawable.actionbar_search);
-        }
-    }
-    */
-
     /**
      * A tab in the action bar.
      */
