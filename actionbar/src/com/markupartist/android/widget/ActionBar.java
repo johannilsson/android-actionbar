@@ -55,7 +55,7 @@ import com.markupartist.android.widget.actionbar.R;
  * 
  * @author Johan Nilsson <http://markupartist.com>
  */
-public class ActionBar extends RelativeLayout implements Menu {
+public class ActionBar extends RelativeLayout {
     /**
      * Display the 'home' element such that it appears as an 'up' affordance.
      * e.g. show an arrow to the left indicating the action that will be
@@ -403,211 +403,6 @@ public class ActionBar extends RelativeLayout implements Menu {
         //Show custom view if we are not in list navigation, not in tab
         //navigation, and the showing custom flag is set
         mCustomView.setVisibility(!isList && !isList && !isTab && showingCustom ? View.VISIBLE : View.GONE);
-    }
-
-    // ------------------------------------------------------------------------
-    // MENU INTERFACE METHODS
-    // ------------------------------------------------------------------------
-    
-    @Override
-    public Action add(CharSequence title) {
-        return new Action().setTitle(title);
-    }
-    
-    @Override
-    public Action add(int titleRes) {
-        return new Action().setTitle(titleRes);
-    }
-
-    @Override
-    public Action add(int groupId, int itemId, int order, CharSequence title) {
-        return new Action(groupId, itemId, order).setTitle(title);
-    }
-
-    @Override
-    public Action add(int groupId, int itemId, int order, int titleRes) {
-        return new Action(groupId, itemId, order).setTitle(titleRes);
-    }
-
-    @Override
-    public int addIntentOptions(int groupId, int itemId, int order, ComponentName caller, Intent[] specifics, Intent intent, int flags, MenuItem[] outSpecificItems) {
-        //DISCLAIMER: I have no idea what this does. Taken verbatim from
-        // http://android.git.kernel.org/?p=platform/frameworks/base.git;a=blob;f=core/java/com/android/internal/view/menu/MenuBuilder.java;h=228d5d09b0ab2efdd1a5bbc73853c92ef40b7cf7;hb=HEAD#l420
-        PackageManager pm = getContext().getPackageManager();
-        final List<ResolveInfo> lri =
-            pm.queryIntentActivityOptions(caller, specifics, intent, 0);
-        final int count = (lri != null) ? lri.size() : 0;
-        
-        if ((flags & Menu.FLAG_APPEND_TO_GROUP) == 0) {
-            removeGroup(groupId);
-        }
-        
-        for (int i = 0; i < count; i++) {
-            final ResolveInfo ri = lri.get(i);
-            Intent rintent = new Intent(
-                (ri.specificIndex < 0) ? intent : specifics[ri.specificIndex]);
-            rintent.setComponent(new ComponentName(
-                    ri.activityInfo.applicationInfo.packageName,
-                    ri.activityInfo.name));
-            final Action item = add(groupId, itemId, order, ri.loadLabel(pm))
-                    .setIcon(ri.loadIcon(pm))
-                    .setIntent(rintent);
-            if ((outSpecificItems != null) && (ri.specificIndex > 0)) {
-                outSpecificItems[ri.specificIndex] = item;
-            }
-        }
-        
-        return count;
-    }
-
-    @Override
-    public SubMenu addSubMenu(CharSequence title) {
-        //We do not support sub-menus.
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public SubMenu addSubMenu(int titleRes) {
-        //We do not support sub-menus.
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public SubMenu addSubMenu(int groupId, int itemId, int order, CharSequence title) {
-        //We do not support sub-menus.
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public SubMenu addSubMenu(int groupId, int itemId, int order, int titleRes) {
-        //We do not support sub-menus.
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void clear() {
-        mActionsView.removeAllViews();
-    }
-
-    @Override
-    public void close() {
-        //Negative. We are always open.
-    }
-
-    @Override
-    public Action findItem(int id) {
-        if (id == R.id.actionbar_item_home) {
-            View home = mHomeView.getChildAt(0);
-            return (home != null) ? (Action) home.getTag() : null;
-        }
-        
-        final int count = size();
-        for (int i = 0; i < count; i++) {
-            Action item = getItem(i);
-            if (item.mItemId == id) {
-                return item;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Action getItem(int index) {
-        View view = mActionsView.getChildAt(index);
-        return (view != null) ? (Action) view.getTag() : null;
-    }
-
-    @Override
-    public boolean hasVisibleItems() {
-        final int count = size();
-        for (int i = 0; i < count; i++) {
-            if (getItem(i).isVisible()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean isShortcutKey(int keyCode, KeyEvent event) {
-        //We do not support shortcut keys.
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public boolean performIdentifierAction(int id, int flags) {
-        //We do not support shortcut keys.
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public boolean performShortcut(int keyCode, KeyEvent event, int flags) {
-        //We do not support shortcut keys.
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void removeGroup(int groupId) {
-        final int count = size();
-        for (int i = 0; i < count; i++) {
-            if (getItem(i).mGroupId == groupId) {
-                mActionsView.removeViewAt(i);
-            }
-        }
-    }
-
-    @Override
-    public void removeItem(int id) {
-        final int count = size();
-        for (int i = 0; i < count; i++) {
-            if (getItem(i).mItemId == id) {
-                mActionsView.removeViewAt(i);
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void setGroupCheckable(int group, boolean checkable, boolean exclusive) {
-        final int count = size();
-        for (int i = 0; i < count; i++) {
-            Action item = getItem(i);
-            if (item.mGroupId == group) {
-                item.mIsCheckable = true;
-            }
-        }
-    }
-
-    @Override
-    public void setGroupEnabled(int group, boolean enabled) {
-        final int count = size();
-        for (int i = 0; i < count; i++) {
-            Action item = getItem(i);
-            if (item.mGroupId == group) {
-                item.mIsEnabled = enabled;
-            }
-        }
-    }
-
-    @Override
-    public void setGroupVisible(int group, boolean visible) {
-        final int count = size();
-        for (int i = 0; i < count; i++) {
-            Action item = getItem(i);
-            if (item.mGroupId == group) {
-                item.setVisible(visible);
-            }
-        }
-    }
-
-    @Override
-    public void setQwertyMode(boolean isQwerty) {
-        //Do nothing. We do not support shortcuts.
-    }
-
-    @Override
-    public int size() {
-        return mActionsView.getChildCount();
     }
 
     // ------------------------------------------------------------------------
@@ -1194,51 +989,184 @@ public class ActionBar extends RelativeLayout implements Menu {
     }
 
     // ------------------------------------------------------------------------
-    // CUSTOM METHODS
+    // ACTION ITEM METHODS
     // ------------------------------------------------------------------------
-
+    
     /**
-     * Add a new item to the menu.
+     * <p>Adds a new {@link Action}.</p>
      * 
-     * @return The newly added menu item. 
+     * <p>To add a home action using this method make sure the action ID is
+     * {@code R.id.actionbar_item_home}.</p>
+     * 
+     * @param action Action to add.
+     * 
+     * @see #addAction(Action, int)
+     * @see #addActions(Action...)
      */
-    public Action add() {
-        return add("");
+    public void addAction(Action action) {
+        addAction(action, getActionCount());
     }
     
     /**
-     * Add a new item to the menu with the given icon.
+     * <p>Adds a new {@link Action} at the specified index.</p>
      * 
-     * @param itemId Unique item id.
-     * @param iconRes Icon resource ID.
-     * @return The newly added menu item. 
+     * <p>To add a home action using this method make sure the action ID is
+     * {@code R.id.actionbar_item_home}.</p>
+     * 
+     * @param action Action to add.
+     * @param index The position at which to add the action.
+     * 
+     * @see #addAction(Action)
+     * @see #addActions(Action...)
      */
-    public Action add(int itemId, int iconRes) {
-        return add(0, itemId, 0, "").setIcon(iconRes);
+    public void addAction(Action action, int index) {
+        if (!action.mActionBar.equals(this)) {
+            throw new IllegalStateException("Cannot add an action from a different action bar.");
+        }
+        
+        if (action.mItemId == R.id.actionbar_item_home) {
+            mHomeView.removeAllViews();
+            mHomeView.addView(action.mView);
+        } else {
+            mActionsView.addView(action.mView);
+        }
     }
     
     /**
-     * Add a new item to the menu with the given id, icon, and intent.
+     * Adds a list of {@link Action}s.
      * 
-     * @param itemId Unique item id.
-     * @param iconRes Icon resource ID.
-     * @param intent Intent to be executed when clicked.
-     * @return The newly added menu item. 
+     * @param actions List of actions to add.
+     * 
+     * @see #addAction(Action)
+     * @see #addAction(Action, int)
      */
-    public Action add(int itemId, int iconRes, Intent intent) {
-        return add(itemId, iconRes).setIntent(intent);
+    public void addActions(Action... actions) {
+        for (Action action : actions) {
+            addAction(action);
+        }
+    }
+    
+    public final Menu asMenu() {
+        return new MenuImpl();
     }
     
     /**
-     * Add a new item to the menu with the given id, icon, and click listener.
-     * 
-     * @param itemId Unique item id.
-     * @param iconRes Icon resource ID.
-     * @param listener Item click listener.
-     * @return The newly added menu item. 
+     * @deprecated Use {@link #setDisplayShowHomeEnabled(boolean)}.
      */
-    public Action add(int itemId, int iconRes, OnMenuItemClickListener listener) {
-        return add(itemId, iconRes).setOnMenuItemClickListener(listener);
+    @Deprecated
+    public void clearHomeAction() {
+        mHomeView.removeAllViews();
+    }
+    
+    public Action findAction(int itemId) {
+        if (itemId == R.id.actionbar_item_home) {
+            View view = mHomeView.getChildAt(0);
+            if (view != null) {
+                return (Action) view.getTag();
+            }
+        } else {
+            final int count = mActionsView.getChildCount();
+            for (int i = 0; i < count; i++) {
+                Action action = (Action) mActionsView.getChildAt(i).getTag();
+                if (action.getItemId() == itemId) {
+                    return action;
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Return an action at the specified index if it exists.
+     * 
+     * @param index Index of the action.
+     * @return Action or {@code null} if it does not exist.
+     * 
+     * @see #getActionCount()
+     */
+    public Action getActionAt(int index) {
+        View view = mActionsView.getChildAt(index);
+        return (view != null) ? (Action) view.getTag() : null;
+    }
+    
+    /**
+     * Returns the number of actions currently registered with the action bar.
+     * 
+     * @return Action count.
+     */
+    public int getActionCount() {
+        return mActionsView.getChildCount();
+    }
+    
+    /**
+     * Create a new action for this action bar.
+     * 
+     * @return Action instance.
+     * 
+     * @see #newAction(int)
+     */
+    public Action newAction() {
+        return new Action(this);
+    }
+    
+    /**
+     * Create a new action for this action bar with the specified unique ID.
+     * 
+     * @param itemId Unique action ID.
+     * @return Action instance.
+     * 
+     * @see #newAction()
+     */
+    public Action newAction(int itemId) {
+        Action action = new Action(this);
+        action.mItemId = itemId;
+        return action;
+    }
+    
+    /**
+     * Remove an action from the action bar.
+     * 
+     * @param action Action to remove.
+     */
+    public void removeAction(Action action) {
+        final int count = mActionsView.getChildCount();
+        for (int i = 0; i < count; i++) {
+            if (mActionsView.getChildAt(i).getTag().equals(action)) {
+                mActionsView.removeViewAt(i);
+                break;
+            }
+        }
+    }
+    
+    /**
+     * Remove an action from the action bar.
+     * 
+     * @param itemId ID of the action to remove.
+     */
+    public void removeAction(int itemId) {
+        final int count = mActionsView.getChildCount();
+        for (int i = 0; i < count; i++) {
+            if (((Action)mActionsView.getChildAt(i).getTag()).getItemId() == itemId) {
+                mActionsView.removeViewAt(i);
+                break;
+            }
+        }
+    }
+    
+    /**
+     * Remove an action from the action bar.
+     * 
+     * @param index Position of the action to remove.
+     */
+    public void removeActionAt(int index) {
+        mActionsView.removeViewAt(index);
+    }
+    
+    /**
+     * Removes all action views from this action bar.
+     */
+    public void removeAllActions() {
+        mActionsView.removeAllViews();
     }
     
     /**
@@ -1248,6 +1176,18 @@ public class ActionBar extends RelativeLayout implements Menu {
      */
     public void removeItemAt(int index) {
         mActionsView.removeViewAt(index);
+    }
+    
+    /**
+     * Set the special action for home icon and logo. This will automatically
+     * enable {@link #DISPLAY_SHOW_HOME}.
+     * 
+     * @param action Action to set.
+     */
+    public void setHomeAction(Action action) {
+        action.mItemId = R.id.actionbar_item_home;
+        addAction(action);
+        setDisplayShowHomeEnabled(true);
     }
 
     /**
@@ -1338,141 +1278,159 @@ public class ActionBar extends RelativeLayout implements Menu {
     /**
      * Definition of an action that can be performed along with a icon to show.
      */
-    public final class Action implements MenuItem {
+    public static class Action implements MenuItem {
+        private final ActionBar mActionBar;
         private final View mView;
         private final ImageView mIcon;
-        private final int mItemId;
+        private /*final*/ int mItemId;
         private final int mGroupId;
         private final int mOrder;
         
-        OnMenuItemClickListener mListener;
-        Intent mIntent;
-        CharSequence mTitle;
-        boolean mIsEnabled;
-        boolean mIsCheckable;
-        boolean mIsChecked;
+        private OnMenuItemClickListener mListener;
+        private Intent mIntent;
+        private CharSequence mTitle;
+        private boolean mIsEnabled;
+        private boolean mIsCheckable;
+        private boolean mIsChecked;
         
-        
-        Action() {
-            this(0, 0, 0);
-        }
-        Action(int groupId, int itemId, int order) {
-            mView = mInflater.inflate(R.layout.actionbar_item, mActionsView, false);
-            mView.setTag(this);
-            mView.setOnClickListener(ActionBar.this.mActionClicked);
+
+        /**
+         * This constructor should <strong>ONLY</strong> be used in the
+         * instantiation of Actions which will be later passed to
+         * {@link ActionBar#addAction(Action)}.
+         */
+        Action(ActionBar actionBar) {
+            mActionBar = actionBar;
+            mGroupId = 0;
+            mItemId = 0;
+            mOrder = 0;
+            mIsEnabled = true;
             
-            if (itemId == R.id.actionbar_item_home) {
-                mHomeView.removeAllViews();
-                mHomeView.addView(mView);
-            } else {
-                mActionsView.addView(mView);
-            }
+            mView = mActionBar.mInflater.inflate(R.layout.actionbar_item, mActionBar.mActionsView, false);
+            mView.setTag(this);
+            mView.setOnClickListener(mActionBar.mActionClicked);
             
             mIcon = (ImageButton) mView.findViewById(R.id.actionbar_item);
-            
+        }
+        
+        /**
+         * This constructor should <strong>ONLY</strong> be used in the
+         * inflation of Actions from a menu XML resource.
+         */
+        Action(ActionBar actionBar, int groupId, int itemId, int order) {
+            mActionBar = actionBar;
             mGroupId = groupId;
             mItemId = itemId;
             mOrder = order;
             mIsEnabled = true;
+            
+            mView = mActionBar.mInflater.inflate(R.layout.actionbar_item, mActionBar.mActionsView, false);
+            mView.setTag(this);
+            mView.setOnClickListener(mActionBar.mActionClicked);
+            
+            mIcon = (ImageButton) mView.findViewById(R.id.actionbar_item);
+            
+            //Attach to view
+            mActionBar.addAction(this);
         }
         
 
         @Override
-        public char getAlphabeticShortcut() {
+        public final char getAlphabeticShortcut() {
             //We do not support shortcut keys.
             throw new NotImplementedException();
         }
 
         @Override
-        public int getGroupId() {
+        public final int getGroupId() {
             return mGroupId;
         }
         
         @Override
-        public Drawable getIcon() {
+        public final Drawable getIcon() {
             return mIcon.getDrawable();
         }
 
         @Override
-        public Intent getIntent() {
+        public final Intent getIntent() {
             return mIntent;
         }
 
         @Override
-        public int getItemId() {
+        public final int getItemId() {
             return mItemId;
         }
 
         @Override
-        public ContextMenuInfo getMenuInfo() {
+        public final ContextMenuInfo getMenuInfo() {
             return null;
         }
 
         @Override
-        public char getNumericShortcut() {
+        public final char getNumericShortcut() {
             //We do not support shortcut keys.
             throw new NotImplementedException();
         }
 
         @Override
-        public int getOrder() {
+        public final int getOrder() {
             return mOrder;
         }
 
         @Override
-        public SubMenu getSubMenu() {
+        public final SubMenu getSubMenu() {
             return null;
         }
 
         @Override
-        public CharSequence getTitle() {
+        public final CharSequence getTitle() {
             return mTitle;
         }
 
         @Override
-        public CharSequence getTitleCondensed() {
+        public final CharSequence getTitleCondensed() {
             return getTitle();
         }
 
         @Override
-        public boolean hasSubMenu() {
+        public final boolean hasSubMenu() {
             return false;
         }
 
         @Override
-        public boolean isCheckable() {
+        public final boolean isCheckable() {
             return mIsCheckable;
         }
 
         @Override
-        public boolean isChecked() {
+        public final boolean isChecked() {
             return mIsCheckable && mIsChecked;
         }
 
         @Override
-        public boolean isEnabled() {
+        public final boolean isEnabled() {
             return mIsEnabled;
         }
 
         @Override
-        public boolean isVisible() {
+        public final boolean isVisible() {
             return mView.getVisibility() == View.VISIBLE;
         }
 
         @Override
-        public Action setAlphabeticShortcut(char alphaChar) {
+        public final Action setAlphabeticShortcut(char alphaChar) {
             //We do not support shortcut keys.
             return this;
         }
 
         @Override
-        public Action setCheckable(boolean checkable) {
+        public final Action setCheckable(boolean checkable) {
             mIsCheckable = checkable;
             return this;
         }
 
         @Override
-        public Action setChecked(boolean checked) {
+        public final Action setChecked(boolean checked) {
             if (mIsCheckable) {
                 mIsChecked = checked;
             }
@@ -1480,67 +1438,68 @@ public class ActionBar extends RelativeLayout implements Menu {
         }
 
         @Override
-        public Action setEnabled(boolean enabled) {
+        public final Action setEnabled(boolean enabled) {
             mIsEnabled = enabled;
             return this;
         }
 
         @Override
-        public Action setIcon(Drawable icon) {
+        public final Action setIcon(Drawable icon) {
             mIcon.setImageDrawable(icon);
             return this;
         }
 
         @Override
-        public Action setIcon(int iconRes) {
-            mIcon.setImageDrawable(getContext().getResources().getDrawable(iconRes));
+        public final Action setIcon(int iconRes) {
+            Drawable icon = mActionBar.getContext().getResources().getDrawable(iconRes);
+            mIcon.setImageDrawable(icon);
             return this;
         }
 
         @Override
-        public Action setIntent(Intent intent) {
+        public final Action setIntent(Intent intent) {
             mIntent = intent;
             return this;
         }
 
         @Override
-        public Action setNumericShortcut(char numericChar) {
+        public final Action setNumericShortcut(char numericChar) {
             //We do not support shortcut keys.
             return this;
         }
 
         @Override
-        public Action setOnMenuItemClickListener(OnMenuItemClickListener menuItemClickListener) {
+        public final Action setOnMenuItemClickListener(OnMenuItemClickListener menuItemClickListener) {
             mListener = menuItemClickListener;
             return this;
         }
 
         @Override
-        public Action setShortcut(char numericChar, char alphaChar) {
+        public final Action setShortcut(char numericChar, char alphaChar) {
             //We do not support shortcut keys.
             return this;
         }
 
         @Override
-        public Action setTitle(CharSequence title) {
+        public final Action setTitle(CharSequence title) {
             mTitle = title;
             return this;
         }
 
         @Override
-        public Action setTitle(int title) {
-            mTitle = getContext().getResources().getText(title);
+        public final Action setTitle(int title) {
+            mTitle = mActionBar.getContext().getResources().getText(title);
             return this;
         }
 
         @Override
-        public Action setTitleCondensed(CharSequence title) {
+        public final Action setTitleCondensed(CharSequence title) {
             mTitle = title;
             return this;
         }
 
         @Override
-        public Action setVisible(boolean visible) {
+        public final Action setVisible(boolean visible) {
             mView.setVisibility(visible ? View.VISIBLE : View.GONE);
             return this;
         }
@@ -1558,8 +1517,215 @@ public class ActionBar extends RelativeLayout implements Menu {
                 mListener.onMenuItemClick(this);
             }
             if (mIntent != null) {
-                getContext().startActivity(mIntent);
+                mActionBar.getContext().startActivity(mIntent);
             }
+        }
+    }
+    
+    /**
+     * Implementation of the {@link Menu} interface for inflation of action
+     * items from XML.
+     */
+    final class MenuImpl implements Menu {
+        @Override
+        public Action add(CharSequence title) {
+            return new Action(ActionBar.this, 0, 0, 0).setTitle(title);
+        }
+        
+        @Override
+        public Action add(int titleRes) {
+            return new Action(ActionBar.this, 0, 0, 0).setTitle(titleRes);
+        }
+
+        @Override
+        public Action add(int groupId, int itemId, int order, CharSequence title) {
+            return new Action(ActionBar.this, groupId, itemId, order).setTitle(title);
+        }
+
+        @Override
+        public Action add(int groupId, int itemId, int order, int titleRes) {
+            return new Action(ActionBar.this, groupId, itemId, order).setTitle(titleRes);
+        }
+
+        @Override
+        public int addIntentOptions(int groupId, int itemId, int order, ComponentName caller, Intent[] specifics, Intent intent, int flags, MenuItem[] outSpecificItems) {
+            //DISCLAIMER: I have no idea what this does. Taken verbatim from
+            // http://android.git.kernel.org/?p=platform/frameworks/base.git;a=blob;f=core/java/com/android/internal/view/menu/MenuBuilder.java;h=228d5d09b0ab2efdd1a5bbc73853c92ef40b7cf7;hb=HEAD#l420
+            PackageManager pm = getContext().getPackageManager();
+            final List<ResolveInfo> lri =
+                pm.queryIntentActivityOptions(caller, specifics, intent, 0);
+            final int count = (lri != null) ? lri.size() : 0;
+            
+            if ((flags & Menu.FLAG_APPEND_TO_GROUP) == 0) {
+                removeGroup(groupId);
+            }
+            
+            for (int i = 0; i < count; i++) {
+                final ResolveInfo ri = lri.get(i);
+                Intent rintent = new Intent(
+                    (ri.specificIndex < 0) ? intent : specifics[ri.specificIndex]);
+                rintent.setComponent(new ComponentName(
+                        ri.activityInfo.applicationInfo.packageName,
+                        ri.activityInfo.name));
+                final Action item = add(groupId, itemId, order, ri.loadLabel(pm))
+                        .setIcon(ri.loadIcon(pm))
+                        .setIntent(rintent);
+                if ((outSpecificItems != null) && (ri.specificIndex > 0)) {
+                    outSpecificItems[ri.specificIndex] = item;
+                }
+            }
+            
+            return count;
+        }
+
+        @Override
+        public SubMenu addSubMenu(CharSequence title) {
+            //We do not support sub-menus.
+            throw new NotImplementedException();
+        }
+
+        @Override
+        public SubMenu addSubMenu(int titleRes) {
+            //We do not support sub-menus.
+            throw new NotImplementedException();
+        }
+
+        @Override
+        public SubMenu addSubMenu(int groupId, int itemId, int order, CharSequence title) {
+            //We do not support sub-menus.
+            throw new NotImplementedException();
+        }
+
+        @Override
+        public SubMenu addSubMenu(int groupId, int itemId, int order, int titleRes) {
+            //We do not support sub-menus.
+            throw new NotImplementedException();
+        }
+
+        @Override
+        public void clear() {
+            mActionsView.removeAllViews();
+        }
+
+        @Override
+        public void close() {
+            //Negative. We are always open.
+        }
+
+        @Override
+        public Action findItem(int id) {
+            if (id == R.id.actionbar_item_home) {
+                View home = mHomeView.getChildAt(0);
+                return (home != null) ? (Action) home.getTag() : null;
+            }
+            
+            final int count = size();
+            for (int i = 0; i < count; i++) {
+                Action item = getItem(i);
+                if (item.mItemId == id) {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public Action getItem(int index) {
+            View view = mActionsView.getChildAt(index);
+            return (view != null) ? (Action) view.getTag() : null;
+        }
+
+        @Override
+        public boolean hasVisibleItems() {
+            final int count = size();
+            for (int i = 0; i < count; i++) {
+                if (getItem(i).isVisible()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public boolean isShortcutKey(int keyCode, KeyEvent event) {
+            //We do not support shortcut keys.
+            throw new NotImplementedException();
+        }
+
+        @Override
+        public boolean performIdentifierAction(int id, int flags) {
+            //We do not support shortcut keys.
+            throw new NotImplementedException();
+        }
+
+        @Override
+        public boolean performShortcut(int keyCode, KeyEvent event, int flags) {
+            //We do not support shortcut keys.
+            throw new NotImplementedException();
+        }
+
+        @Override
+        public void removeGroup(int groupId) {
+            final int count = size();
+            for (int i = 0; i < count; i++) {
+                if (getItem(i).mGroupId == groupId) {
+                    mActionsView.removeViewAt(i);
+                }
+            }
+        }
+
+        @Override
+        public void removeItem(int id) {
+            final int count = size();
+            for (int i = 0; i < count; i++) {
+                if (getItem(i).mItemId == id) {
+                    mActionsView.removeViewAt(i);
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public void setGroupCheckable(int group, boolean checkable, boolean exclusive) {
+            final int count = size();
+            for (int i = 0; i < count; i++) {
+                Action item = getItem(i);
+                if (item.mGroupId == group) {
+                    item.mIsCheckable = true;
+                }
+            }
+        }
+
+        @Override
+        public void setGroupEnabled(int group, boolean enabled) {
+            final int count = size();
+            for (int i = 0; i < count; i++) {
+                Action item = getItem(i);
+                if (item.mGroupId == group) {
+                    item.mIsEnabled = enabled;
+                }
+            }
+        }
+
+        @Override
+        public void setGroupVisible(int group, boolean visible) {
+            final int count = size();
+            for (int i = 0; i < count; i++) {
+                Action item = getItem(i);
+                if (item.mGroupId == group) {
+                    item.setVisible(visible);
+                }
+            }
+        }
+
+        @Override
+        public void setQwertyMode(boolean isQwerty) {
+            //Do nothing. We do not support shortcuts.
+        }
+
+        @Override
+        public int size() {
+            return mActionsView.getChildCount();
         }
     }
 

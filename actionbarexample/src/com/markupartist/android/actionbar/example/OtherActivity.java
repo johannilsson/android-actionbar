@@ -20,11 +20,10 @@ public class OtherActivity extends Activity implements TabListener {
 
         ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
         
-        getMenuInflater().inflate(R.menu.other_actionbar, actionBar);
-        Toast.makeText(this, "Count: " + actionBar.size(), Toast.LENGTH_LONG).show();
-        actionBar.findItem(R.id.actionbar_item_home).setIntent(HomeActivity.createIntent(this));
-        actionBar.findItem(R.id.item_share).setIntent(createShareIntent());
-        actionBar.findItem(R.id.item_export).setOnMenuItemClickListener(exampleListener);
+        getMenuInflater().inflate(R.menu.other_actionbar, actionBar.asMenu());
+        actionBar.findAction(R.id.actionbar_item_home).setIntent(HomeActivity.createIntent(this));
+        actionBar.findAction(R.id.item_share).setIntent(createShareIntent());
+        actionBar.findAction(R.id.item_export).setOnMenuItemClickListener(exampleListener);
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.addTab(actionBar.newTab().setText("Tab 1").setTabListener(this));
