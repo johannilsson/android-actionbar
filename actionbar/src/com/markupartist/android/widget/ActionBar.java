@@ -289,7 +289,6 @@ public class ActionBar extends RelativeLayout implements Menu {
         mSubtitleView = (TextView) mBarView.findViewById(R.id.actionbar_subtitle);
         
         mListView = (FrameLayout) mBarView.findViewById(R.id.actionbar_list);
-        mListView.setOnClickListener(mListClicked);
         mListIndicator = mBarView.findViewById(R.id.actionbar_list_indicator);
         
         mCustomView = (FrameLayout) mBarView.findViewById(R.id.actionbar_custom);
@@ -388,6 +387,11 @@ public class ActionBar extends RelativeLayout implements Menu {
             mListView.removeAllViews();
             if (hasList) {
                 mListView.addView(mListAdapter.getView(mSelectedIndex, oldView, mListView));
+            }
+
+            View firstListItem = mListView.getChildAt(mSelectedIndex);
+            if (firstListItem != null) {
+                firstListItem.setOnClickListener(mListClicked);
             }
         }
         
