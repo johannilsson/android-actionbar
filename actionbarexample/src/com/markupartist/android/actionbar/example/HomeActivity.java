@@ -20,12 +20,6 @@ import android.widget.Toast;
 
 public class HomeActivity extends Activity {
     private static final Random RANDOM = new Random();
-    private static final String[] TAB_TEXT = new String[] {
-        "Tab1",
-        "Tab2",
-        "This is some really long tab text!",
-        "Tab4",
-    };
     
     private ActionBar mActionBar;
     
@@ -333,17 +327,32 @@ public class HomeActivity extends Activity {
         mTabAdd.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tabText = TAB_TEXT[mActionBar.getTabCount()];
-                mActionBar.addTab(mActionBar.newTab().setText(tabText));
+                ActionBar.Tab newTab = mActionBar.newTab();
+
+                if (RANDOM.nextBoolean()) {
+                    newTab.setCustomView(R.layout.tab_custom_view);
+                } else {
+                    boolean icon = RANDOM.nextBoolean();
+                    if (icon) {
+                        newTab.setIcon(R.drawable.ic_title_share_default);
+                    }
+                    if (!icon || RANDOM.nextBoolean()) {
+                        newTab.setText("Tab Text!");
+                    }
+                }
+                
+                mActionBar.addTab(newTab);
+                
                 updateButtonStates();
             }
         });
         mTabSelect.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                final int newIndex = RANDOM.nextInt(mActionBar.getTabCount());
-                mActionBar.setSelectedNavigationItem(newIndex);
-                updateButtonStates();
+                if (mActionBar.getTabCount() > 0) {
+                    final int newIndex = RANDOM.nextInt(mActionBar.getTabCount());
+                    mActionBar.setSelectedNavigationItem(newIndex);
+                }
             }
         });
         mTabRemove.setOnClickListener(new OnClickListener() {

@@ -246,31 +246,23 @@ public class ActionBar extends RelativeLayout implements Menu {
         }
     };
     
+    /**
+     * Listener for action item click.
+     */
     private final View.OnClickListener mActionClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            final Action action = (Action) view.getTag();
-            if (action.mIsCheckable) {
-                action.mIsChecked = !action.mIsChecked;
-            }
-            if (action.mListener != null) {
-                action.mListener.onMenuItemClick(action);
-            }
-            if (action.mIntent != null) {
-                getContext().startActivity(action.mIntent);
-            }
+            ((Action) view.getTag()).select();
         }
     };
     
+    /**
+     * Listener for tab clicked.
+     */
     private final View.OnClickListener mTabClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            final Tab tab = (Tab) view.getTag();
-            if (tab.mIsSelected) {
-                tab.mListener.onTabReselected(tab);
-            } else {
-                tab.select();
-            }
+            ((Tab) view.getTag()).select();
         }
     };
 
@@ -642,8 +634,7 @@ public class ActionBar extends RelativeLayout implements Menu {
      * @param setSelected True if the added tab should become the selected tab.
      */
     public void addTab(Tab tab, boolean setSelected) {
-        final int position = getTabCount();
-        addTab(tab, position, setSelected);
+        addTab(tab, getTabCount(), setSelected);
     }
 
     /**
@@ -667,7 +658,10 @@ public class ActionBar extends RelativeLayout implements Menu {
      * @param setSelected True if the added tab should become the selected tab.
      */
     public void addTab(Tab tab, int position, boolean setSelected) {
-        mTabsView.addView(tab.inflate(setSelected), position);
+        mTabsView.addView(tab.mView, position);
+        if (setSelected) {
+            tab.select();
+        }
     }
     
     /**
@@ -853,7 +847,10 @@ public class ActionBar extends RelativeLayout implements Menu {
      * Remove all tabs from the action bar and deselect the current tab.
      */
     public void removeAllTabs() {
-        getSelectedTab().unselect();
+        Tab selected = getSelectedTab();
+        if (selected != null) {
+            selected.unselect();
+        }
         mTabsView.removeAllViews();
     }
     
@@ -1547,58 +1544,117 @@ public class ActionBar extends RelativeLayout implements Menu {
             mView.setVisibility(visible ? View.VISIBLE : View.GONE);
             return this;
         }
+        
+        /**
+         * Perform all actions associated with selection: Flip the checked
+         * state (if checkable), execute the {@link OnMenuItemClickListener}
+         * (if available), and/or launch the {@link Intent} (if set).
+         */
+        public void select() {
+            if (mIsCheckable) {
+                mIsChecked = !mIsChecked;
+            }
+            if (mListener != null) {
+                mListener.onMenuItemClick(this);
+            }
+            if (mIntent != null) {
+                getContext().startActivity(mIntent);
+            }
+        }
     }
 
     /**
      * A tab in the action bar.
      */
-    public class Tab {
-        private View mView;
-        private CharSequence mText;
-        private ActionBar.TabListener mListener;
-        private boolean mIsSelected;
-        
+    public final class Tab {
         /**
-         * Get whether or not this tab is currently selected.
+         * An invalid position for a tab.
          * 
-         * @return Tab selection state.
+         * @see #getPosition()
          */
-        boolean isSelected() {
-            return mIsSelected;
+        public static final int INVALID_POSITION = -1;
+        
+        final View mView;
+        final ImageView mIconView;
+        final TextView mTextView;
+        final FrameLayout mCustomView;
+        final View mSelectedView;
+        
+        ActionBar.TabListener mListener;
+        boolean mIsSelected;
+        Object mTag;
+        
+        
+        Tab() {
+            mView = mInflater.inflate(R.layout.actionbar_tab, mTabsView, false);
+            mView.setTag(this);
+            mView.setOnClickListener(mTabClicked);
+            
+            mIconView = (ImageView)mView.findViewById(R.id.actionbar_tab_icon);
+            mTextView = (TextView)mView.findViewById(R.id.actionbar_tab);
+            mCustomView = (FrameLayout)mView.findViewById(R.id.actionbar_tab_custom);
+            mSelectedView = mView.findViewById(R.id.actionbar_tab_selected);
         }
 
+        
+        /**
+         * Update display to reflect current property state.
+         */
+        void reloadDisplay() {
+            boolean hasCustom = mCustomView.getChildCount() > 0;
+            this.mIconView.setVisibility(hasCustom ? View.GONE : View.VISIBLE);
+            this.mTextView.setVisibility(hasCustom ? View.GONE : View.VISIBLE);
+            this.mCustomView.setVisibility(hasCustom ? View.VISIBLE : View.GONE);
+        }
+
+        /**
+         * Retrieve a previously set custom view for this tab.
+         * 
+         * @return The custom view set by {@link #setCustomView(View)}.
+         */
+        public View getCustomView() {
+            return mCustomView.getChildAt(0);
+        }
+
+        /**
+         * Return the icon associated with this tab.
+         * 
+         * @return The tab's icon.
+         */
+        public Drawable getIcon() {
+            return mIconView.getDrawable();
+        }
+        
+        /**
+         * Return the current position of this tab in the action bar.
+         * 
+         * @return Current position, or {@link #INVALID_POSITION} if this tab
+         * is not currently in the action bar.
+         */
+        public int getPosition() {
+            final int count = mTabsView.getChildCount();
+            for (int i = 0; i < count; i++) {
+                if (mTabsView.getChildAt(i).getTag().equals(this)) {
+                    return i;
+                }
+            }
+            return INVALID_POSITION;
+        }
+        
+        /**
+         * @return This tab's tag object.
+         */
+        public Object getTag() {
+            return mTag;
+        }
+        
         /**
          * Return the text of this tab.
          * 
          * @return The tab's text.
          */
         public CharSequence getText() {
-            return mText;
-        }
-
-        /**
-         * Set the text displayed on this tab. Text may be truncated if there
-         * is not room to display the entire string.
-         * 
-         * @param text The text to display.
-         */
-        public ActionBar.Tab setText(CharSequence text) {
-            mText = text;
-
-            return this;
-        }
-
-        /**
-         * Set the {@link ActionBar.TabListener} that will handle switching to
-         * and from this tab. All tabs must have a TabListener set before being
-         * added to the ActionBar.
-         * 
-         * @param listener Listener to handle tab selection events.
-         */
-        public ActionBar.Tab setTabListener(ActionBar.TabListener listener) {
-            mListener = listener;
-
-            return this;
+            return mTextView.getText();
         }
 
         /**
@@ -1613,53 +1669,131 @@ public class ActionBar extends RelativeLayout implements Menu {
                 return;
             }
             
-            View selectedView = mView.findViewById(R.id.actionbar_tab_selected);
-            selectedView.setBackgroundColor(Color.WHITE);
-
-            final int tabs = mTabsView.getChildCount();
-            for (int tabIndex = 0; tabIndex < tabs; tabIndex++) {
-                View tabView = mTabsView.getChildAt(tabIndex);
-                if ((tabView != null) && (tabView.getTag() instanceof Tab)) {
-                    ((Tab)tabView.getTag()).unselect();
-                }
+            Tab selected = getSelectedTab();
+            if (selected != null) {
+                selected.unselect();
             }
 
             mIsSelected = true;
+            mSelectedView.setBackgroundColor(Color.WHITE);
             if (mListener != null) {
                 mListener.onTabSelected(this);
             }
         }
 
+        /**
+         * Set a custom view to be used for this tab. This overrides values set
+         * by {@link #setText(CharSequence)} and {@link #setIcon(Drawable)}.
+         * 
+         * @param layoutResId A layout resource to inflate and use as a custom
+         * tab view
+         * @return The current instance for call chaining.
+         */
+        public ActionBar.Tab setCustomView(int layoutResId) {
+            mCustomView.removeAllViews();
+            mInflater.inflate(layoutResId, this.mCustomView, true);
+            reloadDisplay();
+            return this;
+        }
+
+        /**
+         * Set a custom view to be used for this tab. This overrides values set
+         * by {@link #setText(CharSequence)} and {@link #setIcon(Drawable)}.
+         * 
+         * @param view Custom view to be used as a tab.
+         * @return The current instance for call chaining.
+         */
+        public ActionBar.Tab setCustomView(View view) {
+            mCustomView.removeAllViews();
+            if (view != null) {
+                mCustomView.addView(view);
+            }
+            reloadDisplay();
+            return this;
+        }
+
+        /**
+         * Set the icon displayed on this tab.
+         * 
+         * @param icon The drawable to use as an icon.
+         * @return The current instance for call chaining.
+         */
+        public ActionBar.Tab setIcon(Drawable icon) {
+            mIconView.setImageDrawable(icon);
+            return this;
+        }
+
+        /**
+         * Set the icon displayed on this tab.
+         * 
+         * @param resId Resource ID referring to the drawable to use as an icon
+         * @return The current instance for call chaining.
+         */
+        public ActionBar.Tab setIcon(int resId) {
+            mIconView.setImageResource(resId);
+            return this;
+        }
+
+        /**
+         * Set the {@link ActionBar.TabListener} that will handle switching to
+         * and from this tab. All tabs must have a TabListener set before being
+         * added to the ActionBar.
+         * 
+         * @param listener Listener to handle tab selection events.
+         */
+        public ActionBar.Tab setTabListener(ActionBar.TabListener listener) {
+            mListener = listener;
+            return this;
+        }
+
+        /**
+         * Give this Tab an arbitrary object to hold for later use.
+         * 
+         * @param obj Object to store.
+         * @return The current instance for call chaining.
+         */
+        public ActionBar.Tab setTag(Object obj) {
+            mTag = obj;
+            return this;
+        }
+
+        /**
+         * Set the text displayed on this tab. Text may be truncated if there
+         * is not room to display the entire string.
+         * 
+         * @param text The text to display.
+         * @return The current instance for call chaining.
+         */
+        public ActionBar.Tab setText(CharSequence text) {
+            mTextView.setText(text);
+            return this;
+        }
+
+        /**
+         * Set the text displayed on this tab. Text may be truncated if there
+         * is not room to display the entire string.
+         * 
+         * @param text Resource ID of text to display.
+         * @return The current instance for call chaining.
+         */
+        public ActionBar.Tab setText(int resId) {
+            mTextView.setText(resId);
+            return this;
+        }
+
+        /**
+         * Unselect this tab. Only valid if the tab has been added to the
+         * action bar and was previously selected.
+         */
         void unselect() {
             if (mIsSelected) {
-                View selectedView = mView.findViewById(R.id.actionbar_tab_selected);
-                selectedView.setBackgroundColor(Color.TRANSPARENT);
+                mSelectedView.setBackgroundColor(Color.TRANSPARENT);
+                mIsSelected = false;
 
                 if (mListener != null) {
                     mListener.onTabUnselected(this);
                 }
             }
-            mIsSelected = false;
-        }
-
-        private View inflate(boolean isSelected) {
-            mView = mInflater.inflate(R.layout.actionbar_tab, mTabsView, false);
-
-            TextView textView =
-                (TextView) mView.findViewById(R.id.actionbar_tab);
-            textView.setText(getText());
-
-            View selectedView = mView.findViewById(R.id.actionbar_tab_selected);
-            if (!isSelected) {
-                selectedView.setBackgroundColor(Color.TRANSPARENT);
-            } else {
-                select();
-            }
-
-            mView.setTag(this);
-            mView.setOnClickListener(ActionBar.this.mTabClicked);
-
-            return mView;
         }
     }
 

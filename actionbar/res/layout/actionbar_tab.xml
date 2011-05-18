@@ -22,10 +22,18 @@
     android:focusable="true"
     android:background="@drawable/actionbar_btn"
     >
+    <ImageView
+        android:id="@+id/actionbar_tab_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:gravity="center_vertical"
+        />
     <com.markupartist.android.widget.ScrollingTextView
         android:id="@+id/actionbar_tab"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
+        android:layout_toRightOf="@id/actionbar_tab_icon"
+        android:layout_alignWithParentIfMissing="true"
         android:padding="5dip"
         android:layout_weight="1"
         android:gravity="center_vertical"
@@ -37,12 +45,19 @@
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
         />
+    <FrameLayout
+        android:id="@+id/actionbar_tab_custom"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="5dip"
+        android:layout_weight="1"
+        android:visibility="gone"
+        />
     <!-- TODO: Make configurable. -->
     <View
         android:id="@+id/actionbar_tab_selected"
         android:layout_width="wrap_content"
         android:layout_height="5dip"
-        android:background="#FFFFFF"
         android:layout_alignParentBottom="true"
         />
 </RelativeLayout>
