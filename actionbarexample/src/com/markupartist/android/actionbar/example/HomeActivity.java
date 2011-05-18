@@ -20,12 +20,6 @@ import android.widget.Toast;
 
 public class HomeActivity extends Activity {
     private static final Random RANDOM = new Random();
-    private static final String[] TAB_TEXT = new String[] {
-        "Tab1",
-        "Tab2",
-        "This is some really long tab text!",
-        "Tab4",
-    };
     
     private ActionBar mActionBar;
     
@@ -84,12 +78,15 @@ public class HomeActivity extends Activity {
         mActionBar.setCustomView(R.layout.custom_view);
         mActionBar.setDisplayShowCustomEnabled(false);
         mActionBar.setDisplayShowHomeEnabled(false);
-        mActionBar.add(0, R.id.actionbar_item_home, 0, "")
-            .setIcon(R.drawable.ic_title_home_default)
-            .setIntent(createIntent(this));
-
-        ArrayAdapter<CharSequence> listAdapter = ArrayAdapter.createFromResource(
-                this, R.array.locations, R.layout.actionbar_list_dropdown_item);
+        
+        //You could also use addHomeAction and omit the ID for the following:
+        mActionBar.addAction(
+            mActionBar.newAction(R.id.actionbar_item_home)
+                .setIcon(R.drawable.ic_title_home_default)
+                .setIntent(createIntent(this))
+        );
+        
+        SpinnerAdapter listAdapter = ArrayAdapter.createFromResource(this, R.array.locations, R.layout.actionbar_list_dropdown_item);
         mActionBar.setListNavigationCallbacks(listAdapter, new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
@@ -128,17 +125,20 @@ public class HomeActivity extends Activity {
         mActionAdd.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mActionBar.size() == 0) {
+                if (mActionBar.getActionCount() == 0) {
                     addShareItem();
                 } else {
-                    mActionBar.add(0, R.drawable.ic_title_export_default)
-                        .setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                Toast.makeText(HomeActivity.this, "Action clicked!", Toast.LENGTH_SHORT).show();
-                                return true;
-                            }
-                        });
+                    mActionBar.addAction(
+                        mActionBar.newAction()
+                            .setIcon(R.drawable.ic_title_export_default)
+                            .setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    Toast.makeText(HomeActivity.this, "Action clicked!", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                }
+                            })
+                    );
                 }
                 updateButtonStates();
             }
@@ -146,7 +146,7 @@ public class HomeActivity extends Activity {
         mActionRemoveOne.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                int actionCount = mActionBar.size();
+                int actionCount = mActionBar.getActionCount();
                 mActionBar.removeItemAt(actionCount - 1);
                 Toast.makeText(HomeActivity.this, "Removed action." , Toast.LENGTH_SHORT).show();
                 updateButtonStates();
@@ -155,14 +155,14 @@ public class HomeActivity extends Activity {
         mActionRemoveShare.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mActionBar.removeItem(R.id.item_share);
+                mActionBar.removeAction(R.id.item_share);
                 updateButtonStates();
             }
         });
         mActionRemoveAll.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mActionBar.clear();
+                mActionBar.removeAllActions();
                 updateButtonStates();
             }
         });
@@ -334,17 +334,32 @@ public class HomeActivity extends Activity {
         mTabAdd.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tabText = TAB_TEXT[mActionBar.getTabCount()];
-                mActionBar.addTab(mActionBar.newTab().setText(tabText));
+                ActionBar.Tab newTab = mActionBar.newTab();
+
+                if (RANDOM.nextBoolean()) {
+                    newTab.setCustomView(R.layout.tab_custom_view);
+                } else {
+                    boolean icon = RANDOM.nextBoolean();
+                    if (icon) {
+                        newTab.setIcon(R.drawable.ic_title_share_default);
+                    }
+                    if (!icon || RANDOM.nextBoolean()) {
+                        newTab.setText("Tab Text!");
+                    }
+                }
+                
+                mActionBar.addTab(newTab);
+                
                 updateButtonStates();
             }
         });
         mTabSelect.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                final int newIndex = RANDOM.nextInt(mActionBar.getTabCount());
-                mActionBar.setSelectedNavigationItem(newIndex);
-                updateButtonStates();
+                if (mActionBar.getTabCount() > 0) {
+                    final int newIndex = RANDOM.nextInt(mActionBar.getTabCount());
+                    mActionBar.setSelectedNavigationItem(newIndex);
+                }
             }
         });
         mTabRemove.setOnClickListener(new OnClickListener() {
@@ -367,15 +382,19 @@ public class HomeActivity extends Activity {
     }
     
     private void addShareItem() {
-        mActionBar.add(0, R.id.item_share, 0, "")
-            .setIcon(R.drawable.ic_title_share_default)
-            .setIntent(createShareIntent());
+        mActionBar.addAction(
+            mActionBar.newAction(R.id.item_share)
+                .setIcon(R.drawable.ic_title_share_default)
+                .setIntent(createShareIntent())
+        );
     }
     
     private void addOtherItem() {
-        mActionBar.add()
-        .setIcon(R.drawable.ic_title_export_default)
-        .setIntent(new Intent(this, OtherActivity.class));
+        mActionBar.addAction(
+            mActionBar.newAction()
+                .setIcon(R.drawable.ic_title_export_default)
+                .setIntent(new Intent(this, OtherActivity.class))
+        );
     }
     
     private void updateButtonStates() {
@@ -392,9 +411,9 @@ public class HomeActivity extends Activity {
         boolean hasSubtitle = mActionBar.getSubtitle() != null;
         boolean hasTabs = mActionBar.getTabCount() > 0;
         boolean hasMaxTabs = mActionBar.getTabCount() > 3;
-        boolean hasActions = mActionBar.size() > 0;
-        boolean hasMaxActions = mActionBar.size() > 3;
-        boolean hasActionShare = mActionBar.findItem(R.id.item_share) != null;
+        boolean hasActions = mActionBar.getActionCount() > 0;
+        boolean hasMaxActions = mActionBar.getActionCount() > 3;
+        boolean hasActionShare = mActionBar.findAction(R.id.item_share) != null;
         
         mActionBarShow.setEnabled(!isVisible);
         mActionBarHide.setEnabled(isVisible);
