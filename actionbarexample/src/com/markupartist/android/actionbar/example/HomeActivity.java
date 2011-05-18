@@ -87,8 +87,9 @@ public class HomeActivity extends Activity {
         mActionBar.add(0, R.id.actionbar_item_home, 0, "")
             .setIcon(R.drawable.ic_title_home_default)
             .setIntent(createIntent(this));
-        
-        SpinnerAdapter listAdapter = ArrayAdapter.createFromResource(this, R.array.locations, R.layout.actionbar_title);
+
+        ArrayAdapter<CharSequence> listAdapter = ArrayAdapter.createFromResource(
+                this, R.array.locations, R.layout.actionbar_list_dropdown_item);
         mActionBar.setListNavigationCallbacks(listAdapter, new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
