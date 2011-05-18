@@ -268,6 +268,12 @@ public class ActionBar extends RelativeLayout {
 
     
     
+    /**
+     * Instantiate a new action bar instance.
+     * 
+     * @param context Context to which the action bar will be tied.
+     * @param attrs Configuration attributes.
+     */
     public ActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -1046,6 +1052,12 @@ public class ActionBar extends RelativeLayout {
         }
     }
     
+    /**
+     * Return a proxy to the action bar that implementes the {@link Menu}
+     * interface to allow for inflation of action items from an XML resource.
+     * 
+     * @return Menu proxy instance.
+     */
     public final Menu asMenu() {
         return new MenuImpl();
     }
@@ -1058,6 +1070,12 @@ public class ActionBar extends RelativeLayout {
         mHomeView.removeAllViews();
     }
     
+    /**
+     * Find an action with the specified ID.
+     * 
+     * @param itemId Action ID.
+     * @return Action or {@code null}.
+     */
     public Action findAction(int itemId) {
         if (itemId == R.id.actionbar_item_home) {
             View view = mHomeView.getChildAt(0);
