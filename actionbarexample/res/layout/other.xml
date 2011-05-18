@@ -6,13 +6,13 @@
     android:layout_height="fill_parent"
     >
     <com.markupartist.android.widget.ActionBar
-	    android:id="@+id/actionbar"
-	    app:title="@string/some_title"
-	    style="@style/ActionBar"
+        android:id="@+id/actionbar"
+        app:title="@string/some_title"
+        style="@style/ActionBar"
         />
-	<TextView
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="Home home"
-	    />
+    <TextView
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content" 
+        android:text="@string/other_content"
+        />
 </LinearLayout>
