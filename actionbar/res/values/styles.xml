@@ -39,4 +39,9 @@
     </style>
     <style name="ActionBarProgressBar" parent="@android:style/Widget.ProgressBar.Small">
     </style>
+    <style name="ActionBar_TabView">
+        <item name="android:background">@drawable/actionbar_tab</item>
+        <item name="android:paddingLeft">4dip</item>
+        <item name="android:paddingRight">4dip</item>
+    </style>
 </resources>

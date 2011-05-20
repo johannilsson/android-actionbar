@@ -156,15 +156,6 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             />
-        <!-- TODO: Make configurable. -->
-        <View
-            android:id="@+id/actionbar_tabs_bottom_line"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="2dip"
-            android:background="#FFFFFF"
-            android:layout_alignParentBottom="true"
-            />
         <FrameLayout
             android:id="@+id/actionbar_custom"
             android:layout_width="fill_parent"

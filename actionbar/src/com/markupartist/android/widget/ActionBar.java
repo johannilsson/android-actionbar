@@ -27,7 +27,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -38,7 +37,6 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -173,9 +171,6 @@ public class ActionBar extends RelativeLayout {
 
     /** Container for all tab items. */
     private final LinearLayout mTabsView;
-    
-    /** Bottom line when in tabs navigation mode. */
-    private final View mTabsBottomLine;
 
     /** Indeterminate progress bar. */
     private final ProgressBar mProgress;
@@ -297,7 +292,6 @@ public class ActionBar extends RelativeLayout {
         mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
 
         mTabsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_tabs);
-        mTabsBottomLine = mBarView.findViewById(R.id.actionbar_tabs_bottom_line);
 
         mProgress = (ProgressBar) mBarView.findViewById(R.id.actionbar_progress);
 
@@ -402,7 +396,6 @@ public class ActionBar extends RelativeLayout {
 
         // Show tabs if in tabs navigation mode.
         mTabsView.setVisibility(isTab ? View.VISIBLE : View.GONE);
-        mTabsBottomLine.setVisibility(isTab ? View.VISIBLE : View.GONE);
 
         //Show title view if we are not in list navigation, not showing custom
         //view, and the show title flag is true
@@ -1766,7 +1759,6 @@ public class ActionBar extends RelativeLayout {
         final ImageView mIconView;
         final TextView mTextView;
         final FrameLayout mCustomView;
-        final View mSelectedView;
         
         ActionBar.TabListener mListener;
         boolean mIsSelected;
@@ -1781,7 +1773,6 @@ public class ActionBar extends RelativeLayout {
             mIconView = (ImageView)mView.findViewById(R.id.actionbar_tab_icon);
             mTextView = (TextView)mView.findViewById(R.id.actionbar_tab);
             mCustomView = (FrameLayout)mView.findViewById(R.id.actionbar_tab_custom);
-            mSelectedView = mView.findViewById(R.id.actionbar_tab_selected);
         }
 
         
@@ -1863,7 +1854,7 @@ public class ActionBar extends RelativeLayout {
             }
 
             mIsSelected = true;
-            mSelectedView.setBackgroundColor(Color.WHITE);
+            mView.setSelected(true);
             if (mListener != null) {
                 mListener.onTabSelected(this);
             }
@@ -1975,7 +1966,7 @@ public class ActionBar extends RelativeLayout {
          */
         void unselect() {
             if (mIsSelected) {
-                mSelectedView.setBackgroundColor(Color.TRANSPARENT);
+                mView.setSelected(false);
                 mIsSelected = false;
 
                 if (mListener != null) {
