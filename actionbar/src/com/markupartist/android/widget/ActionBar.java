@@ -36,6 +36,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -1564,16 +1565,22 @@ public class ActionBar extends RelativeLayout {
         }
         
         /**
-         * Perform all actions associated with selection: Flip the checked
+         * Perform all actions associated with selection. Flip the checked
          * state (if checkable), execute the {@link OnMenuItemClickListener}
-         * (if available), and/or launch the {@link Intent} (if set).
+         * (if available) or the {@link Activity#onMenuItemSelected(int, MenuItem)}
+         * that will call through to {@link Activity#onOptionsItemSelected(MenuItem)}.
+         * The {@link Intent} will always be executed (if set).
          */
         public void select() {
             if (mIsCheckable) {
                 mIsChecked = !mIsChecked;
             }
+
             if (mListener != null) {
                 mListener.onMenuItemClick(this);
+            } else if (mListener == null && mActionBar.getContext() instanceof Activity) {
+                ((Activity) mActionBar.getContext()).onMenuItemSelected(
+                        Window.FEATURE_OPTIONS_PANEL, this);
             }
             if (mIntent != null) {
                 mActionBar.getContext().startActivity(mIntent);
