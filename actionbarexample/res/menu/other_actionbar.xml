@@ -9,5 +9,7 @@
         android:icon="@drawable/ic_title_share_default"/>
     <item
         android:id="@+id/item_export"
-        android:icon="@drawable/ic_title_export_default"/>
+        android:icon="@drawable/ic_title_export_default"
+        android:title="@string/export_menu_item_label"
+        />
 </menu>

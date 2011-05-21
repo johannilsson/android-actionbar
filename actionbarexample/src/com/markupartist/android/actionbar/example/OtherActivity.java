@@ -1,17 +1,17 @@
 package com.markupartist.android.actionbar.example;
 
-import com.markupartist.android.widget.ActionBar;
-import com.markupartist.android.widget.ActionBar.Tab;
-import com.markupartist.android.widget.ActionBar.TabListener;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.Toast;
 
+import com.markupartist.android.widget.ActionBar;
+import com.markupartist.android.widget.ActionBar.Tab;
+import com.markupartist.android.widget.ActionBar.TabListener;
+
 public class OtherActivity extends Activity implements TabListener {
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,9 @@ public class OtherActivity extends Activity implements TabListener {
         getMenuInflater().inflate(R.menu.other_actionbar, actionBar.asMenu());
         actionBar.findAction(R.id.actionbar_item_home).setIntent(HomeActivity.createIntent(this));
         actionBar.findAction(R.id.item_share).setIntent(createShareIntent());
-        actionBar.findAction(R.id.item_export).setOnMenuItemClickListener(exampleListener);
+        // We could use this to assign a OnMenuItemClickListener, but if don't
+        // the Activity onOptionsItemSelected method will instead be called.
+        //actionBar.findAction(R.id.item_export).setOnMenuItemClickListener(exampleListener);
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.addTab(actionBar.newTab().setText("Tab 1").setTabListener(this));
@@ -40,6 +42,21 @@ public class OtherActivity extends Activity implements TabListener {
         return Intent.createChooser(intent, "Share");
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.item_export) {
+            // The MenuItem is actually a ActionBar.Action, for just getting
+            // the title this is by no way needed, it just here for the demon.
+            final ActionBar.Action exportAction = (ActionBar.Action) item;
+            Toast.makeText(this, String.format(
+                    "Pressed '%s'",
+                    exportAction.getTitle()), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*
     private final OnMenuItemClickListener exampleListener = new OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
@@ -48,6 +65,7 @@ public class OtherActivity extends Activity implements TabListener {
             return true;
         }
     };
+    */
 
     @Override
     public void onTabReselected(Tab tab) {
