@@ -16,6 +16,22 @@
 
 <resources>
     <declare-styleable name="ActionBar">
+        <!-- A string to be representing the action bar title. -->
         <attr name="title" format="string" localization="suggested" />
+        <!-- A drawable to use as the background for the action bar. This can
+             be either a reference to a full drawable resource (such as a PNG
+             image, 9-patch, XML state list description, etc), or a solid color
+             such as "#ff000000" (black). -->
+        <attr name="actionBarBackground" format="reference|color" />
+        <!-- A drawable to use as the item separator for action items. This can
+             be either a reference to a full drawable resource (such as a PNG
+             image, 9-patch, XML state list description, etc), or a solid color
+             such as "#ff000000" (black). -->
+        <attr name="actionBarSeparator" format="reference|color" />
+        <!-- A drawable to use as the background for action items. This can be
+             either a reference to a full drawable resource (such as a PNG
+             image, 9-patch, XML state list description, etc), or a solid color
+             such as "#ff000000" (black). -->
+        <attr name="actionBarItemBackground" format="reference|color" />
     </declare-styleable>
 </resources>

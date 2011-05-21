@@ -209,9 +209,15 @@ public class ActionBar extends RelativeLayout {
      * Callback for the list navigation event.
      */
     private OnNavigationListener mListCallback;
-    
-    
-    
+
+    /**
+     * A resource to use as the background for action items. This is specified
+     * by the user when setting up the action bar in their layout by using the
+     * attribute <code>actionBarItemBackground</code>. This can be either a
+     * drawable or a solid color.
+     */
+    private int mActionItemBackgroundResource = -1;
+
     /**
      * Listener for list title click. Will display a list dialog of all the
      * options provided and execute the specified {@link OnNavigationListener}.
@@ -261,8 +267,6 @@ public class ActionBar extends RelativeLayout {
         }
     };
 
-    
-    
     /**
      * Instantiate a new action bar instance.
      * 
@@ -271,6 +275,32 @@ public class ActionBar extends RelativeLayout {
      */
     public ActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        String title = null;
+        int separatorResource = -1;
+        int backgroundResource = -1;
+
+        TypedArray a = context.obtainStyledAttributes(attrs,
+                R.styleable.ActionBar);
+        final int N = a.getIndexCount();
+        for (int i = 0; i < N; i++) {
+            int attr = a.getIndex(i);
+            switch (attr) {
+            case R.styleable.ActionBar_title:
+                title = a.getString(attr);
+                break;
+            case R.styleable.ActionBar_actionBarBackground:
+                backgroundResource = a.getResourceId(attr, 0);
+                break;
+            case R.styleable.ActionBar_actionBarItemBackground:
+                mActionItemBackgroundResource = a.getResourceId(attr, 0);
+                break;
+            case R.styleable.ActionBar_actionBarSeparator:
+                separatorResource = a.getResourceId(attr, 0);
+                break;
+            }
+        }
+        a.recycle();
 
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -295,9 +325,16 @@ public class ActionBar extends RelativeLayout {
 
         mProgress = (ProgressBar) mBarView.findViewById(R.id.actionbar_progress);
 
-        TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.ActionBar);
-        CharSequence title = a.getString(R.styleable.ActionBar_title);
+        // Apply custom styles inflated from attributes.
+
+        if (backgroundResource > 0) {
+            mBarView.setBackgroundResource(backgroundResource);
+        }
+
+        if (separatorResource > 0) {
+            mActionsView.setBackgroundResource(separatorResource);
+        }
+
         if (title != null) {
             setTitle(title);
         } else if (context instanceof Activity) {
@@ -310,9 +347,7 @@ public class ActionBar extends RelativeLayout {
                 //Can't load and/or find title. Eat exception.
             }
         }
-        
-        a.recycle();
-        
+
         //Must be >= gingerbread to look for a logo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             Drawable logo = LogoLoader.loadLogo(context);
@@ -1307,7 +1342,6 @@ public class ActionBar extends RelativeLayout {
         private boolean mIsEnabled;
         private boolean mIsCheckable;
         private boolean mIsChecked;
-        
 
         /**
          * This constructor should <strong>ONLY</strong> be used in the
@@ -1320,10 +1354,13 @@ public class ActionBar extends RelativeLayout {
             mItemId = 0;
             mOrder = 0;
             mIsEnabled = true;
-            
+
             mView = mActionBar.mInflater.inflate(R.layout.actionbar_item, mActionBar.mActionsView, false);
             mView.setTag(this);
             mView.setOnClickListener(mActionBar.mActionClicked);
+            if (mActionBar.mActionItemBackgroundResource > 0) {
+                mView.setBackgroundResource(mActionBar.mActionItemBackgroundResource);
+            }
             
             mIcon = (ImageButton) mView.findViewById(R.id.actionbar_item);
         }
@@ -1338,11 +1375,14 @@ public class ActionBar extends RelativeLayout {
             mItemId = itemId;
             mOrder = order;
             mIsEnabled = true;
-            
+
             mView = mActionBar.mInflater.inflate(R.layout.actionbar_item, mActionBar.mActionsView, false);
             mView.setTag(this);
             mView.setOnClickListener(mActionBar.mActionClicked);
-            
+            if (mActionBar.mActionItemBackgroundResource != 0) {
+                mView.setBackgroundResource(mActionBar.mActionItemBackgroundResource);
+            }
+
             mIcon = (ImageButton) mView.findViewById(R.id.actionbar_item);
             
             //Attach to view
