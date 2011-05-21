@@ -25,6 +25,7 @@
         <item name="android:layout_height">@dimen/actionbar_height</item>
         <item name="android:padding">5dp</item>
         <item name="android:layout_marginLeft">1px</item>
+        <item name="android:background">@drawable/actionbar_btn</item>
     </style>
     <style name="ActionBarHomeItem" parent="ActionBarItem">
         <item name="android:layout_marginRight">1px</item>
