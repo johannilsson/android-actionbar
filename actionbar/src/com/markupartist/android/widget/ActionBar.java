@@ -1339,6 +1339,7 @@ public class ActionBar extends RelativeLayout {
         private OnMenuItemClickListener mListener;
         private Intent mIntent;
         private CharSequence mTitle;
+        private CharSequence mTitleCondensed;
         private boolean mIsEnabled;
         private boolean mIsCheckable;
         private boolean mIsChecked;
@@ -1444,7 +1445,10 @@ public class ActionBar extends RelativeLayout {
 
         @Override
         public final CharSequence getTitleCondensed() {
-            return getTitle();
+            if (mTitleCondensed == null) {
+                return getTitle();
+            }
+            return mTitleCondensed;
         }
 
         @Override
@@ -1549,7 +1553,7 @@ public class ActionBar extends RelativeLayout {
 
         @Override
         public final Action setTitleCondensed(CharSequence title) {
-            mTitle = title;
+            mTitleCondensed = title;
             return this;
         }
 
