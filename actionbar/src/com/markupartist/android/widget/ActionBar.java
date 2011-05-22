@@ -1372,11 +1372,12 @@ public class ActionBar extends RelativeLayout {
          * This constructor should <strong>ONLY</strong> be used in the
          * inflation of Actions from a menu XML resource.
          */
-        Action(ActionBar actionBar, int groupId, int itemId, int order) {
+        Action(ActionBar actionBar, int groupId, int itemId, int order, CharSequence title) {
             mActionBar = actionBar;
             mGroupId = groupId;
             mItemId = itemId;
             mOrder = order;
+            mTitle = title;
             mIsEnabled = true;
 
             mView = mActionBar.mInflater.inflate(R.layout.actionbar_item, mActionBar.mActionsView, false);
@@ -1549,7 +1550,9 @@ public class ActionBar extends RelativeLayout {
 
         @Override
         public final Action setTitle(int title) {
-            mTitle = mActionBar.getContext().getResources().getText(title);
+            if (title > 0) {
+                this.setTitle(mActionBar.getContext().getResources().getText(title));
+            }
             return this;
         }
 
@@ -1594,24 +1597,34 @@ public class ActionBar extends RelativeLayout {
      * items from XML.
      */
     final class MenuImpl implements Menu {
+        private static final int DEFAULT_ITEM_ID = 0;
+        private static final int DEFAULT_GROUP_ID = 0;
+        private static final int DEFAULT_ORDER = 0;
+
         @Override
         public Action add(CharSequence title) {
-            return new Action(ActionBar.this, 0, 0, 0).setTitle(title);
-        }
-        
-        @Override
-        public Action add(int titleRes) {
-            return new Action(ActionBar.this, 0, 0, 0).setTitle(titleRes);
+            return this.add(DEFAULT_GROUP_ID, DEFAULT_ITEM_ID,
+                    DEFAULT_ORDER, title);
         }
 
         @Override
-        public Action add(int groupId, int itemId, int order, CharSequence title) {
-            return new Action(ActionBar.this, groupId, itemId, order).setTitle(title);
+        public Action add(int titleRes) {
+            return this.add(DEFAULT_GROUP_ID, DEFAULT_ITEM_ID,
+                    DEFAULT_ORDER, titleRes);
         }
 
         @Override
         public Action add(int groupId, int itemId, int order, int titleRes) {
-            return new Action(ActionBar.this, groupId, itemId, order).setTitle(titleRes);
+            String title = null;
+            if (titleRes > 0) {
+                title = getContext().getResources().getString(titleRes);
+            }
+            return this.add(groupId, itemId, order, title);
+        }
+
+        @Override
+        public Action add(int groupId, int itemId, int order, CharSequence title) {
+            return new Action(ActionBar.this, groupId, itemId, order, title);
         }
 
         @Override
