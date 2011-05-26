@@ -1383,7 +1383,7 @@ public class ActionBar extends RelativeLayout {
             mView = mActionBar.mInflater.inflate(R.layout.actionbar_item, mActionBar.mActionsView, false);
             mView.setTag(this);
             mView.setOnClickListener(mActionBar.mActionClicked);
-            if (mActionBar.mActionItemBackgroundResource != 0) {
+            if (mActionBar.mActionItemBackgroundResource > 0) {
                 mView.setBackgroundResource(mActionBar.mActionItemBackgroundResource);
             }
 
