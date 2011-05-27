@@ -232,14 +232,14 @@ public class ActionBar extends RelativeLayout {
                         .setAdapter(mListAdapter, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int position) {
-                                //Execute call back, if exists
-                                if (mListCallback != null) {
-                                    mListCallback.onNavigationItemSelected(position, mListAdapter.getItemId(position));
-                                }
-                                
                                 if (position != mSelectedIndex) {
                                     mSelectedIndex = position;
                                     reloadDisplay();
+                                }
+
+                                //Execute call back, if exists
+                                if (mListCallback != null) {
+                                    mListCallback.onNavigationItemSelected(position, mListAdapter.getItemId(position));
                                 }
                             }
                         })
