@@ -15,6 +15,7 @@
 -->
 
 <resources>
+    <!-- Attributes used to style the Action Bar. -->
     <declare-styleable name="ActionBar">
         <!-- A string to be representing the action bar title. -->
         <attr name="title" format="string" localization="suggested" />
@@ -33,5 +34,12 @@
              image, 9-patch, XML state list description, etc), or a solid color
              such as "#ff000000" (black). -->
         <attr name="actionBarItemBackground" format="reference|color" />
+
+        <!-- Specifies a style resource to use for the tab bar. -->
+        <attr name="actionBarTabBarStyle" format="reference" />
+        <!-- Specifies a style resource to use for the tab view. -->
+        <attr name="actionBarTabViewStyle" format="reference" />
+        <!-- Specifies a style resource to use for the tab text. -->
+        <attr name="actionBarTabTextStyle" format="reference" />
     </declare-styleable>
 </resources>
