@@ -30,6 +30,7 @@ public class OtherActivity extends Activity implements TabListener {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.addTab(actionBar.newTab().setText("Tab 1").setTabListener(this));
         actionBar.addTab(actionBar.newTab().setText("Tab 2").setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setText("Tab 3").setTabListener(this));
         
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);

@@ -22,4 +22,29 @@
     <style name="ActionBarProgressBar" parent="@android:style/Widget.ProgressBar.Small.Inverse">
     </style>
      -->
+
+    <!-- Demonstrates how we can style the action bar differently for another
+         activity. Drawables for the tabs used in this examples has been stolen
+         from the iosched app <http://code.google.com/p/iosched>. -->
+    <style name="OtherTheme" parent="@style/Theme.ActionBar.Light">
+        <item name="actionBarTabBarStyle">@style/FancyTabBar</item>
+        <item name="actionBarTabViewStyle">@style/FancyTabView</item>
+        <item name="actionBarTabTextStyle">@style/FancyTabText</item>
+    </style>
+
+    <style name="FancyTabBar" parent="ActionBar_TabBar">
+        <item name="android:background">@drawable/tab_custom_off_background</item>
+        <item name="android:paddingTop">5dip</item>
+        <item name="android:layout_height">38dp</item>
+    </style>
+    <style name="FancyTabView" parent="ActionBar_TabView">
+        <item name="android:background">@drawable/tab_custom_indicator</item>
+        <item name="android:layout_height">38dp</item>
+        <item name="android:layout_marginLeft">2dip</item>
+        <item name="android:layout_marginRight">2dip</item>
+    </style>
+    <style name="FancyTabText" parent="ActionBar_TabText">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>
