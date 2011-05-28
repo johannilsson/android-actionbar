@@ -23,4 +23,6 @@
     <color name="actionbar_background_dropdown_end">#B02121</color>
     <color name="actionbar_background_item_pressed_start">#FF7F00</color>
     <color name="actionbar_background_item_pressed_end">#EE7600</color>
+    <color name="actionbar_tab_bar_background">#999999</color>
+    
 </resources>
