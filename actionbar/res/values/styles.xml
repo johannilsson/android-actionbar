@@ -84,7 +84,7 @@
     </style>
     <!-- Represent a tab view item in the tab bar. -->
     <style name="ActionBar_TabView">
-        <item name="android:background">@drawable/actionbar_tab</item>
+        <item name="android:background">@drawable/actionbar_tab_indicator</item>
         <item name="android:paddingLeft">4dip</item>
         <item name="android:paddingRight">4dip</item>
         <item name="android:gravity">center_horizontal</item>
