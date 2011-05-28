@@ -14,11 +14,45 @@
      limitations under the License.
 -->
 <resources>
+    <style name="Theme.ActionBar" parent="android:style/Theme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarTabBarStyle">@style/ActionBar_TabBar</item>
+        <item name="actionBarTabViewStyle">@style/ActionBar_TabView</item>
+        <item name="actionBarTabTextStyle">@style/ActionBar_TabText</item>
+    </style>
+    <style name="Theme.ActionBar.Light" parent="android:style/Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarTabBarStyle">@style/ActionBar_TabBar</item>
+        <item name="actionBarTabViewStyle">@style/ActionBar_TabView</item>
+        <item name="actionBarTabTextStyle">@style/ActionBar_TabText</item>
+    </style>
+
     <style name="ActionBar">
         <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <!-- <item name="android:background">@drawable/actionbar_background</item> -->
+    </style>
+    <style name="ActionBar_Container">
+        <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">@dimen/actionbar_height</item>
-        <item name="android:orientation">horizontal</item>
         <item name="android:background">@drawable/actionbar_background</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    <style name="ActionBar_Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignWithParentIfMissing">true</item>
+        <item name="android:padding">5dip</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">16dip</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/actionbar_title</item>
+        <item name="android:lines">1</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
     </style>
     <style name="ActionBarItem">
         <item name="android:layout_width">@dimen/actionbar_item_width</item>
@@ -40,9 +74,24 @@
     </style>
     <style name="ActionBarProgressBar" parent="@android:style/Widget.ProgressBar.Small">
     </style>
+
+    <!-- The tab bar that holds the tabs. -->
+    <style name="ActionBar_TabBar">
+        <item name="android:background">@color/actionbar_tab_bar_background</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!-- Represent a tab view item in the tab bar. -->
     <style name="ActionBar_TabView">
         <item name="android:background">@drawable/actionbar_tab</item>
         <item name="android:paddingLeft">4dip</item>
         <item name="android:paddingRight">4dip</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_gravity">center_vertical</item>
     </style>
+    <!-- The style for the text in the tab view. -->
+    <style name="ActionBar_TabText" parent="ActionBar_Text">
+    </style>
+
 </resources>
