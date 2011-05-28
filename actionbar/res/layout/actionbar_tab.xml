@@ -13,49 +13,31 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- ?android:attr/actionModeStyle -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?attr/actionBarTabViewStyle"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:layout_alignParentLeft="true"
     android:layout_weight="1"
     android:focusable="true"
-    style="@style/ActionBar_TabView"
     >
     <ImageView
         android:id="@+id/actionbar_tab_icon"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
         />
     <com.markupartist.android.widget.ScrollingTextView
-        android:id="@+id/actionbar_tab"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:id="@+id/actionbar_tab_text"
+        style="?attr/actionBarTabTextStyle"
         android:layout_toRightOf="@id/actionbar_tab_icon"
-        android:layout_alignWithParentIfMissing="true"
-        android:padding="5dip"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:textSize="16dip"
-        android:textStyle="bold"
-        android:textColor="@color/actionbar_title"
-        android:lines="1"
-        android:scrollHorizontally="true"
-        android:ellipsize="marquee"
-        android:marqueeRepeatLimit="marquee_forever"
         />
     <FrameLayout
         android:id="@+id/actionbar_tab_custom"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:padding="5dip"
-        android:layout_weight="1"
-        android:visibility="gone"
-        />
-    <View
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_weight="1"
+        android:visibility="gone"
         />
 </RelativeLayout>
