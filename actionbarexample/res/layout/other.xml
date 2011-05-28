@@ -5,14 +5,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    <!-- Demonstrates how the action bar can be styled differently from another
-         another action bar within the same project. -->
     <com.markupartist.android.widget.ActionBar
         android:id="@+id/actionbar"
         app:title="@string/some_title"
-        app:actionBarBackground="@drawable/other_actionbar_background"
-        app:actionBarItemBackground="@drawable/other_actionbar_item_btn"
-        app:actionBarSeparator="@color/other_actionbar_separator"
         style="@style/ActionBar"
         />
     <TextView
