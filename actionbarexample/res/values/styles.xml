@@ -25,8 +25,15 @@
 
     <!-- Demonstrates how we can style the action bar differently for another
          activity. Drawables for the tabs used in this examples has been stolen
-         from the iosched app <http://code.google.com/p/iosched>. -->
-    <style name="OtherTheme" parent="@style/Theme.ActionBar.Light">
+         from the iosched app <http://code.google.com/p/iosched>.
+         
+         This example also demonstrates that there's no dependency on the
+         themes defined in the action bar as long as all the styles has been
+         setup to point to a style resource. -->
+    <style name="OtherTheme" parent="android:style/Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- These are the styles that is needed by the action bar. -->
         <item name="actionBarTabBarStyle">@style/FancyTabBar</item>
         <item name="actionBarTabViewStyle">@style/FancyTabView</item>
         <item name="actionBarTabTextStyle">@style/FancyTabText</item>
