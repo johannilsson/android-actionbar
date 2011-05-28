@@ -142,7 +142,7 @@ public class ActionBar extends RelativeLayout {
     private final LayoutInflater mInflater;
     
     /** Parent view of the action bar. */
-    private final RelativeLayout mBarView;
+    private final LinearLayout mBarView;
     
     /** Home item view. */
     private final FrameLayout mHomeView;
@@ -306,7 +306,7 @@ public class ActionBar extends RelativeLayout {
 
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        mBarView = (RelativeLayout) mInflater.inflate(R.layout.actionbar, null);
+        mBarView = (LinearLayout) mInflater.inflate(R.layout.actionbar, null);
         addView(mBarView);
 
         mHomeView = (FrameLayout) mBarView.findViewById(R.id.actionbar_home_view);
@@ -436,10 +436,10 @@ public class ActionBar extends RelativeLayout {
 
         //Show title view if we are not in list navigation, not showing custom
         //view, and the show title flag is true
-        mTitleView.setVisibility(!isList && !showingCustom && !isTab && showingTitle ? View.VISIBLE : View.GONE);
+        mTitleView.setVisibility(!isList && !showingCustom && showingTitle ? View.VISIBLE : View.GONE);
         //Show subtitle view if we are not in list navigation, not showing
         //custom view, show title flag is true, and a subtitle is set
-        mSubtitleView.setVisibility(!isList && !showingCustom && !isTab && showingTitle && hasSubtitle ? View.VISIBLE : View.GONE);
+        mSubtitleView.setVisibility(!isList && !showingCustom && showingTitle && hasSubtitle ? View.VISIBLE : View.GONE);
         //Show custom view if we are not in list navigation, not in tab
         //navigation, and the showing custom flag is set
         mCustomView.setVisibility(!isList && !isList && !isTab && showingCustom ? View.VISIBLE : View.GONE);
@@ -1836,7 +1836,7 @@ public class ActionBar extends RelativeLayout {
             mView.setOnClickListener(mTabClicked);
             
             mIconView = (ImageView)mView.findViewById(R.id.actionbar_tab_icon);
-            mTextView = (TextView)mView.findViewById(R.id.actionbar_tab);
+            mTextView = (TextView)mView.findViewById(R.id.actionbar_tab_text);
             mCustomView = (FrameLayout)mView.findViewById(R.id.actionbar_tab_custom);
         }
 
