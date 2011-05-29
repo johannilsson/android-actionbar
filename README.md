@@ -39,7 +39,7 @@ If the title is not set the title will be pulled from the application manifest a
 
 Create a menu xml within `res/menu`. The item with id `actionbar_item_home` will automatically be used as the home action.
 
-```
+``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
