@@ -18,16 +18,20 @@ This demonstrates how to use the default navigation mode and how to add actions.
 
 The action bar is just as any other widget and is added to a layout with the following xml.
 
-    <com.markupartist.android.widget.ActionBar
-	    android:id="@+id/actionbar"
-	    app:title="@string/some_title"
-	    style="@style/ActionBar"
-        />
+``` xml
+<com.markupartist.android.widget.ActionBar
+    android:id="@+id/actionbar"
+    app:title="@string/some_title"
+    style="@style/ActionBar"
+    />
+```
 
 In the above example the title is set using `app:title` which requires that the main application namespace is added first. The title can also be set through code for example:
 
-    ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-    actionBar.setTitle(R.string.my_title)
+``` java
+ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+actionBar.setTitle(R.string.my_title)
+```
 
 If the title is not set the title will be pulled from the application manifest automatically.
 
@@ -35,47 +39,53 @@ If the title is not set the title will be pulled from the application manifest a
 
 Create a menu xml within `res/menu`. The item with id `actionbar_item_home` will automatically be used as the home action.
 
-    <?xml version="1.0" encoding="utf-8"?>
-    <menu xmlns:android="http://schemas.android.com/apk/res/android">
-        <item
-            android:id="@id/actionbar_item_home"
-            android:icon="@drawable/ic_actionbar_home"
-            android:title="@string/home_actionbar_item_label"
-            />
-        <item
-            android:id="@+id/item_share"
-            android:icon="@drawable/ic_actionbar_share"
-            android:title="@string/share_actionbar_item_label"
-            />
-        <item
-            android:id="@+id/item_export"
-            android:icon="@drawable/ic_actionbar_export"
-            android:title="@string/export_actionbar_item_label"
-            />
-    </menu>
+```
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@id/actionbar_item_home"
+        android:icon="@drawable/ic_actionbar_home"
+        android:title="@string/home_actionbar_item_label"
+        />
+    <item
+        android:id="@+id/item_share"
+        android:icon="@drawable/ic_actionbar_share"
+        android:title="@string/share_actionbar_item_label"
+        />
+    <item
+        android:id="@+id/item_export"
+        android:icon="@drawable/ic_actionbar_export"
+        android:title="@string/export_actionbar_item_label"
+        />
+</menu>
+```
 
 Find the action bar from the layout and add action items from the menu.
 
-    ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-    getMenuInflater().inflate(R.menu.other_actionbar, actionBar.asMenu());
+``` java
+ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+getMenuInflater().inflate(R.menu.other_actionbar, actionBar.asMenu());
+```
 
 Handle actions by implementing `onOptionsItemSelected` in the activity.
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getId()) {
-        case R.id.actionbar_item_home:
-            // Home action was clicked.
-            return true;
-        case R.id.item_share:
-            // Share action was clicked.
-            return true;
-        case R.id.item_export:
-            // Export action was clicked.
-            return true;       
-        }
-        return super.onOptionsItemSelected(item);
+``` java
+@Override
+public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getId()) {
+    case R.id.actionbar_item_home:
+        // Home action was clicked.
+        return true;
+    case R.id.item_share:
+        // Share action was clicked.
+        return true;
+    case R.id.item_export:
+        // Export action was clicked.
+        return true;       
     }
+    return super.onOptionsItemSelected(item);
+}
+```
 
 Actions can be handled and added in several ways, for full example please refer to the example app.
 
@@ -85,12 +95,14 @@ The ActionBar is a Libary Project this means that all resources will be merged t
 
 To change the colors and create a blue action bar, create a `colors.xml` within `res/values` of the main project.
 
-    <?xml version="1.0" encoding="utf-8"?>
-    <resources>
-        <color name="actionbar_separator">#3A5FCD</color>
-        <color name="actionbar_background_start">#3A5FCD</color>
-        <color name="actionbar_background_end">#27408B</color>
-    </resources> 
+``` xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="actionbar_separator">#3A5FCD</color>
+    <color name="actionbar_background_start">#3A5FCD</color>
+    <color name="actionbar_background_end">#27408B</color>
+</resources> 
+```
 
 In this example we don't override the values for `actionbar_background_item_pressed_start` and `actionbar_background_item_pressed_end` since we decided to stick with the default values for those.
 
