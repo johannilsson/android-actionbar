@@ -19,7 +19,7 @@
     android:layout_height="wrap_content"
     >
     <RelativeLayout 
-        style="@style/ActionBar_Container"
+        style="?attr/actionBarStyle"
         >
         <RelativeLayout
             android:id="@+id/actionbar_home"
@@ -33,9 +33,7 @@
             <ImageButton
                 android:id="@+id/actionbar_home_logo"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/actionbar_height"
-                android:background="@drawable/actionbar_btn"
-                style="@style/ActionBarHomeLogo"
+                style="?attr/actionBarHomeLogoStyle"
                 android:visibility="gone"
                 />
             <FrameLayout
@@ -46,7 +44,7 @@
                 android:layout_centerVertical="true"
                 android:layout_margin="0dp"
                 android:padding="0dp"
-                android:background="@color/actionbar_separator"
+                android:background="?attr/actionBarItemDivider"
                 android:visibility="gone"
                 />
             <ImageView
@@ -60,7 +58,7 @@
                 android:visibility="gone"
                 />
         </RelativeLayout>
-        
+
         <LinearLayout
             android:id="@+id/actionbar_actions"
             android:layout_width="wrap_content"
@@ -69,9 +67,9 @@
             android:layout_centerVertical="true"
             android:layout_margin="0dp"
             android:padding="0dp"
-            android:background="@color/actionbar_separator"
+            android:background="?attr/actionBarItemDivider"
             />
-        
+
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -82,6 +80,7 @@
             >
             <ProgressBar
                 android:id="@+id/actionbar_progress"
+                style="?attr/actionBarProgressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -89,42 +88,19 @@
                 android:paddingRight="7dip"
                 android:indeterminateOnly="true"
                 android:visibility="gone"
-                style="@style/ActionBarProgressBar"
                 />
             <com.markupartist.android.widget.ScrollingTextView
                 android:id="@+id/actionbar_title"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="?attr/actionBarTitleTextStyle"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/actionbar_progress"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:textSize="16dip"
-                android:textStyle="bold"
-                android:textColor="@color/actionbar_title"
-                android:lines="1"
-                android:scrollHorizontally="true"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
                 />
             <com.markupartist.android.widget.ScrollingTextView
                 android:id="@+id/actionbar_subtitle"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                style="?attr/actionBarSubtitleTextStyle"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/actionbar_progress"
                 android:layout_below="@id/actionbar_title"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:textSize="12dip"
-                android:textColor="@color/actionbar_subtitle"
-                android:lines="1"
-                android:scrollHorizontally="true"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
                 android:visibility="gone"
                 />
             <FrameLayout

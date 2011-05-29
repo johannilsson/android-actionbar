@@ -17,34 +17,50 @@
     <style name="Theme.ActionBar" parent="android:style/Theme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarStyle">@style/ActionBar_Container</item>
+        <item name="actionBarTitleTextStyle">@style/ActionBar_TitleText</item>
+        <item name="actionBarSubtitleTextStyle">@style/ActionBar_SubtitleText</item>
+        <item name="actionBarItemStyle">@style/ActionBar_Item</item>
+        <item name="actionBarHomeItemStyle">@style/ActionBar_HomeItem</item>
+        <item name="actionBarHomeLogoStyle">@style/ActionBar_HomeLogo</item>
+        <item name="actionBarProgressBarStyle">@style/ActionBar_ProgressBar</item>
         <item name="actionBarTabBarStyle">@style/ActionBar_TabBar</item>
         <item name="actionBarTabViewStyle">@style/ActionBar_TabView</item>
         <item name="actionBarTabTextStyle">@style/ActionBar_TabText</item>
+        <item name="actionBarItemDivider">@color/actionbar_divider</item>
     </style>
     <style name="Theme.ActionBar.Light" parent="android:style/Theme.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarStyle">@style/ActionBar_Container</item>
+        <item name="actionBarTitleTextStyle">@style/ActionBar_TitleText</item>
+        <item name="actionBarSubtitleTextStyle">@style/ActionBar_SubtitleText</item>
+        <item name="actionBarItemStyle">@style/ActionBar_Item</item>
+        <item name="actionBarHomeItemStyle">@style/ActionBar_HomeItem</item>
+        <item name="actionBarHomeLogoStyle">@style/ActionBar_HomeLogo</item>
+        <item name="actionBarProgressBarStyle">@style/ActionBar_ProgressBar</item>
         <item name="actionBarTabBarStyle">@style/ActionBar_TabBar</item>
         <item name="actionBarTabViewStyle">@style/ActionBar_TabView</item>
         <item name="actionBarTabTextStyle">@style/ActionBar_TabText</item>
+        <item name="actionBarItemDivider">@color/actionbar_divider</item>
     </style>
 
     <style name="ActionBar">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <!-- <item name="android:background">@drawable/actionbar_background</item> -->
     </style>
+
     <style name="ActionBar_Container">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">@dimen/actionbar_height</item>
         <item name="android:background">@drawable/actionbar_background</item>
         <item name="android:orientation">horizontal</item>
     </style>
+
     <style name="ActionBar_Text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignWithParentIfMissing">true</item>
-        <item name="android:padding">5dip</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textSize">16dip</item>
         <item name="android:textStyle">bold</item>
@@ -53,26 +69,42 @@
         <item name="android:scrollHorizontally">true</item>
         <item name="android:ellipsize">marquee</item>
         <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
-    <style name="ActionBarItem">
+
+    <style name="ActionBar_TitleText" parent="ActionBar_Text">
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+    </style>
+    <style name="ActionBar_SubtitleText" parent="ActionBar_TitleText">
+        <item name="android:textSize">12dip</item>
+        <item name="android:textColor">@color/actionbar_subtitle</item>
+    </style>
+
+    <style name="ActionBar_Item">
         <item name="android:layout_width">@dimen/actionbar_item_width</item>
         <item name="android:layout_height">@dimen/actionbar_height</item>
         <item name="android:padding">5dp</item>
         <item name="android:layout_marginLeft">1px</item>
         <item name="android:background">@drawable/actionbar_btn</item>
     </style>
-    <style name="ActionBarHomeItem" parent="ActionBarItem">
+
+    <style name="ActionBar_HomeItem" parent="ActionBar_Item">
         <item name="android:layout_marginRight">1px</item>
         <item name="android:layout_marginLeft">0px</item>
     </style>
-    <style name="ActionBarHomeLogo">
+
+    <style name="ActionBar_HomeLogo">
+        <item name="android:layout_height">@dimen/actionbar_height</item>
+        <item name="android:background">@drawable/actionbar_btn</item>
         <item name="android:layout_marginRight">1px</item>
         <item name="android:paddingTop">0dip</item>
         <item name="android:paddingBottom">0dip</item>
         <item name="android:paddingRight">0dip</item>
         <item name="android:paddingLeft">5dip</item>
     </style>
-    <style name="ActionBarProgressBar" parent="@android:style/Widget.ProgressBar.Small">
+
+    <style name="ActionBar_ProgressBar" parent="@android:style/Widget.ProgressBar.Small">
     </style>
 
     <!-- The tab bar that holds the tabs. -->
@@ -92,6 +124,7 @@
     </style>
     <!-- The style for the text in the tab view. -->
     <style name="ActionBar_TabText" parent="ActionBar_Text">
+        <item name="android:padding">5dip</item>
     </style>
 
 </resources>

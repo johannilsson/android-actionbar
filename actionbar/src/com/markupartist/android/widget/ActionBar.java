@@ -213,14 +213,6 @@ public class ActionBar extends RelativeLayout {
     private OnNavigationListener mListCallback;
 
     /**
-     * A resource to use as the background for action items. This is specified
-     * by the user when setting up the action bar in their layout by using the
-     * attribute <code>actionBarItemBackground</code>. This can be either a
-     * drawable or a solid color.
-     */
-    private int mActionItemBackgroundResource = -1;
-
-    /**
      * Listener for list title click. Will display a list dialog of all the
      * options provided and execute the specified {@link OnNavigationListener}.
      */
@@ -279,8 +271,6 @@ public class ActionBar extends RelativeLayout {
         super(context, attrs);
 
         String title = null;
-        int separatorResource = -1;
-        int backgroundResource = -1;
 
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.ActionBar);
@@ -290,15 +280,6 @@ public class ActionBar extends RelativeLayout {
             switch (attr) {
             case R.styleable.ActionBar_title:
                 title = a.getString(attr);
-                break;
-            case R.styleable.ActionBar_actionBarBackground:
-                backgroundResource = a.getResourceId(attr, 0);
-                break;
-            case R.styleable.ActionBar_actionBarItemBackground:
-                mActionItemBackgroundResource = a.getResourceId(attr, 0);
-                break;
-            case R.styleable.ActionBar_actionBarSeparator:
-                separatorResource = a.getResourceId(attr, 0);
                 break;
             }
         }
@@ -326,16 +307,6 @@ public class ActionBar extends RelativeLayout {
         mTabsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_tabs);
 
         mProgress = (ProgressBar) mBarView.findViewById(R.id.actionbar_progress);
-
-        // Apply custom styles inflated from attributes.
-
-        if (backgroundResource > 0) {
-            mBarView.setBackgroundResource(backgroundResource);
-        }
-
-        if (separatorResource > 0) {
-            mActionsView.setBackgroundResource(separatorResource);
-        }
 
         if (title != null) {
             setTitle(title);
@@ -1361,9 +1332,6 @@ public class ActionBar extends RelativeLayout {
             mView = mActionBar.mInflater.inflate(R.layout.actionbar_item, mActionBar.mActionsView, false);
             mView.setTag(this);
             mView.setOnClickListener(mActionBar.mActionClicked);
-            if (mActionBar.mActionItemBackgroundResource > 0) {
-                mView.setBackgroundResource(mActionBar.mActionItemBackgroundResource);
-            }
             
             mIcon = (ImageButton) mView.findViewById(R.id.actionbar_item);
         }
@@ -1383,9 +1351,6 @@ public class ActionBar extends RelativeLayout {
             mView = mActionBar.mInflater.inflate(R.layout.actionbar_item, mActionBar.mActionsView, false);
             mView.setTag(this);
             mView.setOnClickListener(mActionBar.mActionClicked);
-            if (mActionBar.mActionItemBackgroundResource > 0) {
-                mView.setBackgroundResource(mActionBar.mActionItemBackgroundResource);
-            }
 
             mIcon = (ImageButton) mView.findViewById(R.id.actionbar_item);
             

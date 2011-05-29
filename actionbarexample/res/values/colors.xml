@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <color name="other_actionbar_separator">#3A5FCD</color>
-    <color name="other_actionbar_background_start">#3A5FCD</color>
-    <color name="other_actionbar_background_end">#27408B</color>    
+    <color name="blue_actionbar_divider">#3A5FCD</color>
+    <color name="blue_actionbar_background_start">#3A5FCD</color>
+    <color name="blue_actionbar_background_end">#27408B</color>    
 </resources>

@@ -15,31 +15,36 @@
 -->
 
 <resources>
-    <!-- Attributes used to style the Action Bar. -->
-    <declare-styleable name="ActionBar">
-        <!-- A string to be representing the action bar title. -->
-        <attr name="title" format="string" localization="suggested" />
-        <!-- A drawable to use as the background for the action bar. This can
-             be either a reference to a full drawable resource (such as a PNG
-             image, 9-patch, XML state list description, etc), or a solid color
-             such as "#ff000000" (black). -->
-        <attr name="actionBarBackground" format="reference|color" />
-        <!-- A drawable to use as the item separator for action items. This can
-             be either a reference to a full drawable resource (such as a PNG
-             image, 9-patch, XML state list description, etc), or a solid color
-             such as "#ff000000" (black). -->
-        <attr name="actionBarSeparator" format="reference|color" />
-        <!-- A drawable to use as the background for action items. This can be
-             either a reference to a full drawable resource (such as a PNG
-             image, 9-patch, XML state list description, etc), or a solid color
-             such as "#ff000000" (black). -->
-        <attr name="actionBarItemBackground" format="reference|color" />
-
+    <declare-styleable name="Theme.ActionBar">
+        <!-- Specifies a style resource to use for the top part of the action
+             bar. -->
+        <attr name="actionBarStyle" format="reference" />
+        <!-- Specifies a style resource to use for the title. -->
+        <attr name="actionBarTitleTextStyle" format="reference" />
+        <!-- Specifies a style resource to use for the title. -->
+        <attr name="actionBarSubtitleTextStyle" format="reference" />
+        <!-- Specifies a style resource to use for an action item. -->
+        <attr name="actionBarItemStyle" format="reference" />
+        <!-- Specifies a style resource to use for an home item. -->
+        <attr name="actionBarHomeItemStyle" format="reference" />
+        <!-- Specifies a style resource to use for the home logo. -->
+        <attr name="actionBarHomeLogoStyle" format="reference" />
+        <!-- Specifies a style resource to use for the progress bar. -->
+        <attr name="actionBarProgressBarStyle" format="reference" />
         <!-- Specifies a style resource to use for the tab bar. -->
         <attr name="actionBarTabBarStyle" format="reference" />
         <!-- Specifies a style resource to use for the tab view. -->
         <attr name="actionBarTabViewStyle" format="reference" />
         <!-- Specifies a style resource to use for the tab text. -->
         <attr name="actionBarTabTextStyle" format="reference" />
+        <!-- Specifies a drawable or color resource to use as divider between
+             action items. -->
+        <attr name="actionBarItemDivider" format="reference|color" />
+    </declare-styleable>
+
+    <!-- Attributes used to style the Action Bar. -->
+    <declare-styleable name="ActionBar">
+        <!-- A string to be representing the action bar title. -->
+        <attr name="title" format="string" localization="suggested" />
     </declare-styleable>
 </resources>

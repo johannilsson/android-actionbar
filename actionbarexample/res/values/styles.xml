@@ -33,12 +33,29 @@
     <style name="OtherTheme" parent="android:style/Theme.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <!-- These are the styles that is needed by the action bar. -->
+        <!-- These are the styles that is needed for tabs. -->
         <item name="actionBarTabBarStyle">@style/FancyTabBar</item>
         <item name="actionBarTabViewStyle">@style/FancyTabView</item>
         <item name="actionBarTabTextStyle">@style/FancyTabText</item>
+        <item name="actionBarStyle">@style/BlueActionBar</item>
+        <item name="actionBarItemStyle">@style/BlueActionBarItem</item>
+        <item name="actionBarItemDivider">@color/blue_actionbar_divider</item>
+        <!-- These are the resources needed by the action bar, they all refer
+             to default values. -->
+        <item name="actionBarTitleTextStyle">@style/ActionBar_TitleText</item>
+        <item name="actionBarSubtitleTextStyle">@style/ActionBar_SubtitleText</item>
+        <item name="actionBarHomeItemStyle">@style/ActionBar_HomeItem</item>
+        <item name="actionBarHomeLogoStyle">@style/ActionBar_HomeLogo</item>
+        <item name="actionBarProgressBarStyle">@style/ActionBar_ProgressBar</item>
     </style>
 
+    <style name="BlueActionBar" parent="@style/ActionBar_Container">
+        <item name="android:background">@drawable/blue_actionbar_background</item>
+    </style>
+    <style name="BlueActionBarItem" parent="@style/ActionBar_Item">
+        <item name="android:background">@drawable/blue_actionbar_item_btn</item>
+    </style>
+ 
     <style name="FancyTabBar" parent="ActionBar_TabBar">
         <item name="android:background">@drawable/tab_custom_off_background</item>
         <item name="android:paddingTop">5dip</item>
