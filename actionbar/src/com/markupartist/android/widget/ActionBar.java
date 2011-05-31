@@ -1034,12 +1034,12 @@ public class ActionBar extends RelativeLayout {
         if (!action.mActionBar.equals(this)) {
             throw new IllegalStateException("Cannot add an action from a different action bar.");
         }
-        
+
         if (action.mItemId == R.id.actionbar_item_home) {
             mHomeView.removeAllViews();
             mHomeView.addView(action.mView);
         } else {
-            mActionsView.addView(action.mView);
+            mActionsView.addView(action.mView, index);
         }
     }
     
