@@ -246,6 +246,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * A {@link LinkedList} that holds a list of {@link Action}s.
      */
     public static class ActionList extends LinkedList<Action> {
+        private static final long serialVersionUID = -7639253919045641775L;
     }
 
     /**
