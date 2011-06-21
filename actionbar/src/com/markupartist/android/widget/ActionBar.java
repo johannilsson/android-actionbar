@@ -1555,6 +1555,29 @@ public class ActionBar extends RelativeLayout {
                 mActionBar.getContext().startActivity(mIntent);
             }
         }
+
+        @Override
+        public View getActionView() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public MenuItem setActionView(View arg0) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public MenuItem setActionView(int arg0) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public void setShowAsAction(int actionEnum) {
+            // TODO Auto-generated method stub
+        }
     }
     
     /**
