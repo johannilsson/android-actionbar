@@ -47,6 +47,9 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:text="Remove share action" />
+    <Button android:id="@+id/add_search_action" android:layout_width="wrap_content" android:text="Add Search Action" android:layout_height="wrap_content"></Button>
+    <Button android:id="@+id/add_dialog_action" android:layout_width="wrap_content" android:text="Add Dialog Action" android:layout_height="wrap_content"></Button>
+    <Button android:id="@+id/add_inter_action" android:layout_width="wrap_content" android:text="Add Interface Action" android:layout_height="wrap_content"></Button>
 	    </LinearLayout>
     </ScrollView>
 </LinearLayout>
