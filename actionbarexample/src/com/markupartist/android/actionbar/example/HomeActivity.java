@@ -1,10 +1,8 @@
 package com.markupartist.android.actionbar.example;
 
-import com.markupartist.android.widget.ActionBar;
-import com.markupartist.android.widget.ActionBar.Action;
-import com.markupartist.android.widget.ActionBar.IntentAction;
-
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +11,15 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class HomeActivity extends Activity {
+import com.markupartist.android.widget.ActionBar;
+import com.markupartist.android.widget.ActionBar.Action;
+import com.markupartist.android.widget.ActionBar.DialogAction;
+import com.markupartist.android.widget.ActionBar.IntentAction;
+import com.markupartist.android.widget.ActionBar.InterfaceAction;
+import com.markupartist.android.widget.ActionBar.SearchAction;
+import com.markupartist.android.widget.OnActionClickListener;
+
+public class HomeActivity extends Activity implements OnActionClickListener {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +50,7 @@ public class HomeActivity extends Activity {
                 actionBar.setProgressBarVisibility(View.GONE);
             }
         });
-
+        
         Button removeActions = (Button) findViewById(R.id.remove_actions);
         removeActions.setOnClickListener(new OnClickListener() {
             @Override
@@ -67,6 +73,30 @@ public class HomeActivity extends Activity {
                         return R.drawable.ic_title_share_default;
                     }
                 });
+            }
+        });
+        
+        Button addSAction = (Button) findViewById(R.id.add_search_action);
+        addSAction.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionBar.addAction(new SearchAction(HomeActivity.this, android.R.drawable.ic_menu_search));
+            }
+        });
+        
+        Button addDAction = (Button) findViewById(R.id.add_dialog_action);
+        addDAction.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionBar.addAction(new DialogAction(HomeActivity.this, 0, android.R.drawable.ic_menu_info_details));
+            }
+        });
+        
+        Button addIAction = (Button) findViewById(R.id.add_inter_action);
+        addIAction.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionBar.addAction(new InterfaceAction(HomeActivity.this, android.R.drawable.ic_menu_view));
             }
         });
 
@@ -101,4 +131,18 @@ public class HomeActivity extends Activity {
         intent.putExtra(Intent.EXTRA_TEXT, "Shared from the ActionBar widget.");
         return Intent.createChooser(intent, "Share");
     }
+
+	
+    @Override
+	public void onActionClick(Action a) {
+		Toast.makeText(this, "The InterfaceAction has been received", Toast.LENGTH_SHORT).show();
+	}
+	
+	@Override
+	public Dialog onCreateDialog(int id) {
+		AlertDialog.Builder b = new AlertDialog.Builder(this);
+		b.setMessage("The DialogAction has been received. Hit back to clear this dialog.")
+		.setTitle("DialogAction");
+		return b.create();
+	}
 }

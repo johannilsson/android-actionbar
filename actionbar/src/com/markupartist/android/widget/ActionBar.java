@@ -18,8 +18,7 @@ package com.markupartist.android.widget;
 
 import java.util.LinkedList;
 
-import com.markupartist.android.widget.actionbar.R;
-
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +34,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.markupartist.android.widget.actionbar.R;
 
 public class ActionBar extends RelativeLayout implements OnClickListener {
 
@@ -290,6 +291,121 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
                         Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    
+    /**
+     * An Action which calls up a dialog from the host {@link Activity}, using {@link Activity.onCreateDialog(int id)}
+     * @author Espiandev
+     *
+     */
+    public static class DialogAction extends AbstractAction {
+		
+        private Activity mHost;
+        private int dialogId;
+
+        /**
+         * 
+         * @param context the context to invoke a dialog in
+         * @param dialogId an int id to determine which dialog to invoke
+         * @param drawable the drawable to use for the action
+         */
+        public DialogAction(Activity host, int dialogId, int drawable) {
+            super(drawable);
+            mHost = host;
+            this.dialogId = dialogId;
+        }
+
+        @Override
+        public void performAction(View view) {
+            try {
+            	mHost.showDialog(dialogId);             
+            } catch (Exception e) {
+                Toast.makeText(mHost,
+                        e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    
+	}
+    
+    /**
+     * An Action which utilises an interface, allowing the host activity to handle the click.
+     * @author Espiandev
+     *
+     */
+    public static class InterfaceAction extends AbstractAction {
+        private OnActionClickListener mListener = null;
+    	private Activity mHost;  
+    	
+    	/**
+    	 * Create an InterfaceAction. <code>host</code> must implement {@link OnActionClickListener}.
+    	 * @param host the {@link Activity} which will handle the click
+    	 * @param drawable the icon for the {@link Action}
+    	 */
+    	public InterfaceAction(Activity host, int drawable) {
+    		super(drawable);
+    		mHost = host;
+    		try {
+    			mListener = (OnActionClickListener) mHost;
+    		} catch (ClassCastException cce) {
+    			Toast.makeText(host,
+                        mHost.getText(R.string.actionbar_listener_unimplemented),
+                        Toast.LENGTH_SHORT).show();
+    		}
+    	}
+    	
+    	/**
+    	 * Set the OnActionClickListener
+    	 * @param listener The listener to bind to this InterfaceAction
+    	 * @return this InterfaceAction
+    	 */
+    	public InterfaceAction setOnActionListener(OnActionClickListener listener) {
+    		this.mListener = listener;
+    		return this;
+    	}
+
+		@Override
+		public void performAction(View view) {
+			try {
+				mListener.onActionClick(this);
+			} catch (NullPointerException npe) {
+				Toast.makeText(mHost,
+                        mHost.getText(R.string.actionbar_listener_unimplemented),
+                        Toast.LENGTH_SHORT).show();
+			} catch (Exception ex) {
+				Toast.makeText(mHost,
+                        mHost.getText(R.string.actionbar_listener_error),
+                        Toast.LENGTH_SHORT).show();
+			}
+		}
+        
+    }
+    
+    /**
+     * An Action which invokes onSearchRequested() in the hosting Activity
+     * @author Espiandev
+     *
+     */
+    public static class SearchAction extends AbstractAction {
+    	
+    	private Activity mHost;
+    	
+        public SearchAction(Activity host, int drawable) {
+            super(drawable);
+            mHost = host;
+        }
+        
+        @Override
+        public void performAction(View view) {
+            try {
+                mHost.onSearchRequested();
+            } catch (Exception mnfe) {
+            	Toast.makeText(mHost,
+                        mHost.getText(R.string.actionbar_search_error),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        
     }
 
     /*
