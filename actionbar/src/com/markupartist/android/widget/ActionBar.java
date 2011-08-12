@@ -291,7 +291,19 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
             }
         }
     }
-
+    public static abstract class ButtonAction extends AbstractAction {
+        public ButtonAction(int drawable)
+        {
+            super(drawable);
+        }
+        
+        @Override
+        public void performAction(View v)
+        {
+            clicked();
+        }
+        public abstract void clicked();
+    }
     /*
     public static abstract class SearchAction extends AbstractAction {
         public SearchAction() {
