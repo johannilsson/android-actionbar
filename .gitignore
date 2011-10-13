@@ -8,3 +8,4 @@ target
 local.properties
 build.xml
 proguard.cfg
+/actionbar/nbandroid/
