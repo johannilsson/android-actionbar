@@ -16,12 +16,12 @@
 <!-- ?android:attr/actionModeStyle -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="?attr/actionBarTabViewStyle"
+    android:addStatesFromChildren="true"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:layout_alignParentLeft="true"
     android:layout_weight="1"
-    android:focusable="true"
     >
     <ImageView
         android:id="@+id/actionbar_tab_icon"
@@ -35,6 +35,7 @@
         />
     <FrameLayout
         android:id="@+id/actionbar_tab_custom"
+        android:addStatesFromChildren="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
