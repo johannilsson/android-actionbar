@@ -378,6 +378,14 @@ public class ActionBar extends RelativeLayout {
             mHomeUpIndicator.setVisibility(getDisplayOptionValue(DISPLAY_HOME_AS_UP) ? View.VISIBLE : View.GONE);
             mHomeLogo.setVisibility(usingLogo ? View.VISIBLE : View.GONE);
             mHomeView.setVisibility(usingLogo ? View.GONE : View.VISIBLE);
+
+            if (usingLogo) {
+                Action homeAction = findAction(R.id.actionbar_item_home);
+                if (homeAction != null) {
+                    mHomeLogo.setTag(homeAction);
+                    mHomeLogo.setOnClickListener(mActionClicked);
+                }
+            }
         } else {
             mHomeUpIndicator.setVisibility(View.GONE);
             mHomeLogo.setVisibility(View.GONE);
@@ -1558,8 +1566,7 @@ public class ActionBar extends RelativeLayout {
 
         @Override
         public View getActionView() {
-            // TODO Auto-generated method stub
-            return null;
+            return mView;
         }
 
         @Override
