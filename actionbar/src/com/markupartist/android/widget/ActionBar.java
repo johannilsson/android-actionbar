@@ -31,6 +31,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.ActionProvider;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -1556,6 +1557,73 @@ public class ActionBar extends RelativeLayout {
             if (mIntent != null) {
                 mActionBar.getContext().startActivity(mIntent);
             }
+        }
+
+        @Override
+        public boolean collapseActionView() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean expandActionView() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public ActionProvider getActionProvider() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public View getActionView() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public boolean isActionViewExpanded() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public MenuItem setActionProvider(ActionProvider arg0) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public MenuItem setActionView(View view) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public MenuItem setActionView(int resId) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public MenuItem setOnActionExpandListener(
+                OnActionExpandListener listener) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public void setShowAsAction(int actionEnum) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        @Override
+        public MenuItem setShowAsActionFlags(int actionEnum) {
+            // TODO Auto-generated method stub
+            return null;
         }
     }
     
