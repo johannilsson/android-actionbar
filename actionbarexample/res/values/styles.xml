@@ -19,7 +19,7 @@
     Example of how to change the style of the progress bar.
     -->
     <!--
-    <style name="ActionBarProgressBar" parent="@android:style/Widget.ProgressBar.Small.Inverse">
+    <style name="ActionBar_ProgressBar" parent="@android:style/Widget.ProgressBar.Small.Inverse">
     </style>
      -->
 
