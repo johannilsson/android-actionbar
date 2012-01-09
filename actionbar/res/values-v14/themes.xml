@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <style name="Theme.ActionBar.Holo" parent="android:style/Theme.Holo">
+    <style name="Theme.ActionBar.Holo" parent="@android:style/Theme.Holo">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionBarStyle">@style/ActionBar_Container</item>
@@ -30,7 +30,7 @@
         <item name="actionBarItemDivider">@color/actionbar_divider</item>
     </style>
 
-    <style name="Theme.ActionBar.Holo.Light" parent="android:style/Theme.Holo.Light">
+    <style name="Theme.ActionBar.Holo.Light" parent="@android:style/Theme.Holo.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionBarStyle">@style/ActionBar_Container</item>
