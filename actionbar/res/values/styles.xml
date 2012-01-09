@@ -19,14 +19,14 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="ActionBar_Container">
+    <style name="ActionBar.Container">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">@dimen/actionbar_height</item>
         <item name="android:background">@drawable/actionbar_background</item>
         <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="ActionBar_Text">
+    <style name="ActionBar.Text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignWithParentIfMissing">true</item>
@@ -41,16 +41,16 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="ActionBar_TitleText" parent="ActionBar_Text">
+    <style name="ActionBar.TitleText" parent="ActionBar.Text">
         <item name="android:paddingLeft">10dip</item>
         <item name="android:paddingRight">10dip</item>
     </style>
-    <style name="ActionBar_SubtitleText" parent="ActionBar_TitleText">
+    <style name="ActionBar.SubtitleText" parent="ActionBar.TitleText">
         <item name="android:textSize">12dip</item>
         <item name="android:textColor">@color/actionbar_subtitle</item>
     </style>
 
-    <style name="ActionBar_Item">
+    <style name="ActionBar.Item">
         <item name="android:layout_width">@dimen/actionbar_item_width</item>
         <item name="android:layout_height">@dimen/actionbar_height</item>
         <item name="android:padding">5dp</item>
@@ -58,12 +58,12 @@
         <item name="android:background">@drawable/actionbar_btn</item>
     </style>
 
-    <style name="ActionBar_HomeItem" parent="ActionBar_Item">
+    <style name="ActionBar.HomeItem" parent="ActionBar.Item">
         <item name="android:layout_marginRight">1px</item>
         <item name="android:layout_marginLeft">0px</item>
     </style>
 
-    <style name="ActionBar_HomeLogo">
+    <style name="ActionBar.HomeLogo">
         <item name="android:layout_height">@dimen/actionbar_height</item>
         <item name="android:background">@drawable/actionbar_btn</item>
         <item name="android:layout_marginRight">1px</item>
@@ -73,18 +73,18 @@
         <item name="android:paddingLeft">5dip</item>
     </style>
 
-    <style name="ActionBar_ProgressBar" parent="@android:style/Widget.ProgressBar.Small">
+    <style name="ActionBar.ProgressBar" parent="@android:style/Widget.ProgressBar.Small">
     </style>
 
     <!-- The tab bar that holds the tabs. -->
-    <style name="ActionBar_TabBar">
+    <style name="ActionBar.TabBar">
         <item name="android:background">@color/actionbar_tab_bar_background</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     <!-- Represent a tab view item in the tab bar. -->
-    <style name="ActionBar_TabView">
+    <style name="ActionBar.TabView">
         <item name="android:background">@drawable/actionbar_tab_indicator</item>
         <item name="android:paddingLeft">4dip</item>
         <item name="android:paddingRight">4dip</item>
@@ -92,7 +92,7 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
     <!-- The style for the text in the tab view. -->
-    <style name="ActionBar_TabText" parent="ActionBar_Text">
+    <style name="ActionBar.TabText" parent="ActionBar.Text">
         <item name="android:padding">5dip</item>
     </style>
 

@@ -19,7 +19,7 @@
     Example of how to change the style of the progress bar.
     -->
     <!--
-    <style name="ActionBarProgressBar" parent="@android:style/Widget.ProgressBar.Small.Inverse">
+    <style name="ActionBar.ProgressBar" parent="@android:style/Widget.ProgressBar.Small.Inverse">
     </style>
      -->
 
@@ -30,7 +30,7 @@
          This example also demonstrates that there's no dependency on the
          themes defined in the action bar as long as all the styles has been
          setup to point to a style resource. -->
-    <style name="OtherTheme" parent="android:style/Theme.Light">
+    <style name="OtherTheme" parent="@android:style/Theme.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <!-- These are the styles that is needed for tabs. -->
@@ -42,32 +42,32 @@
         <item name="actionBarItemDivider">@color/blue_actionbar_divider</item>
         <!-- These are the resources needed by the action bar, they all refer
              to default values. -->
-        <item name="actionBarTitleTextStyle">@style/ActionBar_TitleText</item>
-        <item name="actionBarSubtitleTextStyle">@style/ActionBar_SubtitleText</item>
-        <item name="actionBarHomeItemStyle">@style/ActionBar_HomeItem</item>
-        <item name="actionBarHomeLogoStyle">@style/ActionBar_HomeLogo</item>
-        <item name="actionBarProgressBarStyle">@style/ActionBar_ProgressBar</item>
+        <item name="actionBarTitleTextStyle">@style/ActionBar.TitleText</item>
+        <item name="actionBarSubtitleTextStyle">@style/ActionBar.SubtitleText</item>
+        <item name="actionBarHomeItemStyle">@style/ActionBar.HomeItem</item>
+        <item name="actionBarHomeLogoStyle">@style/ActionBar.HomeLogo</item>
+        <item name="actionBarProgressBarStyle">@style/ActionBar.ProgressBar</item>
     </style>
 
-    <style name="BlueActionBar" parent="@style/ActionBar_Container">
+    <style name="BlueActionBar" parent="@style/ActionBar.Container">
         <item name="android:background">@drawable/blue_actionbar_background</item>
     </style>
-    <style name="BlueActionBarItem" parent="@style/ActionBar_Item">
+    <style name="BlueActionBarItem" parent="@style/ActionBar.Item">
         <item name="android:background">@drawable/blue_actionbar_item_btn</item>
     </style>
  
-    <style name="FancyTabBar" parent="ActionBar_TabBar">
+    <style name="FancyTabBar" parent="ActionBar.TabBar">
         <item name="android:background">@drawable/tab_custom_off_background</item>
         <item name="android:paddingTop">5dip</item>
         <item name="android:layout_height">38dp</item>
     </style>
-    <style name="FancyTabView" parent="ActionBar_TabView">
+    <style name="FancyTabView" parent="ActionBar.TabView">
         <item name="android:background">@drawable/tab_custom_indicator</item>
         <item name="android:layout_height">38dp</item>
         <item name="android:layout_marginLeft">2dip</item>
         <item name="android:layout_marginRight">2dip</item>
     </style>
-    <style name="FancyTabText" parent="ActionBar_TabText">
+    <style name="FancyTabText" parent="ActionBar.TabText">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:textSize">14sp</item>
     </style>

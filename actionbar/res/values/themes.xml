@@ -14,35 +14,35 @@
      limitations under the License.
 -->
 <resources>
-
-    <style name="Theme.ActionBar" parent="android:style/Theme">
+    <style name="Theme.ActionBar" parent="@android:style/Theme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="actionBarStyle">@style/ActionBar_Container</item>
-        <item name="actionBarTitleTextStyle">@style/ActionBar_TitleText</item>
-        <item name="actionBarSubtitleTextStyle">@style/ActionBar_SubtitleText</item>
-        <item name="actionBarItemStyle">@style/ActionBar_Item</item>
-        <item name="actionBarHomeItemStyle">@style/ActionBar_HomeItem</item>
-        <item name="actionBarHomeLogoStyle">@style/ActionBar_HomeLogo</item>
-        <item name="actionBarProgressBarStyle">@style/ActionBar_ProgressBar</item>
-        <item name="actionBarTabBarStyle">@style/ActionBar_TabBar</item>
-        <item name="actionBarTabViewStyle">@style/ActionBar_TabView</item>
-        <item name="actionBarTabTextStyle">@style/ActionBar_TabText</item>
+        <item name="actionBarStyle">@style/ActionBar.Container</item>
+        <item name="actionBarTitleTextStyle">@style/ActionBar.TitleText</item>
+        <item name="actionBarSubtitleTextStyle">@style/ActionBar.SubtitleText</item>
+        <item name="actionBarItemStyle">@style/ActionBar.Item</item>
+        <item name="actionBarHomeItemStyle">@style/ActionBar.HomeItem</item>
+        <item name="actionBarHomeLogoStyle">@style/ActionBar.HomeLogo</item>
+        <item name="actionBarProgressBarStyle">@style/ActionBar.ProgressBar</item>
+        <item name="actionBarTabBarStyle">@style/ActionBar.TabBar</item>
+        <item name="actionBarTabViewStyle">@style/ActionBar.TabView</item>
+        <item name="actionBarTabTextStyle">@style/ActionBar.TabText</item>
         <item name="actionBarItemDivider">@color/actionbar_divider</item>
     </style>
-    <style name="Theme.ActionBar.Light" parent="android:style/Theme.Light">
+
+    <style name="Theme.ActionBar.Light" parent="@android:style/Theme.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="actionBarStyle">@style/ActionBar_Container</item>
-        <item name="actionBarTitleTextStyle">@style/ActionBar_TitleText</item>
-        <item name="actionBarSubtitleTextStyle">@style/ActionBar_SubtitleText</item>
-        <item name="actionBarItemStyle">@style/ActionBar_Item</item>
-        <item name="actionBarHomeItemStyle">@style/ActionBar_HomeItem</item>
-        <item name="actionBarHomeLogoStyle">@style/ActionBar_HomeLogo</item>
-        <item name="actionBarProgressBarStyle">@style/ActionBar_ProgressBar</item>
-        <item name="actionBarTabBarStyle">@style/ActionBar_TabBar</item>
-        <item name="actionBarTabViewStyle">@style/ActionBar_TabView</item>
-        <item name="actionBarTabTextStyle">@style/ActionBar_TabText</item>
+        <item name="actionBarStyle">@style/ActionBar.Container</item>
+        <item name="actionBarTitleTextStyle">@style/ActionBar.TitleText</item>
+        <item name="actionBarSubtitleTextStyle">@style/ActionBar.SubtitleText</item>
+        <item name="actionBarItemStyle">@style/ActionBar.Item</item>
+        <item name="actionBarHomeItemStyle">@style/ActionBar.HomeItem</item>
+        <item name="actionBarHomeLogoStyle">@style/ActionBar.HomeLogo</item>
+        <item name="actionBarProgressBarStyle">@style/ActionBar.ProgressBar</item>
+        <item name="actionBarTabBarStyle">@style/ActionBar.TabBar</item>
+        <item name="actionBarTabViewStyle">@style/ActionBar.TabView</item>
+        <item name="actionBarTabTextStyle">@style/ActionBar.TabText</item>
         <item name="actionBarItemDivider">@color/actionbar_divider</item>
     </style>
 </resources>
