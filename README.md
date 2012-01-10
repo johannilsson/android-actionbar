@@ -131,6 +131,7 @@ This widget wouldn't be the same without the excellent contributions by;
 * RickardPettersson, <https://github.com/RickardPettersson>
 * Jesse Vincent, <http://blog.fsck.com>
 * Gyuri Grell, <http://gyurigrell.com>
+* Ricardo Amaral, <http://ricardoamaral.net>
 
 ### Want to contribute?
 
