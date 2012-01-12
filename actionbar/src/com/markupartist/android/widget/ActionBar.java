@@ -1349,7 +1349,9 @@ public class ActionBar extends RelativeLayout {
             mTitle = title;
             mIsEnabled = true;
 
-            mView = mActionBar.mInflater.inflate(R.layout.actionbar_item, mActionBar.mActionsView, false);
+            int layoutId = (itemId == R.id.actionbar_item_home) ? R.layout.actionbar_item_home : R.layout.actionbar_item;
+
+            mView = mActionBar.mInflater.inflate(layoutId, mActionBar.mActionsView, false);
             mView.setTag(this);
             mView.setOnClickListener(mActionBar.mActionClicked);
 
