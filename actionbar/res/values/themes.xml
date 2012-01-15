@@ -14,11 +14,14 @@
      limitations under the License.
 -->
 <resources>
-    <style name="Theme.ActionBar.InternalBase" parent="@android:style/Theme"></style>
-    <style name="Theme.ActionBar.InternalBase.Light" parent="@android:style/Theme.Light"></style>
+    <style name="Theme.ActionBar.InternalBase" parent="@android:style/Theme">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    <style name="Theme.ActionBar.InternalBase.Light" parent="@android:style/Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+    </style>
 
     <style name="Theme.ActionBar" parent="Theme.ActionBar.InternalBase">
-        <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionBarStyle">@style/ActionBar.Container</item>
         <item name="actionBarTitleTextStyle">@style/ActionBar.TitleText</item>
@@ -34,7 +37,6 @@
     </style>
 
     <style name="Theme.ActionBar.Light" parent="Theme.ActionBar.InternalBase.Light">
-        <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionBarStyle">@style/ActionBar.Container</item>
         <item name="actionBarTitleTextStyle">@style/ActionBar.TitleText</item>
