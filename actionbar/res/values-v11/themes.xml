@@ -14,6 +14,6 @@
      limitations under the License.
 -->
 <resources>
-    <style name="Theme.ActionBar.InternalBase" parent="@android:style/Theme.Holo"></style>
-    <style name="Theme.ActionBar.InternalBase.Light" parent="@android:style/Theme.Holo.Light"></style>
+    <style name="Theme.ActionBar.InternalBase" parent="@android:style/Theme.Holo.NoActionBar"></style>
+    <style name="Theme.ActionBar.InternalBase.Light" parent="@style/Theme.Holo.Light.NoActionBar"></style>
 </resources>
