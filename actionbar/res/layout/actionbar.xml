@@ -94,6 +94,7 @@
                 style="?attr/actionBarTitleTextStyle"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/actionbar_progress"
+                android:singleLine="true"
                 />
             <com.markupartist.android.widget.ScrollingTextView
                 android:id="@+id/actionbar_subtitle"
@@ -101,6 +102,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/actionbar_progress"
                 android:layout_below="@id/actionbar_title"
+                android:singleLine="true"
                 android:visibility="gone"
                 />
             <FrameLayout
