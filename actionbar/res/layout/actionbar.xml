@@ -44,15 +44,22 @@
             android:orientation="horizontal"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:background="@color/actionbar_separator"
             android:visibility="gone"
             >
             <!-- TODO: Make configurable. -->
             <ImageButton
                 android:id="@+id/actionbar_home_btn"
                 style="@style/ActionBarHomeItem"
+				android:layout_marginRight="0dp"
                 android:background="@drawable/actionbar_btn"
                 />
+			<View
+                android:layout_width="1px"
+                android:layout_height="fill_parent"
+                android:padding="0dp"
+                android:layout_marginLeft="0dp"
+                android:background="@color/actionbar_separator"
+                android:layout_toRightOf="@id/actionbar_home_btn" />
         </RelativeLayout>
         <ImageView
             android:id="@+id/actionbar_home_is_back"
