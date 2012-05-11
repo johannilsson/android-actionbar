@@ -317,6 +317,36 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     }
     */
     
+    /** Interface used to define the listener of an onClickAction */
+    public static interface OnClickActionListener {
+    	
+    	/** Called when an onClickAction gets fired, flag will be the same as the actions flag */
+    	public void onClickAction(int flag);
+    }
+    
+    /**
+     * Simple action that just performs an onClick when the user taps the action button
+     * @author Moritz "Moss" Wundke (b.thax.dcg@gmail.com)
+     *
+     */
+    public static class OnClickAction extends AbstractAction {
+    	private OnClickActionListener mClickListener;
+    	private int mFlag;
+    	
+    	public OnClickAction(Context context, OnClickActionListener clickListener, int flag, int drawable) {
+            super(drawable);
+            mClickListener = clickListener;
+            mFlag = flag;
+        }
+    	
+    	@Override
+        public void performAction(View view) {
+            if (mClickListener != null) {
+            	mClickListener.onClickAction(mFlag);
+            }
+        }
+    }
+    
     /**
      * Animated action with start/stop methods.
      * @author Moritz "Moss" Wundke (b.thax.dcg@gmail.com)
