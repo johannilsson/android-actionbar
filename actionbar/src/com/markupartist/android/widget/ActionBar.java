@@ -214,6 +214,26 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
                 final Object tag = view.getTag();
                 if (tag instanceof Action && tag.equals(action)) {
                     mActionsView.removeView(view);
+                    break;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Change the visibility of an action
+     * @param action
+     * @param visibility
+     */
+    public void setActionVisibility(Action action, int visibility) {
+    	int childCount = mActionsView.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = mActionsView.getChildAt(i);
+            if (view != null) {
+                final Object tag = view.getTag();
+                if (tag instanceof Action && tag.equals(action)) {
+                	view.setVisibility(visibility);
+                	break;
                 }
             }
         }
