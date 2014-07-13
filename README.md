@@ -1,5 +1,9 @@
 # Action Bar for Android
 
+**Note** This library is deprecated, use either [v7 appcompat library](http://developer.android.com/tools/support-library/features.html#v7) or [ActionBarSherlock](http://actionbarsherlock.com/).
+
+---
+
 ![ActionBar for Android](http://markupartist.com/images/actionbar.png "ActionBar for Android")
 
 This projects aims to provide a reusable action bar component. The action bar pattern is well documented at [Android Patterns](http://www.androidpatterns.com/uap_pattern/action-bar).
