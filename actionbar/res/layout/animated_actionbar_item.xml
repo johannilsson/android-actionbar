@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 Johan Nilsson <http://markupartist.com>
+<!-- Copyright (C) 2012 Mystic Tree Games <http://www.mystictreegames.com>
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,9 +13,18 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
-<resources>
-    <declare-styleable name="ActionBar">
-        <attr name="actionbar_title" format="string" localization="suggested" />
-    </declare-styleable>
-</resources>
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/titleLayout"
+    android:background="@drawable/actionbar_background" >
+	<ImageButton
+	    android:id="@+id/actionbar_item"
+	    style="@style/ActionBarItem"
+	    android:background="#00FFFFFF"
+	    android:layout_centerVertical="true"
+	    android:singleLine="true"
+	    android:visibility="visible"
+	    />
+</RelativeLayout>

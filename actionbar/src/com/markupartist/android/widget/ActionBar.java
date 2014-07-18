@@ -28,6 +28,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,7 +71,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.ActionBar);
-        CharSequence title = a.getString(R.styleable.ActionBar_title);
+        CharSequence title = a.getString(R.styleable.ActionBar_actionbar_title);
         if (title != null) {
             setTitle(title);
         }
@@ -212,6 +214,26 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
                 final Object tag = view.getTag();
                 if (tag instanceof Action && tag.equals(action)) {
                     mActionsView.removeView(view);
+                    break;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Change the visibility of an action
+     * @param action
+     * @param visibility
+     */
+    public void setActionVisibility(Action action, int visibility) {
+    	int childCount = mActionsView.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = mActionsView.getChildAt(i);
+            if (view != null) {
+                final Object tag = view.getTag();
+                if (tag instanceof Action && tag.equals(action)) {
+                	view.setVisibility(visibility);
+                	break;
                 }
             }
         }
@@ -231,15 +253,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      * @return a view
      */
     private View inflateAction(Action action) {
-        View view = mInflater.inflate(R.layout.actionbar_item, mActionsView, false);
-
-        ImageButton labelView =
-            (ImageButton) view.findViewById(R.id.actionbar_item);
-        labelView.setImageResource(action.getDrawable());
-
-        view.setTag(action);
-        view.setOnClickListener(this);
-        return view;
+    	return action.onInflateView(this, mInflater.inflate(action.getLayoutResId(), mActionsView, false) );
     }
 
     /**
@@ -255,6 +269,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     public interface Action {
         public int getDrawable();
         public void performAction(View view);
+        
+        /** Used to perform any special action once the {@link ActionBar} inflated our view */
+        public View onInflateView(ActionBar actionBar, View view);
+        
+        /** The layout used to inflate a new view for the action */
+        public int getLayoutResId();
     }
 
     public static abstract class AbstractAction implements Action {
@@ -267,6 +287,23 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         @Override
         public int getDrawable() {
             return mDrawable;
+        }
+        
+        @Override
+        public View onInflateView(ActionBar actionBar, View view) {
+            ImageButton labelView =
+                (ImageButton) view.findViewById(R.id.actionbar_item);
+            labelView.setImageResource(this.getDrawable());
+
+            view.setTag(this);
+            view.setOnClickListener(actionBar);
+            
+            return view;
+        }
+        
+        @Override
+        public int getLayoutResId() {
+        	return R.layout.actionbar_item;
         }
     }
 
@@ -299,4 +336,99 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         }
     }
     */
+    
+    /** Interface used to define the listener of an onClickAction */
+    public static interface OnClickActionListener {
+    	
+    	/** Called when an onClickAction gets fired, flag will be the same as the actions flag */
+    	public void onClickAction(int flag);
+    }
+    
+    /**
+     * Simple action that just performs an onClick when the user taps the action button
+     * @author Moritz "Moss" Wundke (b.thax.dcg@gmail.com)
+     *
+     */
+    public static class OnClickAction extends AbstractAction {
+    	private OnClickActionListener mClickListener;
+    	private int mFlag;
+    	
+    	public OnClickAction(Context context, OnClickActionListener clickListener, int flag, int drawable) {
+            super(drawable);
+            mClickListener = clickListener;
+            mFlag = flag;
+        }
+    	
+    	@Override
+        public void performAction(View view) {
+            if (mClickListener != null) {
+            	mClickListener.onClickAction(mFlag);
+            }
+        }
+    }
+    
+    /**
+     * Animated action with start/stop methods.
+     * @author Moritz "Moss" Wundke (b.thax.dcg@gmail.com)
+     *
+     */
+    public static class AnimatedAction extends AbstractAction {
+        private Animation mAnimation;
+        private ImageButton mAnimatedView;
+        private OnClickListener mClickListener;
+
+        public AnimatedAction(Context context, OnClickListener clickListener, int drawable) {
+            super(drawable);
+            initAction(context, clickListener, R.anim.rotate);
+        }
+        
+        public AnimatedAction(Context context, OnClickListener clickListener, int drawable, int animResId) {
+            super(drawable);
+            initAction(context, clickListener, animResId);
+        }
+        
+        private void initAction(Context context, OnClickListener clickListener, int animResId) {
+        	mAnimation = AnimationUtils.loadAnimation(context, animResId);
+            mAnimation.setRepeatCount(Animation.INFINITE);
+            mClickListener = clickListener;
+        }
+        
+        /** Start the infinite animation for this action */
+        public void startAnimation() {
+        	if ( mAnimatedView != null ) {
+        		mAnimatedView.startAnimation(mAnimation);
+        	}
+        }
+        
+        /** Stop the infinite animation for this action */
+        public void stopAnimation() {
+        	if ( mAnimatedView != null ) {
+        		mAnimatedView.clearAnimation();
+        	}
+        }
+
+        @Override
+        public View onInflateView(ActionBar actionBar, View view) {
+        	mAnimatedView = (ImageButton) view.findViewById(R.id.actionbar_item);
+        	mAnimatedView.setImageResource(this.getDrawable());
+        	
+        	view.setTag(this);
+        	mAnimatedView.setTag(this);
+        	mAnimatedView.setOnClickListener(actionBar);
+            
+            return view;
+        }
+        
+        @Override
+        public void performAction(View view) {
+            if (mClickListener != null) {
+            	mClickListener.onClick(view);
+            }
+        }
+
+    	@Override
+    	public int getLayoutResId() {
+    		return R.layout.animated_actionbar_item;
+    	}
+    }
 }
