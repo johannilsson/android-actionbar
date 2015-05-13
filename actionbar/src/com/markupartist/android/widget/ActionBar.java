@@ -200,6 +200,27 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mActionsView.removeViewAt(index);
     }
 
+   /**
+     * change image Icon [By Hamed Taheri]
+     * @param action use this in performAction method
+     * @param imageID use R.drawable.* image id
+     */
+public void changeIcon(Action action,int imageID)
+{
+	 int childCount = mActionsView.getChildCount();
+     for (int i = 0; i < childCount; i++) {
+         View view = mActionsView.getChildAt(i);
+         if (view != null) {
+             final Object tag = view.getTag();
+             if (tag instanceof Action && tag.equals(action)) {
+                 ImageButton labelView =
+                     (ImageButton) view.findViewById(R.id.actionbar_item);
+                 labelView.setImageResource(imageID);
+             }
+         }
+     }
+}
+
     /**
      * Remove a action from the action bar.
      * @param action The action to remove
